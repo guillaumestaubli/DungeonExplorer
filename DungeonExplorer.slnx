@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="GameEditor/GameEditor.csproj" />
+  <Project Path="GameLib/GameLib.csproj" />
+  <Project Path="GamePlayer/GamePlayer.csproj" />
+</Solution>
