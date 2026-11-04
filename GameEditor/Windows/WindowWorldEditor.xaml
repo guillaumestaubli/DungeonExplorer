@@ -5,8 +5,75 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GameEditor.Windows"
         mc:Ignorable="d"
-        Title="WindowWorldEditor" Height="450" Width="800">
-    <Grid>
-        
+        Title="DungeonExplorer - World Editor" 
+        Height="450" 
+        Width="800"
+        ThemeMode="Dark">
+    
+    <Grid Name="Grid_Main">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Name="Grid_Content" 
+              Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border BorderBrush="#C2C2C2" 
+                    BorderThickness="1"
+                    Grid.Column="0">
+
+                <WindowsFormsHost x:Name="SfmlHost"
+                                  VerticalAlignment="Stretch"
+                                  HorizontalAlignment="Stretch"/>
+                
+            </Border>
+
+            <GridSplitter HorizontalAlignment="Left"
+                          Grid.Column="1"
+                          VerticalAlignment="Stretch"
+                          Background="#202020"
+                          Width="5"
+                          ShowsPreview="True"/>
+
+            <Border BorderBrush="#C2C2C2" 
+                    BorderThickness="1"
+                    Grid.Column="1"
+                    Margin="5,0,0,0">
+
+                <Canvas Name="Canvas_SettingsContainer"
+                        Margin="0,0,0,0"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        Background="#282828">
+
+
+                </Canvas>
+
+            </Border>
+
+        </Grid>
+
+        <Canvas Name="Canvas_SettingsTabsContainer"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Margin="0"
+                Background="#202020">
+            
+            
+            
+        </Canvas>
+
     </Grid>
+
 </Window>
