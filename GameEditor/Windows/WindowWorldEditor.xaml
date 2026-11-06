@@ -8,8 +8,8 @@
         Title="DungeonExplorer - World Editor" 
         Height="450" 
         Width="800"
-        ThemeMode="Dark">
-    
+        ThemeMode="System">
+
     <Grid Name="Grid_Main">
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -19,6 +19,16 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Navigation -->
+        <StackPanel Orientation="Horizontal"
+                    Grid.Column="0"
+                    Grid.Row="0">
+            
+            
+            
+        </StackPanel>
+        
+        
         <Grid Name="Grid_Content" 
               Grid.Row="1">
             <Grid.RowDefinitions>
@@ -29,15 +39,45 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Border BorderBrush="#C2C2C2" 
-                    BorderThickness="1"
-                    Grid.Column="0">
+            <Grid Name="Grid_RenderArea">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20px"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="20px"/>
+                </Grid.RowDefinitions>
 
-                <WindowsFormsHost x:Name="SfmlHost"
-                                  VerticalAlignment="Stretch"
-                                  HorizontalAlignment="Stretch"/>
-                
-            </Border>
+
+                <!-- SFML Render Area -->
+                <Border BorderBrush="#C2C2C2" 
+                        BorderThickness="1"
+                        Grid.Column="0"
+                        Grid.Row="0">
+
+                    <WindowsFormsHost x:Name="SfmlHost"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalAlignment="Stretch"/>
+
+                </Border>
+
+                <ScrollBar Name="ScrlBar_SfmlRenderAreaVertical"
+                           Orientation="Vertical"
+                           Width="20px"
+                           Grid.Column="1"
+                           Grid.Row="0" 
+                           ValueChanged="ScrlBar_SfmlRenderAreaVertical_ValueChanged"/>
+
+                <ScrollBar Name="ScrlBar_SfmlRenderAreaHorizontal"
+                           Orientation="Horizontal"
+                           Grid.Column="0"
+                           Grid.Row="1"
+                           Height="20px"
+                           ValueChanged="ScrlBar_SfmlRenderAreaHorizontal_ValueChanged"/>
+
+            </Grid>
+
 
             <GridSplitter HorizontalAlignment="Left"
                           Grid.Column="1"
@@ -46,6 +86,7 @@
                           Width="5"
                           ShowsPreview="True"/>
 
+            <!-- Selected nav item elements -->
             <Border BorderBrush="#C2C2C2" 
                     BorderThickness="1"
                     Grid.Column="1"
@@ -57,7 +98,8 @@
                         HorizontalAlignment="Stretch"
                         Background="#282828">
 
-
+                    
+                    
                 </Canvas>
 
             </Border>

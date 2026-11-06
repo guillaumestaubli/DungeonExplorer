@@ -11,4 +11,19 @@
     <PackageReference Include="SFML.Net" Version="3.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="DefaultRessources\arial.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DefaultRessources\calibri_light.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DefaultRessources\consolas.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DefaultRessources\texture_not_found.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

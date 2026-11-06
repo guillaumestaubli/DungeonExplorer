@@ -13,4 +13,8 @@
     <PackageReference Include="SFML.Net" Version="3.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GameLib\GameLib.csproj" />
+  </ItemGroup>
+
 </Project>
