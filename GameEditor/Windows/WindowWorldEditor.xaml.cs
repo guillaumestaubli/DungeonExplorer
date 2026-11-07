@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -19,7 +20,6 @@ using SFML.Graphics;
 using GameLib;
 using GameLib.World;
 using GameLib.Core;
-using System.Linq;
 
 namespace GameEditor.Windows
 {
@@ -31,20 +31,21 @@ namespace GameEditor.Windows
         private const float ZOOM_FACTOR = 0.1f;
 
         private float _currentZoom = 1.0f;
-        private Vector2f _viewPosition = new Vector2f(0.0f, 0.0f);
-        private Vector2f _renderAreaSize = new Vector2f(0.0f, 0.0f);
+        private Vector2f _viewPosition = new(0.0f, 0.0f);
+        private Vector2f _renderAreaSize = new(0.0f, 0.0f);
         private View _view;
-        private RenderWindow _renderArea;
-        private System.Windows.Forms.Control _win32SfmlSurface;
+        private readonly RenderWindow _renderArea;
+        private readonly System.Windows.Forms.Control _win32SfmlSurface;
 
-        public WindowWorldEditor()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path">Path of the .dungeon file to open</param>
+        public WindowWorldEditor(string path)
         {
             InitializeComponent();
 
-            // TEST
-            Vector2i gridSize = new Vector2i(50, 50);
-            Vector2f tileRenderSize = new Vector2f(64.0f, 64.0f);
-            Dungeon.CreateNewDungeon(gridSize, tileRenderSize);
+            Dungeon.LoadFromFile(path);
 
             this.Loaded += WindowWorldEditor_Loaded;
             this.Closing += WindowWorldEditor_Closing;
@@ -58,17 +59,17 @@ namespace GameEditor.Windows
             _renderArea = new RenderWindow(_win32SfmlSurface.Handle);
             _renderArea.SetVerticalSyncEnabled(true);
 
-            _renderAreaSize = new Vector2f(_win32SfmlSurface.Size.Width, _win32SfmlSurface.Size.Height);
-            _viewPosition = new Vector2f(0.0f, 0.0f);
+            _renderAreaSize = new(_win32SfmlSurface.Size.Width, _win32SfmlSurface.Size.Height);
+            _viewPosition = new(0.0f, 0.0f);
             _view = new View(new FloatRect(_viewPosition, _renderAreaSize));
 
             CompositionTarget.Rendering += CompositionTarget_Rendering;
 
-            ScrlBar_SfmlRenderAreaHorizontal.LargeChange = Dungeon.CurrentLevel.TileRenderSize.X;
-            ScrlBar_SfmlRenderAreaHorizontal.SmallChange = Dungeon.CurrentLevel.TileRenderSize.X;
+            this.ScrlBar_SfmlRenderAreaHorizontal.LargeChange = Dungeon.CurrentLevel.TileRenderSize.X;
+            this.ScrlBar_SfmlRenderAreaHorizontal.SmallChange = Dungeon.CurrentLevel.TileRenderSize.X;
 
-            ScrlBar_SfmlRenderAreaVertical.LargeChange = Dungeon.CurrentLevel.TileRenderSize.X;
-            ScrlBar_SfmlRenderAreaVertical.SmallChange = Dungeon.CurrentLevel.TileRenderSize.X;
+            this.ScrlBar_SfmlRenderAreaVertical.LargeChange = Dungeon.CurrentLevel.TileRenderSize.X;
+            this.ScrlBar_SfmlRenderAreaVertical.SmallChange = Dungeon.CurrentLevel.TileRenderSize.X;
         }
 
         #region EVENTS
@@ -155,10 +156,10 @@ namespace GameEditor.Windows
         /// <param name="e"></param>
         private void ScrlBar_SfmlRenderAreaVertical_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Vector2f delta = new Vector2f()
+            Vector2f delta = new()
             {
                 X = 0.0f,
-                Y = (float)ScrlBar_SfmlRenderAreaVertical.Value - _viewPosition.Y
+                Y = (float)this.ScrlBar_SfmlRenderAreaVertical.Value - _viewPosition.Y
             };
 
             _view.Move(delta);
@@ -174,9 +175,9 @@ namespace GameEditor.Windows
         /// <param name="e"></param>
         private void ScrlBar_SfmlRenderAreaHorizontal_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Vector2f delta = new Vector2f()
+            Vector2f delta = new()
             {
-                X = (float)ScrlBar_SfmlRenderAreaHorizontal.Value - _viewPosition.X,
+                X = (float)this.ScrlBar_SfmlRenderAreaHorizontal.Value - _viewPosition.X,
                 Y = 0.0f
             };
 
@@ -232,15 +233,15 @@ namespace GameEditor.Windows
             float vert_min = -1.0f * d_ver / 2.0f;
             float vert_max = Dungeon.CurrentLevel.RenderSize.Y - _renderAreaSize.Y + (d_ver / 2.0f);
 
-            ScrlBar_SfmlRenderAreaHorizontal.Minimum = hor_min;
-            ScrlBar_SfmlRenderAreaHorizontal.Maximum = hor_max;
+            this.ScrlBar_SfmlRenderAreaHorizontal.Minimum = hor_min;
+            this.ScrlBar_SfmlRenderAreaHorizontal.Maximum = hor_max;
 
-            ScrlBar_SfmlRenderAreaVertical.Minimum = vert_min;
-            ScrlBar_SfmlRenderAreaVertical.Maximum = vert_max;
+            this.ScrlBar_SfmlRenderAreaVertical.Minimum = vert_min;
+            this.ScrlBar_SfmlRenderAreaVertical.Maximum = vert_max;
 
             double p = 0.25;
-            ScrlBar_SfmlRenderAreaHorizontal.ViewportSize = ScrlBar_SfmlRenderAreaHorizontal.Maximum * p / (1.0 - p);
-            ScrlBar_SfmlRenderAreaVertical.ViewportSize = ScrlBar_SfmlRenderAreaVertical.Maximum * p / (1.0 - p);
+            this.ScrlBar_SfmlRenderAreaHorizontal.ViewportSize = ScrlBar_SfmlRenderAreaHorizontal.Maximum * p / (1.0 - p);
+            this.ScrlBar_SfmlRenderAreaVertical.ViewportSize = ScrlBar_SfmlRenderAreaVertical.Maximum * p / (1.0 - p);
         }
 
         

@@ -1,0 +1,83 @@
+﻿<Window x:Class="GameEditor.Windows.WindowLauncher"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GameEditor.Windows"
+        mc:Ignorable="d"
+        Title="DungeonExplorer - GameEditor - Launcher" 
+        Height="400" 
+        Width="800"
+        ThemeMode="Dark">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        
+        <Label Name="Lbl_Title"
+               Content="Dungeon Explorer - World Editor"
+               Grid.Row="0"
+               HorizontalAlignment="Left" 
+               VerticalAlignment="Top" FontSize="36" FontWeight="Bold" Margin="0,20,0,20"/>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Vertical"
+                        Grid.Row="0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left">
+
+                <Label Content="Load from file :"
+                       HorizontalAlignment="Left"
+                       Margin="5,0,0,0"/>
+
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+
+                    <TextBox Name="TxtBox_FilePath"
+                             IsEnabled="False"
+                             Width="400"
+                             Margin="5,0,0,0"/>
+
+                    <Button Name="Btn_Browse"
+                            Content="Browse" 
+                            Click="Btn_Browse_Click"/>
+
+                </StackPanel>
+
+                <Button Name="Btn_LoadDungeon"
+                        Content="Load"
+                        IsEnabled="False"
+                        HorizontalAlignment="Left"
+                        Padding="50,5,50,5"
+                        Margin="5,10,10,30" 
+                        Click="Btn_LoadDungeon_Click"/>
+
+            </StackPanel>
+
+            <Border Grid.Row="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    BorderBrush="#C2C2C2"
+                    BorderThickness="1"/>
+
+            <Button Name="Btn_CreateNewDungeon"
+                    Content="Create new dungeon"
+                    Grid.Row="1"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Padding="50,5,50,5"
+                    Margin="5,30,10,10" 
+                    Click="Btn_CreateNewDungeon_Click"/>
+
+        </Grid>
+        
+        
+    </Grid>
+</Window>

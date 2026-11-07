@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-
+using GameLib.Files;
+using GameLib.Files.SaveFiles;
 using SFML.System;
 
 namespace GameLib.World
@@ -27,16 +29,39 @@ namespace GameLib.World
         {
             bool outSuccess = true;
 
-            DungeonLevel firstLevel = new DungeonLevel(gridSize, tileRenderSize);
+            DungeonLevel firstLevel = new DungeonLevel(0, gridSize, tileRenderSize, "level_0");
 
             _levels.Add(firstLevel);
 
             return outSuccess;
         }
 
-        public static bool LoadFromFile(string path)
+        public static void LoadFromFile(string path)
         {
-            return false;
+            DungeonSave dungeonSave = FilesManager.LoadDungeonSave(path);
+
+            foreach(string levelPath in dungeonSave.Levels)
+            {
+                LevelSave levelSave = FilesManager.LoadLevelSave(levelPath);
+
+                DungeonLevel level = new(levelSave);
+
+                _levels.Add(level);
+            }
+
+            DungeonLevel firstLevel = _levels.OrderBy(x => x.Index).First();
+
+            for(int i = 0; i < _levels.Count; ++i)
+            {
+                if (_levels[i].ID == firstLevel.ID)
+                {
+                    _currentLevelIndex = i;
+                    break;
+                }
+            }
+
+
+            return;
         }
     }
 }
