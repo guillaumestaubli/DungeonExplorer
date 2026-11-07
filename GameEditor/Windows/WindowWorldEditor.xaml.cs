@@ -87,18 +87,7 @@ namespace GameEditor.Windows
 
                 _renderArea.Clear(SFML.Graphics.Color.Black);
 
-                DungeonLevel level = Dungeon.Levels.First();
-
-                for (int x = 0; x < level.GridSize.X; ++x)
-                {
-                    for (int y = 0; y < level.GridSize.Y; ++y)
-                    {
-                        foreach (IDrawable drawable in level.Tiles[x, y].Drawables)
-                        {
-                            _renderArea.Draw(drawable);
-                        }
-                    }
-                }
+                DrawGround(Dungeon.CurrentLevel);
 
                 _renderArea.Display();
             }
@@ -244,6 +233,40 @@ namespace GameEditor.Windows
             this.ScrlBar_SfmlRenderAreaVertical.ViewportSize = ScrlBar_SfmlRenderAreaVertical.Maximum * p / (1.0 - p);
         }
 
-        
+        /// <summary>
+        /// Draw only the visible part of the map to increase performances on large maps
+        /// </summary>
+        /// <param name="level">level to draw</param>
+        private void DrawGround(DungeonLevel level)
+        {
+            int x_min = (int)(_viewPosition.X / level.TileRenderSize.X);
+            int x_max = (int)((_viewPosition.X + _view.Size.X) / level.TileRenderSize.X) + 1;
+
+            if (x_min < 0)
+                x_min = 0;
+
+            if (x_max >= level.GridSize.X)
+                x_max = level.GridSize.X;
+
+            int y_min = (int)(_viewPosition.Y / level.TileRenderSize.Y);
+            int y_max = (int)((_viewPosition.Y + _view.Size.Y) / level.TileRenderSize.Y) + 1;
+
+            if (y_min < 0)
+                y_min = 0;
+
+            if (y_max >= level.GridSize.Y)
+                y_max = level.GridSize.Y;
+
+            for (int x = x_min; x < x_max; ++x)
+            {
+                for (int y = y_min; y < y_max; ++y)
+                {
+                    foreach (IDrawable drawable in level.Tiles[x, y].Drawables)
+                    {
+                        _renderArea.Draw(drawable);
+                    }
+                }
+            }
+        }
     }
 }
