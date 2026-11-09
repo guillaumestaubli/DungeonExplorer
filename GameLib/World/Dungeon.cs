@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using GameLib.Files;
 using GameLib.Files.SaveFiles;
+using GameLib.World.Tiles;
 using SFML.System;
 
 namespace GameLib.World
@@ -62,6 +63,17 @@ namespace GameLib.World
 
 
             return;
+        }
+
+
+        public static Tile GetTile(Vector2f screenCoords)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Tile GetTile(Vector2i gridIndex)
+        {
+            throw new NotImplementedException();
         }
     }
 }

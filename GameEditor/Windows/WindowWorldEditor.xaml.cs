@@ -20,6 +20,7 @@ using SFML.Graphics;
 using GameLib;
 using GameLib.World;
 using GameLib.Core;
+using GameLib.World.Tiles;
 
 namespace GameEditor.Windows
 {
@@ -28,17 +29,15 @@ namespace GameEditor.Windows
     /// </summary>
     public partial class WindowWorldEditor : Window
     {
-        private const float ZOOM_FACTOR = 0.1f;
-
-        private float _currentZoom = 1.0f;
-        private Vector2f _viewPosition = new(0.0f, 0.0f);
+        private Vector2f _viewPosition { get { return _view.Center - _view.Size / 2.0f; } }
         private Vector2f _renderAreaSize = new(0.0f, 0.0f);
         private View _view;
+        private float _viewZoomFactor = 1.0f;
         private readonly RenderWindow _renderArea;
         private readonly System.Windows.Forms.Control _win32SfmlSurface;
 
         /// <summary>
-        /// 
+        /// Initialize a new instance of the world editor with a world to open
         /// </summary>
         /// <param name="path">Path of the .dungeon file to open</param>
         public WindowWorldEditor(string path)
@@ -52,27 +51,22 @@ namespace GameEditor.Windows
 
             _win32SfmlSurface = new System.Windows.Forms.Control();
             _win32SfmlSurface.Resize += Win32SfmlSurface_Resize;
-            _win32SfmlSurface.MouseWheel += RenderArea_MouseWheel;
+            _win32SfmlSurface.MouseEnter += Win32SfmlSurface_MouseEnter;
+            _win32SfmlSurface.MouseLeave += Win32SfmlSurface_MouseLeave;
 
             this.SfmlHost.Child = _win32SfmlSurface;
 
             _renderArea = new RenderWindow(_win32SfmlSurface.Handle);
+            _renderArea.SetFramerateLimit(0);
             _renderArea.SetVerticalSyncEnabled(true);
+            _renderArea.SetKeyRepeatEnabled(true);
+            _renderArea.MouseWheelScrolled += RenderArea_MouseWheelScrolled;
 
             _renderAreaSize = new(_win32SfmlSurface.Size.Width, _win32SfmlSurface.Size.Height);
-            _viewPosition = new(0.0f, 0.0f);
-            _view = new View(new FloatRect(_viewPosition, _renderAreaSize));
+            _view = new View(new FloatRect(new Vector2f(0.0f, 0.0f), _renderAreaSize));
 
             CompositionTarget.Rendering += CompositionTarget_Rendering;
-
-            this.ScrlBar_SfmlRenderAreaHorizontal.LargeChange = Dungeon.CurrentLevel.TileRenderSize.X;
-            this.ScrlBar_SfmlRenderAreaHorizontal.SmallChange = Dungeon.CurrentLevel.TileRenderSize.X;
-
-            this.ScrlBar_SfmlRenderAreaVertical.LargeChange = Dungeon.CurrentLevel.TileRenderSize.X;
-            this.ScrlBar_SfmlRenderAreaVertical.SmallChange = Dungeon.CurrentLevel.TileRenderSize.X;
         }
-
-        #region EVENTS
 
         /// <summary>
         /// Called each time the window is drawn (equivalent to a frame)
@@ -85,9 +79,13 @@ namespace GameEditor.Windows
             {
                 _renderArea.DispatchEvents();
 
+                RenderArea_ProcessMouseAndKeyboardInputs();
+
                 _renderArea.Clear(SFML.Graphics.Color.Black);
 
                 DrawGround(Dungeon.CurrentLevel);
+
+                DrawDebug();
 
                 _renderArea.Display();
             }
@@ -95,27 +93,132 @@ namespace GameEditor.Windows
             return;
         }
 
-        /// <summary>
-        /// Occurs when the window is loaded
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void WindowWorldEditor_Loaded(object sender, RoutedEventArgs e)
+        #region DEBUG
+
+        private void DrawDebug()
         {
-            UpdateRenderAreaScrollBars();
+            CircleShape cs_viewCenter = new(5.0f, 32)
+            {
+                Origin = new Vector2f(5.0f, 5.0f),
+                Position = _view.Center,
+                FillColor = SFML.Graphics.Color.Magenta
+            };
+
+            _renderArea.Draw(cs_viewCenter);
+
+            CircleShape cs_topLeftCorner = new(5.0f, 32)
+            {
+                Origin = new Vector2f(5.0f, 5.0f),
+                Position = _viewPosition,
+                FillColor = SFML.Graphics.Color.Blue
+            };
+
+            _renderArea.Draw(cs_topLeftCorner);
+
+        }
+
+        #endregion
+
+        #region EVENTS_RENDER_AREA
+
+        private void Win32SfmlSurface_MouseEnter(object? sender, EventArgs e)
+        {
+            _isCursorInRenderArea = true;
+        }
+
+        private void Win32SfmlSurface_MouseLeave(object? sender, EventArgs e)
+        {
+            _isCursorInRenderArea = false;
+        }
+
+        private bool _isCursorInRenderArea = false;
+        private bool _dragMove_Running = false;
+        private Vector2i _dragMove_LastMousePosition = new Vector2i(-1, -1);
+        private void RenderArea_ProcessMouseAndKeyboardInputs()
+        {
+            if (!_isCursorInRenderArea)
+                return;
+
+            bool isLCtrlPressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LControl);
+            bool isLeftMouseDown = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Left);
+
+            if (isLCtrlPressed && isLeftMouseDown)
+            {
+                _win32SfmlSurface.Cursor = System.Windows.Forms.Cursors.Hand;
+
+                Vector2i currentMousePosition = SFML.Window.Mouse.GetPosition(_renderArea);
+
+                if (!_dragMove_Running)
+                {
+                    _dragMove_Running = true;
+                    _dragMove_LastMousePosition = currentMousePosition;
+                }
+                else
+                {
+                    Vector2i delta = currentMousePosition - _dragMove_LastMousePosition;
+
+                    _view.Move((Vector2f)delta * -1.0f);
+                    _renderArea.SetView(_view);
+
+                    _dragMove_LastMousePosition = currentMousePosition;
+                }
+            }
+            else
+            {
+                _win32SfmlSurface.Cursor = System.Windows.Forms.Cursors.Default;
+
+                _dragMove_Running = false;
+            }
+        }
+
+        private void RenderArea_MouseButtonPressed(object? sender, SFML.Window.MouseButtonEventArgs e)
+        {
+            return;
+        }
+
+        private void RenderArea_MouseButtonReleased(object? sender, SFML.Window.MouseButtonEventArgs e)
+        {
+            return;
+        }
+
+        private void RenderArea_MouseWheelScrolled(object? sender, SFML.Window.MouseWheelScrollEventArgs e)
+        {
+            if (SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LControl))
+            {
+                if (e.Delta < 0) // zoom out
+                {
+                    _view.Zoom(GameEditorConfig.ZOOM_OUT_FACTOR);
+                    _viewZoomFactor *= GameEditorConfig.ZOOM_OUT_FACTOR;
+                }
+                else if (e.Delta > 0) // zoom in
+                {
+                    _view.Zoom(GameEditorConfig.ZOOM_IN_FACTOR);
+                    _viewZoomFactor *= GameEditorConfig.ZOOM_IN_FACTOR;
+                }
+
+                _renderArea.SetView(_view);
+            }
 
             return;
         }
 
-        /// <summary>
-        /// Occurs before the window is closed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        #endregion
+
+        #region EVENTS_WPF_WINDOW
+
+        private void WindowWorldEditor_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            return;
+        }
+
         private void WindowWorldEditor_Closing(object? sender, CancelEventArgs e)
         {
             return;
         }
+
+        #endregion
+
+        #region EVENTS_WINDOW_CONTROLS
 
         /// <summary>
         /// Occurs when the render area is resized in the window
@@ -129,109 +232,13 @@ namespace GameEditor.Windows
             _renderAreaSize = new Vector2f(_win32SfmlSurface.Width, _win32SfmlSurface.Height);
 
             _view = new View(new FloatRect(_viewPosition, _renderAreaSize));
-            _view.Zoom(_currentZoom);
-
+            _view.Zoom(_viewZoomFactor);
             _renderArea.SetView(_view);
-
-            UpdateRenderAreaScrollBars();
 
             return;
         }
 
-        /// <summary>
-        /// Occurs when the user scrolls in the render area
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ScrlBar_SfmlRenderAreaVertical_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            Vector2f delta = new()
-            {
-                X = 0.0f,
-                Y = (float)this.ScrlBar_SfmlRenderAreaVertical.Value - _viewPosition.Y
-            };
-
-            _view.Move(delta);
-            _viewPosition += delta;
-
-            _renderArea.SetView(_view);
-        }
-
-        /// <summary>
-        /// Occurs when the user scrolls in the render area
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ScrlBar_SfmlRenderAreaHorizontal_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            Vector2f delta = new()
-            {
-                X = (float)this.ScrlBar_SfmlRenderAreaHorizontal.Value - _viewPosition.X,
-                Y = 0.0f
-            };
-
-            _view.Move(delta);
-            _viewPosition += delta;
-
-            _renderArea.SetView(_view);
-        }
-
-        /// <summary>
-        /// Handles the mouse scroll in the render area :
-        /// > zoom in/out
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RenderArea_MouseWheel(object? sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            // For zoom in/out : MouseWheel + LeftCtrl
-            if (e.Button == System.Windows.Forms.MouseButtons.None && e.Delta != 0 && Keyboard.IsKeyDown(Key.LeftCtrl))
-            {
-                if (e.Delta < 0) // zoom -
-                {
-                    _currentZoom += ZOOM_FACTOR;
-                }
-                else if (e.Delta > 0) // zoom +
-                {
-                    // prevent the zoom inversion when the float value goes beyond the maximum of decimals of a float
-                    if (_currentZoom - ZOOM_FACTOR >= 0.1f)
-                        _currentZoom -= ZOOM_FACTOR;
-                }
-
-                _view = new View(new FloatRect(_viewPosition, _renderAreaSize));
-                _view.Zoom(_currentZoom);
-                _renderArea.SetView(_view);
-
-                UpdateRenderAreaScrollBars();
-            }
-        }
-
         #endregion
-
-        /// <summary>
-        /// Update the min/max values of the render area scrollbars so that they are still correct when the area is resized or the user zoom (in/out) in the render area
-        /// </summary>
-        private void UpdateRenderAreaScrollBars()
-        {
-            float d_hor = _renderAreaSize.X - _view.Size.X;
-            float d_ver = _renderAreaSize.Y - _view.Size.Y;
-
-            float hor_min = -1.0f * d_hor / 2.0f;
-            float hor_max = Dungeon.CurrentLevel.RenderSize.X - _renderAreaSize.X + (d_hor / 2.0f);
-
-            float vert_min = -1.0f * d_ver / 2.0f;
-            float vert_max = Dungeon.CurrentLevel.RenderSize.Y - _renderAreaSize.Y + (d_ver / 2.0f);
-
-            this.ScrlBar_SfmlRenderAreaHorizontal.Minimum = hor_min;
-            this.ScrlBar_SfmlRenderAreaHorizontal.Maximum = hor_max;
-
-            this.ScrlBar_SfmlRenderAreaVertical.Minimum = vert_min;
-            this.ScrlBar_SfmlRenderAreaVertical.Maximum = vert_max;
-
-            double p = 0.25;
-            this.ScrlBar_SfmlRenderAreaHorizontal.ViewportSize = ScrlBar_SfmlRenderAreaHorizontal.Maximum * p / (1.0 - p);
-            this.ScrlBar_SfmlRenderAreaVertical.ViewportSize = ScrlBar_SfmlRenderAreaVertical.Maximum * p / (1.0 - p);
-        }
 
         /// <summary>
         /// Draw only the visible part of the map to increase performances on large maps
@@ -239,31 +246,21 @@ namespace GameEditor.Windows
         /// <param name="level">level to draw</param>
         private void DrawGround(DungeonLevel level)
         {
-            int x_min = (int)(_viewPosition.X / level.TileRenderSize.X);
-            int x_max = (int)((_viewPosition.X + _view.Size.X) / level.TileRenderSize.X) + 1;
+            FloatRect viewBounds = new FloatRect(_viewPosition, _view.Size);
 
-            if (x_min < 0)
-                x_min = 0;
-
-            if (x_max >= level.GridSize.X)
-                x_max = level.GridSize.X;
-
-            int y_min = (int)(_viewPosition.Y / level.TileRenderSize.Y);
-            int y_max = (int)((_viewPosition.Y + _view.Size.Y) / level.TileRenderSize.Y) + 1;
-
-            if (y_min < 0)
-                y_min = 0;
-
-            if (y_max >= level.GridSize.Y)
-                y_max = level.GridSize.Y;
-
-            for (int x = x_min; x < x_max; ++x)
+            for (int x = 0; x < level.GridSize.X; ++x)
             {
-                for (int y = y_min; y < y_max; ++y)
+                for (int y = 0; y < level.GridSize.Y; ++y)
                 {
-                    foreach (IDrawable drawable in level.Tiles[x, y].Drawables)
+                    Tile tile = level.Tiles[x, y];
+
+                    FloatRect? intersection = tile.GlobalBounds.FindIntersection(viewBounds);
+
+                    if (intersection != null)
                     {
-                        _renderArea.Draw(drawable);
+                        _renderArea.Draw(tile.D_Background);
+                        _renderArea.Draw(tile.D_Border);
+                        _renderArea.Draw(tile.D_GridIndex);
                     }
                 }
             }

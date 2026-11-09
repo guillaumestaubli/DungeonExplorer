@@ -39,46 +39,18 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid Name="Grid_RenderArea">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="20px"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="20px"/>
-                </Grid.RowDefinitions>
+            <!-- SFML Render Area -->
+            <Border BorderBrush="#C2C2C2" 
+                    BorderThickness="1"
+                    Grid.Column="0"
+                    Grid.Row="0">
 
+                <WindowsFormsHost x:Name="SfmlHost"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Stretch"/>
 
-                <!-- SFML Render Area -->
-                <Border BorderBrush="#C2C2C2" 
-                        BorderThickness="1"
-                        Grid.Column="0"
-                        Grid.Row="0">
-
-                    <WindowsFormsHost x:Name="SfmlHost"
-                                      VerticalAlignment="Stretch"
-                                      HorizontalAlignment="Stretch"/>
-
-                </Border>
-
-                <ScrollBar Name="ScrlBar_SfmlRenderAreaVertical"
-                           Orientation="Vertical"
-                           Width="20px"
-                           Grid.Column="1"
-                           Grid.Row="0" 
-                           ValueChanged="ScrlBar_SfmlRenderAreaVertical_ValueChanged"/>
-
-                <ScrollBar Name="ScrlBar_SfmlRenderAreaHorizontal"
-                           Orientation="Horizontal"
-                           Grid.Column="0"
-                           Grid.Row="1"
-                           Height="20px"
-                           ValueChanged="ScrlBar_SfmlRenderAreaHorizontal_ValueChanged"/>
-
-            </Grid>
-
-
+            </Border>
+                
             <GridSplitter HorizontalAlignment="Left"
                           Grid.Column="1"
                           VerticalAlignment="Stretch"

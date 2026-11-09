@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,6 +26,36 @@ namespace GameEditor.Windows
         public WindowLauncher()
         {
             InitializeComponent();
+
+            this.Loaded += WindowLauncher_Loaded;
+        }
+
+        private void WindowLauncher_Loaded(object sender, RoutedEventArgs e)
+        {
+            _filename = null;
+
+            DirectoryInfo directoryInfo = new DirectoryInfo(GameEditorConfig.Path_Base_Projects_Dir);
+
+            foreach(DirectoryInfo subDir in directoryInfo.GetDirectories())
+            {
+                foreach(FileInfo file in subDir.GetFiles())
+                {
+                    if(file.Name.Split('.').Last() == "dungeon")
+                    {
+                        _filename = file.FullName;
+                        break;
+                    }
+                }
+
+                if (_filename != null)
+                    break;
+            }
+
+            if(_filename != null)
+            {
+                this.TxtBox_FilePath.Text = _filename;
+                this.Btn_LoadDungeon.IsEnabled = true;
+            }
         }
 
         private void Btn_Browse_Click(object sender, RoutedEventArgs e)

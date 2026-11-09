@@ -20,10 +20,9 @@ namespace GameLib.World.Tiles
         private bool _showIndex;
         private Color _borderColor;
 
-        private VertexArray _vaTile;
+        private VertexArray _vaBackground;
         private VertexArray _vaBorder;
         private Text _txtIndex;
-        private IDrawable[] _drawables;
 
         #endregion
 
@@ -39,8 +38,6 @@ namespace GameLib.World.Tiles
             set
             {
                 _showBorders = value;
-
-                UpdateOutDrawables();
             }
         }
         public bool ShowIndex
@@ -49,8 +46,6 @@ namespace GameLib.World.Tiles
             set
             {
                 _showIndex = value;
-
-                UpdateOutDrawables();
             }
         }
         public Color BorderColor
@@ -59,11 +54,13 @@ namespace GameLib.World.Tiles
             set
             {
                 _borderColor = value;
-
-                UpdateVertexArrayBorder();
             }
         }
-        public IDrawable[] Drawables { get { return _drawables; } }
+
+
+        public VertexArray D_Background { get { return _vaBackground; } }
+        public VertexArray D_Border { get { return _vaBorder; } }
+        public Text D_GridIndex { get { return _txtIndex; } }
 
         #endregion
 
@@ -78,7 +75,7 @@ namespace GameLib.World.Tiles
             _showIndex = false;
             _borderColor = Color.Black;
 
-            _vaTile = new VertexArray(PrimitiveType.TriangleStrip, 4);
+            _vaBackground = new VertexArray(PrimitiveType.TriangleStrip, 4);
             _vaBorder = new VertexArray(PrimitiveType.LineStrip, 5);
             _txtIndex = new Text(GameLibConfig.Fonts.Arial, $"[{_gridIndex.X};{_gridIndex.Y}]", 12u)
             {
@@ -88,9 +85,6 @@ namespace GameLib.World.Tiles
 
             UpdateVertexArrayBorder();
             UpdateVertexArrayTile();
-
-            _drawables = new IDrawable[1];
-            _drawables[0] = _vaTile;
         }
 
         public Tile(TileSave save)
@@ -104,7 +98,7 @@ namespace GameLib.World.Tiles
             _showIndex = false;
             _borderColor = Color.Black;
 
-            _vaTile = new VertexArray(PrimitiveType.TriangleStrip, 4);
+            _vaBackground = new VertexArray(PrimitiveType.TriangleStrip, 4);
             _vaBorder = new VertexArray(PrimitiveType.LineStrip, 5);
             _txtIndex = new Text(GameLibConfig.Fonts.Arial, $"[{_gridIndex.X};{_gridIndex.Y}]", 12u)
             {
@@ -114,48 +108,29 @@ namespace GameLib.World.Tiles
 
             UpdateVertexArrayBorder();
             UpdateVertexArrayTile();
-
-            _drawables = new IDrawable[1];
-            _drawables[0] = _vaTile;
-        }
-
-        private void UpdateOutDrawables()
-        {
-            List<IDrawable> drawables = new List<IDrawable>()
-            {
-                _vaTile
-            };
-
-            if(_showBorders)
-                drawables.Add(_vaBorder);
-
-            if (_showIndex)
-                drawables.Add(_txtIndex);
-
-            _drawables = drawables.ToArray();
         }
 
         private void UpdateVertexArrayTile()
         {
-            _vaTile[0] = new Vertex
+            _vaBackground[0] = new Vertex
             {
                 Position = _renderPosition,
                 Color = Color.Green
             };
 
-            _vaTile[1] = new Vertex
+            _vaBackground[1] = new Vertex
             {
                 Position = _renderPosition + new Vector2f(0.0f, _renderSize.Y),
                 Color = Color.Green
             };
 
-            _vaTile[2] = new Vertex
+            _vaBackground[2] = new Vertex
             {
                 Position = _renderPosition + new Vector2f(_renderSize.X, 0.0f),
                 Color = Color.Green
             };
 
-            _vaTile[3] = new Vertex
+            _vaBackground[3] = new Vertex
             {
                 Position = _renderPosition + _renderSize,
                 Color = Color.Green

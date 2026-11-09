@@ -18,7 +18,8 @@ namespace GameEditor
 
         public static readonly string Path_Base_Projects_Dir = "";
 
-        
+        public const float ZOOM_IN_FACTOR = 0.875f;
+        public const float ZOOM_OUT_FACTOR = 1.125f;
 
         public static class DungeonCreation
         {
