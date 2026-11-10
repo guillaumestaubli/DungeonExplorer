@@ -8,11 +8,12 @@
         Title="DungeonExplorer - GameEditor - WorldEditor" 
         Height="450" 
         Width="800"
+        Background="#202020"
         ThemeMode="System">
 
     <Grid Name="Grid_Main">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -20,15 +21,126 @@
         </Grid.ColumnDefinitions>
 
         <!-- Navigation -->
-        <StackPanel Orientation="Horizontal"
-                    Grid.Column="0"
-                    Grid.Row="0">
-            
-            
-            
-        </StackPanel>
-        
-        
+        <TabControl Grid.Row="0">
+            <TabItem Header="File">
+                <Grid Background="#202020">
+                    <Border Margin="5"
+                            BorderBrush="Transparent"
+                            Background="Transparent">
+                        <StackPanel Orientation="Horizontal">
+
+                            <Button Name="Btn_Save"
+                                    Content="Save"
+                                    Padding="20,5,20,5"/>
+
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Display">
+                <Grid Background="#202020">
+                    <Border Margin="5"
+                            BorderBrush="Transparent"
+                            Background="Transparent">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Name="StckPanel_DisplayTile"
+                                        Orientation="Vertical"
+                                        Grid.Column="0"/>
+
+                            <StackPanel Name="StckPanel_DisplayProps"
+                                        Orientation="Vertical"
+                                        Grid.Column="1"/>
+
+                            <StackPanel Name="StckPanel_DisplayEntities"
+                                        Orientation="Vertical"
+                                        Grid.Column="2"/>
+
+                            <StackPanel Name="StckPanel_DisplayPlayer"
+                                        Orientation="Vertical"
+                                        Grid.Column="3"/>
+
+                        </Grid>
+                        
+                    </Border>
+                    
+                </Grid>
+            </TabItem>
+            <TabItem Header="Textures">
+                <Grid Background="#202020">
+                    <Border Margin="5"
+                            BorderBrush="Transparent"
+                            Background="Transparent">
+                        <StackPanel Orientation="Horizontal">
+
+                            
+                            
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="World">
+                <Grid Background="#202020">
+                    <Border Margin="5"
+                            BorderBrush="Transparent"
+                            Background="Transparent">
+                        <StackPanel Orientation="Horizontal">
+
+
+
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Props">
+                <Grid Background="#202020">
+                    <Border Margin="5"
+                            BorderBrush="Transparent"
+                            Background="Transparent">
+                        <StackPanel Orientation="Horizontal">
+
+
+
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Entities">
+                <Grid Background="#202020">
+                    <Border Margin="5"
+                            BorderBrush="Transparent"
+                            Background="Transparent">
+                        <StackPanel Orientation="Horizontal">
+
+
+
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Player">
+                <Grid Background="#202020">
+                    <Border Margin="5"
+                            BorderBrush="Transparent"
+                            Background="Transparent">
+                        <StackPanel Orientation="Horizontal">
+
+
+
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+
         <Grid Name="Grid_Content" 
               Grid.Row="1">
             <Grid.RowDefinitions>
@@ -40,7 +152,8 @@
             </Grid.ColumnDefinitions>
 
             <!-- SFML Render Area -->
-            <Border BorderBrush="#C2C2C2" 
+            <Border BorderBrush="#C2C2C2"
+                    Background="#282828"
                     BorderThickness="1"
                     Grid.Column="0"
                     Grid.Row="0">
@@ -59,34 +172,18 @@
                           ShowsPreview="True"/>
 
             <!-- Selected nav item elements -->
-            <Border BorderBrush="#C2C2C2" 
+            <Border BorderBrush="#C2C2C2"
+                    Background="#282828"
                     BorderThickness="1"
                     Grid.Column="1"
                     Margin="5,0,0,0">
 
-                <Canvas Name="Canvas_SettingsContainer"
-                        Margin="0,0,0,0"
-                        VerticalAlignment="Stretch"
-                        HorizontalAlignment="Stretch"
-                        Background="#282828">
-
-                    
-                    
-                </Canvas>
-
             </Border>
 
         </Grid>
+        
 
-        <Canvas Name="Canvas_SettingsTabsContainer"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Margin="0"
-                Background="#202020">
-            
-            
-            
-        </Canvas>
+
 
     </Grid>
 

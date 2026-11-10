@@ -19,7 +19,10 @@
                Content="Dungeon Explorer - World Editor"
                Grid.Row="0"
                HorizontalAlignment="Left" 
-               VerticalAlignment="Top" FontSize="36" FontWeight="Bold" Margin="0,20,0,20"/>
+               VerticalAlignment="Top" 
+               FontSize="36" 
+               FontWeight="Bold" 
+               Margin="0,20,0,20"/>
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
