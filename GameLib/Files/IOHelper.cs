@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using GameLib.Logging;
+using System.Linq;
 
 namespace GameLib.Files
 {
@@ -25,7 +26,7 @@ namespace GameLib.Files
 
                 return IOResult.OK;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Error($"{nameof(IOHelper)}.{nameof(CreateFile)}", $"An error occured during the creation of the file {filename}", e);
 
@@ -49,7 +50,7 @@ namespace GameLib.Files
 
                 return IOResult.OK;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Error($"{nameof(IOHelper)}.{nameof(CreateDirectory)}", $"An error occured during the creation of the directory {directory}", e);
 
@@ -80,7 +81,7 @@ namespace GameLib.Files
 
                 return IOResult.OK;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Error($"{nameof(IOHelper)}.{nameof(WriteToFile)}", $"An error occured during the writing process in the file {filename}", e);
 
@@ -88,6 +89,12 @@ namespace GameLib.Files
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public static IOResult ReadToEnd(string path, out string result)
         {
             result = String.Empty;
@@ -101,11 +108,43 @@ namespace GameLib.Files
 
                 return IOResult.OK;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Error($"{nameof(IOHelper)}.{nameof(ReadToEnd)}", $"An error occured during the reading of the file {path}", e);
 
                 result = String.Empty;
+                return IOResult.ERROR;
+            }
+        }
+
+        /// <summary>
+        /// Copy a file to a directory
+        /// </summary>
+        /// <param name="sourceFileName">URI of the source file</param>
+        /// <param name="destDirName">URI of the destination directory</param>
+        /// <param name="overwritingAllowed">Authorize the overwriting of the file in the destination directory</param>
+        /// <returns>IOResult.OK if the file a successfully been copied</returns>
+        public static IOResult CopyFile(string sourceFileName, string destFileName, bool overwritingAllowed = false)
+        {
+            try
+            {
+                FileInfo sourceInfo = new FileInfo(sourceFileName);
+                FileInfo destInfo = new FileInfo(destFileName);
+
+                if (!sourceInfo.Exists)
+                    return IOResult.DONT_EXISTS;
+
+                if (destInfo.Exists && !overwritingAllowed)
+                    return IOResult.ALREADY_EXISTS;
+
+                File.Copy(sourceFileName, destFileName, overwritingAllowed);
+
+                return IOResult.OK;
+            }
+            catch(Exception e)
+            {
+                Logger.Error($"{nameof(IOHelper)}.{nameof(CopyFile)}", $"An error occured during the copy process of a file", e);
+
                 return IOResult.ERROR;
             }
         }
@@ -117,5 +156,6 @@ namespace GameLib.Files
         ERROR,
         ALREADY_EXISTS,
         DONT_EXISTS,
+        NOT_AUTHORIZED
     }
 }

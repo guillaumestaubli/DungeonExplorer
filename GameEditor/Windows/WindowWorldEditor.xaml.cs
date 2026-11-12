@@ -300,6 +300,23 @@ namespace GameEditor.Windows
             }
         }
 
+        /// <summary>
+        /// Show the WindowAddRessource as a dialog
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_AddTextures_Click(object sender, RoutedEventArgs e)
+        {
+            WindowAddRessource windowAddRessource = new WindowAddRessource();
+
+            _ = windowAddRessource.ShowDialog();
+        }
+
+        private void Btn_Save_Click(object sender, RoutedEventArgs e)
+        {
+            GameLib.Files.FilesManager.SaveProject();
+        }
+
         #endregion
 
         /// <summary>
@@ -379,7 +396,7 @@ namespace GameEditor.Windows
             }
         }
 
-
+        
     }
 
     public class DisplaySettings

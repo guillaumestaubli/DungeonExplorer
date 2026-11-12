@@ -11,6 +11,7 @@ namespace GameLib.Files.SaveFiles
         public int LevelCount { get; set; } = 1;
         public string[] Levels { get; set; } = [];
         public string PathRessources { get; set; } = "Ressources";
+        public string[] RessourcesDoors { get; set; } = [];
         public string[] RessourcesEntities { get; set; } = [];
         public string[] RessourcesGrounds { get; set; } = [];
         public string[] RessourcesPlayer { get; set; } = [];

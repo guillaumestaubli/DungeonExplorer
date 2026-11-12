@@ -9,7 +9,7 @@
         Height="450" 
         Width="800"
         Background="#202020"
-        ThemeMode="System">
+        ThemeMode="Dark">
 
     <Grid Name="Grid_Main">
         <Grid.RowDefinitions>
@@ -31,7 +31,13 @@
 
                             <Button Name="Btn_Save"
                                     Content="Save"
-                                    Padding="20,5,20,5"/>
+                                    Padding="20,5,20,5"
+                                    Margin="0,0,5,0" Click="Btn_Save_Click"/>
+
+                            <Button Name="Btn_AddTexture"
+                                    Content="Add Textures"
+                                    Padding="20,5,20,5"
+                                    Margin="0,0,5,0" Click="Btn_AddTextures_Click"/>
 
                         </StackPanel>
                     </Border>
@@ -68,9 +74,9 @@
                                         Grid.Column="3"/>
 
                         </Grid>
-                        
+
                     </Border>
-                    
+
                 </Grid>
             </TabItem>
             <TabItem Header="Textures">
@@ -80,8 +86,8 @@
                             Background="Transparent">
                         <StackPanel Orientation="Horizontal">
 
-                            
-                            
+
+
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -163,7 +169,7 @@
                                     HorizontalAlignment="Stretch"/>
 
             </Border>
-                
+
             <GridSplitter HorizontalAlignment="Left"
                           Grid.Column="1"
                           VerticalAlignment="Stretch"
@@ -181,7 +187,7 @@
             </Border>
 
         </Grid>
-        
+
 
 
 

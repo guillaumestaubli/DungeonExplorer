@@ -1,11 +1,13 @@
 ﻿using GameLib.Files.SaveFiles;
 using GameLib.Logging;
 using GameLib.World;
+using GameLib.World.Tiles;
 using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace GameLib.Files
@@ -14,19 +16,21 @@ namespace GameLib.Files
     {
         public static class Config
         {
-            public const string DIR_LEVELS_NAME = "Levels";
-            public const string DIR_RESSOURCES_NAME = "Ressources";
-            public const string DIR_RESSOURCES_ENTITIES_NAME = "Entities";
-            public const string DIR_RESSOURCES_GROUNDS_NAME = "Grounds";
-            public const string DIR_RESSOURCES_PLAYER_NAME = "Player";
-            public const string DIR_RESSOURCES_PROPS_NAME = "Props";
-            public const string DIR_RESSOURCES_WALLS_NAME = "Walls";
+            private const string DIR_LEVELS_NAME = "Levels";
+            private const string DIR_RESSOURCES_NAME = "Ressources";
+            private const string DIR_RESSOURCES_DOORS_NAME = "Doors";
+            private const string DIR_RESSOURCES_ENTITIES_NAME = "Entities";
+            private const string DIR_RESSOURCES_GROUNDS_NAME = "Grounds";
+            private const string DIR_RESSOURCES_PLAYER_NAME = "Player";
+            private const string DIR_RESSOURCES_PROPS_NAME = "Props";
+            private const string DIR_RESSOURCES_WALLS_NAME = "Walls";
 
             private static string _dirMain = "";
             private static string _dungeonName = "";
 
             private static string _pathDirLevels = "";
             private static string _pathDirRessources = "";
+            private static string _pathDirResDoors = "";
             private static string _pathDirResEntities = "";
             private static string _pathDirResGrounds = "";
             private static string _pathDirResPlayer = "";
@@ -40,15 +44,39 @@ namespace GameLib.Files
                 _dirMain = dirMain;
                 _dungeonName = dungeonName;
 
+                _pathFileDungeon = $@"{_dirMain}\{_dungeonName}.{GameLibConfig.Global.Ext_DungeonBaseFile}";
+
+                InitSubDirectories();
+            }
+
+            internal static void Init(string dungeonFile)
+            {
+                string[] pathArray = dungeonFile.Split('\\');
+
+                string dirMain = "";
+
+                for(int i = 0; i < pathArray.Length - 1; ++i)
+                {
+                    dirMain += $@"{pathArray[i]}\";
+                }
+
+                _dirMain = dirMain.TrimEnd('\\');
+
+                InitSubDirectories();
+
+                _pathFileDungeon = dungeonFile;
+            }
+
+            private static void InitSubDirectories()
+            {
                 _pathDirLevels = $@"{_dirMain}\{DIR_LEVELS_NAME}";
                 _pathDirRessources = $@"{_dirMain}\{DIR_RESSOURCES_NAME}";
+                _pathDirResDoors = $@"{_dirMain}\{DIR_RESSOURCES_NAME}\{DIR_RESSOURCES_DOORS_NAME}";
                 _pathDirResEntities = $@"{_dirMain}\{DIR_RESSOURCES_NAME}\{DIR_RESSOURCES_ENTITIES_NAME}";
                 _pathDirResGrounds = $@"{_dirMain}\{DIR_RESSOURCES_NAME}\{DIR_RESSOURCES_GROUNDS_NAME}";
                 _pathDirResPlayer = $@"{_dirMain}\{DIR_RESSOURCES_NAME}\{DIR_RESSOURCES_PLAYER_NAME}";
                 _pathDirResProps = $@"{_dirMain}\{DIR_RESSOURCES_NAME}\{DIR_RESSOURCES_PROPS_NAME}";
                 _pathDirResWalls = $@"{_dirMain}\{DIR_RESSOURCES_NAME}\{DIR_RESSOURCES_WALLS_NAME}";
-
-                _pathFileDungeon = $@"{_dirMain}\{_dungeonName}.{GameLibConfig.Global.Ext_DungeonBaseFile}";
             }
 
             #region GET_SET
@@ -57,6 +85,7 @@ namespace GameLib.Files
             public static string PathDirMain { get { return _dirMain; } }
             public static string PathDirLevels { get { return _pathDirLevels; } }
             public static string PathDirRessources { get { return _pathDirRessources; } }
+            public static string PathDirResDoors { get { return _pathDirResDoors; } }
             public static string PathDirResEntities { get { return _pathDirResEntities; } }
             public static string PathDirResGrounds { get { return _pathDirResGrounds; } }
             public static string PathDirResPlayer { get { return _pathDirResPlayer; } }
@@ -76,6 +105,7 @@ namespace GameLib.Files
             _ = IOHelper.CreateDirectory(Config.PathDirMain);
             _ = IOHelper.CreateDirectory(Config.PathDirLevels);
             _ = IOHelper.CreateDirectory(Config.PathDirRessources);
+            _ = IOHelper.CreateDirectory(Config.PathDirResDoors);
             _ = IOHelper.CreateDirectory(Config.PathDirResEntities);
             _ = IOHelper.CreateDirectory(Config.PathDirResGrounds);
             _ = IOHelper.CreateDirectory(Config.PathDirResPlayer);
@@ -93,11 +123,12 @@ namespace GameLib.Files
                 LevelCount = 1,
                 Levels = [Config.PathDirLevels + "\\" + "level_0.json"],
                 PathRessources = Config.PathDirRessources,
-                RessourcesEntities = ["#"],
-                RessourcesGrounds = ["#"],
-                RessourcesPlayer = ["#"],
-                RessourcesProps = ["#"],
-                RessourcesWalls = ["#"]
+                RessourcesDoors = [],
+                RessourcesEntities = [],
+                RessourcesGrounds = [],
+                RessourcesPlayer = [],
+                RessourcesProps = [],
+                RessourcesWalls = []
             };
 
             string dungeonSaveJson = Newtonsoft.Json.JsonConvert.SerializeObject(dungeonSave, Newtonsoft.Json.Formatting.Indented);
@@ -116,6 +147,8 @@ namespace GameLib.Files
 
         public static DungeonSave LoadDungeonSave(string path)
         {
+            Config.Init(path);
+
             string content = String.Empty;
 
             IOResult ior = IOHelper.ReadToEnd(path, out content);
@@ -147,5 +180,81 @@ namespace GameLib.Files
 
             return levelSave;
         }
+
+        public static void SaveProject()
+        {
+            DungeonSave dungeonSave = LoadDungeonSave(Config.PathFileDungeon);
+
+            dungeonSave.LevelCount = Dungeon.Levels.Count;
+
+            dungeonSave.RessourcesDoors = Dungeon.TexturesDoorsFiles.ToArray();
+            dungeonSave.RessourcesEntities = Dungeon.TexturesEntitiesFiles.ToArray();
+            dungeonSave.RessourcesGrounds = Dungeon.TexturesGroundFiles.ToArray();
+            dungeonSave.RessourcesPlayer = Dungeon.TexturesPlayerFiles.ToArray();
+            dungeonSave.RessourcesProps = Dungeon.TexturesPropsFiles.ToArray();
+            dungeonSave.RessourcesWalls = Dungeon.TexturesWallsFiles.ToArray();
+
+            string dungeonSaveJson = Newtonsoft.Json.JsonConvert.SerializeObject(dungeonSave, Newtonsoft.Json.Formatting.Indented);
+
+            _ = IOHelper.WriteToFile(Config.PathFileDungeon, dungeonSaveJson, false, Encoding.UTF8);
+
+            foreach(DungeonLevel level in Dungeon.Levels)
+            {
+                LevelSave levelSave = new LevelSave(level);
+
+                string levelSaveJson = Newtonsoft.Json.JsonConvert.SerializeObject(levelSave, Newtonsoft.Json.Formatting.Indented);
+
+                _ = IOHelper.WriteToFile(dungeonSave.PathFirstLevel, levelSaveJson, false, Encoding.UTF8);
+            }
+        }
+
+
+        public static IOResult CopyTileTextureInProject(string sourceFileName, TileType type)
+        {
+            FileInfo origin = new FileInfo(sourceFileName);
+
+            if (!origin.Exists)
+                return IOResult.DONT_EXISTS;
+
+            string destFilename = string.Empty;
+
+            switch (type)
+            {
+                case TileType.Door:
+                    {
+                        destFilename = Config.PathDirResDoors;
+                        break;
+                    }
+                case TileType.Ground:
+                    {
+                        destFilename = Config.PathDirResGrounds;
+                        break;
+                    }
+                case TileType.Wall:
+                    {
+                        destFilename = Config.PathDirResWalls;
+                        break;
+                    }
+                
+            }
+
+            DirectoryInfo destDir = new DirectoryInfo(destFilename);
+
+            bool exists = destDir.EnumerateFiles().Where(x => x.Name == origin.Name).Count() > 0;
+
+            if (exists)
+                return IOResult.ALREADY_EXISTS;
+
+            destFilename += "\\";
+            destFilename += sourceFileName.Split('\\').Last();
+
+            IOResult ior = IOHelper.CopyFile(sourceFileName, destFilename);
+
+            if (ior == IOResult.OK)
+                Dungeon.AddTileTextureFile(destFilename, type);
+
+            return ior;
+        }
+
     }
 }
