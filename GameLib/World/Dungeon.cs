@@ -54,7 +54,16 @@ namespace GameLib.World
 
         public static void LoadFromFile(string path)
         {
+            _levels.Clear();
+
             DungeonSave dungeonSave = FilesManager.LoadDungeonSave(path);
+
+            _texturesDoorsFiles = dungeonSave.RessourcesDoors.ToList();
+            _texturesEntitiesFiles = dungeonSave.RessourcesEntities.ToList();
+            _texturesGroundFiles = dungeonSave.RessourcesGrounds.ToList();
+            _texturesPlayerFiles = dungeonSave.RessourcesPlayer.ToList();
+            _texturesPropsFiles = dungeonSave.RessourcesProps.ToList();
+            _texturesWallsFiles = dungeonSave.RessourcesWalls.ToList();
 
             foreach (string levelPath in dungeonSave.Levels)
             {
@@ -65,24 +74,23 @@ namespace GameLib.World
                 _levels.Add(level);
             }
 
-            _texturesDoorsFiles = dungeonSave.RessourcesDoors.ToList();
-            _texturesEntitiesFiles = dungeonSave.RessourcesEntities.ToList();
-            _texturesGroundFiles = dungeonSave.RessourcesGrounds.ToList();
-            _texturesPlayerFiles = dungeonSave.RessourcesPlayer.ToList();
-            _texturesPropsFiles = dungeonSave.RessourcesProps.ToList();
-            _texturesWallsFiles = dungeonSave.RessourcesWalls.ToList();
+            LevelSave firstLevelSave = FilesManager.LoadLevelSave(dungeonSave.PathFirstLevel);
 
-            DungeonLevel firstLevel = _levels.OrderBy(x => x.Index).First();
+            DungeonLevel? firstLevel = _levels.Where(x => x.ID.ToString() == firstLevelSave.ID).FirstOrDefault();
 
-            for (int i = 0; i < _levels.Count; ++i)
+            if (firstLevel == null)
+                _currentLevelIndex = 0;
+            else
             {
-                if (_levels[i].ID == firstLevel.ID)
+                for(int i = 0; i < _levels.Count; ++i)
                 {
-                    _currentLevelIndex = i;
-                    break;
+                    if (_levels[i].ID == firstLevel.ID)
+                    {
+                        _currentLevelIndex = i;
+                        break;
+                    }
                 }
             }
-
 
             return;
         }
