@@ -94,7 +94,17 @@
                             Background="Transparent">
                         <StackPanel Orientation="Horizontal">
 
-                            
+                            <Button Name="Btn_EditWorldSize"
+                                    Content="Edit Size"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_EditWorldSize_Click"/>
+
+                            <Button Name="Btn_DrawWorld"
+                                    Content="Draw"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_DrawWorld_Click"/>
 
                         </StackPanel>
                     </Border>
@@ -183,10 +193,11 @@
                           VerticalAlignment="Stretch"
                           Background="#202020"
                           Width="5"
-                          ShowsPreview="True"/>
+                          ShowsPreview="False"/>
 
             <!-- Selected nav item elements -->
-            <Border BorderBrush="#C2C2C2"
+            <Border Name="ToolbarContainer"
+                    BorderBrush="#C2C2C2"
                     Background="#282828"
                     BorderThickness="1"
                     Grid.Column="1"

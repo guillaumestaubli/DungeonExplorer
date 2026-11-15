@@ -17,6 +17,7 @@ using GameLib;
 using GameLib.World;
 using GameLib.Core;
 using GameLib.World.Tiles;
+using GameEditor.Windows.Controls;
 
 namespace GameEditor.Windows
 {
@@ -35,6 +36,7 @@ namespace GameEditor.Windows
         private RenderWindow _renderArea;
         private System.Windows.Forms.Control _win32SfmlSurface;
         private DisplaySettings _displaySettings = new();
+        private Control? _currentToolbar = null;
 
         /// <summary>
         /// Initialize a new instance of the world editor with a world to open
@@ -69,6 +71,8 @@ namespace GameEditor.Windows
             CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
 
+        #region RENDERING
+
         /// <summary>
         /// Called each time the window is drawn (equivalent to a frame)
         /// </summary>
@@ -86,30 +90,62 @@ namespace GameEditor.Windows
 
                 DrawGround(Dungeon.CurrentLevel);
 
-                DrawDebug();
-
                 _renderArea.Display();
             }
 
             return;
         }
 
-        #region DEBUG
-
-        private void DrawDebug()
+        /// <summary>
+        /// Draw only the visible part of the map to increase performances on large maps
+        /// </summary>
+        /// <param name="level">level to draw</param>
+        private void DrawGround(DungeonLevel level)
         {
+            FloatRect viewBounds = new FloatRect(_viewPosition, _view.Size);
 
+            for (int x = 0; x < level.GridSize.X; ++x)
+            {
+                for (int y = 0; y < level.GridSize.Y; ++y)
+                {
+                    Tile tile = level.Tiles[x, y];
+
+                    FloatRect? intersection = tile.GlobalBounds.FindIntersection(viewBounds);
+
+                    if (intersection != null)
+                    {
+                        if (_displaySettings.ShowTileTexture)
+                            _renderArea.Draw(tile.D_Background, tile.BackgroundRenderStates);
+
+                        if (_displaySettings.ShowTileBorder)
+                            _renderArea.Draw(tile.D_Border);
+
+                        if (_displaySettings.ShowTileIndex)
+                            _renderArea.Draw(tile.D_GridIndex);
+                    }
+                }
+            }
         }
 
         #endregion
 
-        #region EVENTS_RENDER_AREA
+        #region SFML_RENDER_AREA
 
+        /// <summary>
+        /// Handle the MouseEnter event on the SFML render area
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Win32SfmlSurface_MouseEnter(object? sender, EventArgs e)
         {
             _isCursorInRenderArea = true;
         }
 
+        /// <summary>
+        /// Handle the MouseLeave event on the SFML render area
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Win32SfmlSurface_MouseLeave(object? sender, EventArgs e)
         {
             _isCursorInRenderArea = false;
@@ -126,15 +162,15 @@ namespace GameEditor.Windows
             bool isLCtrlPressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LControl);
             bool isLeftMouseDown = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Left);
 
-            RenderArea_ProcessDragMove(isLCtrlPressed, isLeftMouseDown);
+            RenderArea_HandleDragMove(isLCtrlPressed, isLeftMouseDown);
         }
 
         /// <summary>
-        /// Manage the drag-move action on the world map
+        /// Handle the drag-move action on the world map
         /// </summary>
         /// <param name="isLCtrlPressed">Left Ctrl pressed</param>
         /// <param name="isLeftMouseDown">Left Button pressed</param>
-        private void RenderArea_ProcessDragMove(bool isLCtrlPressed, bool isLeftMouseDown)
+        private void RenderArea_HandleDragMove(bool isLCtrlPressed, bool isLeftMouseDown)
         {
             if (isLCtrlPressed && isLeftMouseDown)
             {
@@ -165,16 +201,12 @@ namespace GameEditor.Windows
             }
         }
 
-        private void RenderArea_MouseButtonPressed(object? sender, SFML.Window.MouseButtonEventArgs e)
-        {
-            return;
-        }
-
-        private void RenderArea_MouseButtonReleased(object? sender, SFML.Window.MouseButtonEventArgs e)
-        {
-            return;
-        }
-
+        /// <summary>
+        /// Handle the MouseWheelScrolled on the SFML render area.
+        /// LCtrl + Scroll => Zoom in/out
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RenderArea_MouseWheelScrolled(object? sender, SFML.Window.MouseWheelScrollEventArgs e)
         {
             if (SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LControl))
@@ -196,36 +228,8 @@ namespace GameEditor.Windows
             return;
         }
 
-        #endregion
-
-        #region EVENTS_WPF_WINDOW
-
-        private void WindowWorldEditor_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            InitializeDisplayMenu();
-
-            return;
-        }
-
-        private void WindowWorldEditor_Closing(object? sender, CancelEventArgs e)
-        {
-            return;
-        }
-
-        private void WindowWorldEditor_KeyDown(object sender, KeyEventArgs e)
-        {
-            if(Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.S))
-            {
-                GameLib.Files.FilesManager.SaveProject();
-            }
-        }
-
-        #endregion
-
-        #region EVENTS_WINDOW_CONTROLS
-
         /// <summary>
-        /// Occurs when the render area is resized in the window
+        /// Handle the resize of the SFML render area.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -242,8 +246,97 @@ namespace GameEditor.Windows
             return;
         }
 
+        #endregion
+
+        #region WINDOW_EVENTS
+
         /// <summary>
-        /// Check a display settings in the DisplaySettings class using System.Reflection
+        /// Handle the Loaded event.
+        /// Initialize the display tab of the nav.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WindowWorldEditor_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            InitializeDisplayMenu();
+
+            return;
+        }
+
+        /// <summary>
+        /// Handle the Closing event.
+        /// Ask the user if he wants to save before quitting.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WindowWorldEditor_Closing(object? sender, CancelEventArgs e)
+        {
+
+
+            return;
+        }
+
+        /// <summary>
+        /// Handle the KeyDown event.
+        /// LCtrl + S => Save project
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WindowWorldEditor_KeyDown(object sender, KeyEventArgs e)
+        {
+            // LCtrl + S => Save
+            if(Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.S))
+            {
+                GameLib.Files.FilesManager.SaveProject();
+            }
+        }
+
+        
+
+        #endregion
+
+        #region NAV_TAB_PROJECT
+
+        /// <summary>
+        /// Handle the Click event on Btn_Save
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_Save_Click(object sender, RoutedEventArgs e)
+        {
+            GameLib.Files.FilesManager.SaveProject();
+        }
+
+        /// <summary>
+        /// Handle the Click event on Btn_AddTexture
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_AddTextures_Click(object sender, RoutedEventArgs e)
+        {
+            WindowAddRessource windowAddRessource = new WindowAddRessource();
+
+            _ = windowAddRessource.ShowDialog();
+        }
+
+        /// <summary>
+        /// Handle the Click event on Btn_InitializeTiles
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_InitializeTiles_Click(object sender, RoutedEventArgs e)
+        {
+            WindowInitializeTiles windowInitializeTiles = new WindowInitializeTiles();
+
+            _ = windowInitializeTiles.ShowDialog();
+        }
+
+        #endregion
+
+        #region NAV_TAB_DISPLAY
+
+        /// <summary>
+        /// Handle the Checked event on the CheckBoxes of the display tab of the navigation
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -265,7 +358,7 @@ namespace GameEditor.Windows
                 if (propertyValue == null)
                     continue;
 
-                if(property.Name == checkBox.Name)
+                if (property.Name == checkBox.Name)
                 {
                     property.SetValue(_displaySettings, true);
                 }
@@ -274,7 +367,7 @@ namespace GameEditor.Windows
         }
 
         /// <summary>
-        /// Uncheck a display settings in the DisplaySettings class using System.Reflection
+        /// Handle the Unchecked event on the CheckBoxes of the display tab of the navigation
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -301,68 +394,6 @@ namespace GameEditor.Windows
                     property.SetValue(_displaySettings, false);
                 }
 
-            }
-        }
-
-        /// <summary>
-        /// Show the WindowAddRessource as a dialog
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Btn_AddTextures_Click(object sender, RoutedEventArgs e)
-        {
-            WindowAddRessource windowAddRessource = new WindowAddRessource();
-
-            _ = windowAddRessource.ShowDialog();
-        }
-
-        private void Btn_Save_Click(object sender, RoutedEventArgs e)
-        {
-            GameLib.Files.FilesManager.SaveProject();
-        }
-
-        /// <summary>
-        /// Enable the user to define all the tiles of the level at once (type & texture)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Btn_InitializeTiles_Click(object sender, RoutedEventArgs e)
-        {
-            WindowInitializeTiles windowInitializeTiles = new WindowInitializeTiles();
-
-            _ = windowInitializeTiles.ShowDialog();
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Draw only the visible part of the map to increase performances on large maps
-        /// </summary>
-        /// <param name="level">level to draw</param>
-        private void DrawGround(DungeonLevel level)
-        {
-            FloatRect viewBounds = new FloatRect(_viewPosition, _view.Size);
-
-            for (int x = 0; x < level.GridSize.X; ++x)
-            {
-                for (int y = 0; y < level.GridSize.Y; ++y)
-                {
-                    Tile tile = level.Tiles[x, y];
-
-                    FloatRect? intersection = tile.GlobalBounds.FindIntersection(viewBounds);
-
-                    if (intersection != null)
-                    {
-                        if (_displaySettings.ShowTileTexture)
-                            _renderArea.Draw(tile.D_Background, tile.BackgroundRenderStates);
-
-                        if (_displaySettings.ShowTileBorder)
-                            _renderArea.Draw(tile.D_Border);
-
-                        if (_displaySettings.ShowTileIndex)
-                            _renderArea.Draw(tile.D_GridIndex);
-                    }
-                }
             }
         }
 
@@ -412,7 +443,63 @@ namespace GameEditor.Windows
             }
         }
 
+        #endregion
+
+        #region NAV_TAB_WORLD
+
+        /// <summary>
+        /// Handle the Click event on Btn_EditWorldSize
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_EditWorldSize_Click(object sender, RoutedEventArgs e)
+        {
+            string text = "Not implemented";
+            string caption = "DungeonExplorer - GameEditor - Info";
+
+            _ = MessageBox.Show(text, caption, MessageBoxButton.OK);
+        }
+
+        /// <summary>
+        /// Handle the Click event on Btn_DrawWorld
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_DrawWorld_Click(object sender, RoutedEventArgs e)
+        {
+            _currentToolbar = new ControlDrawWorldToolbar();
+
+            this.ToolbarContainer.Child = _currentToolbar;
+        }
+
+        #endregion
+
+        #region NAV_TAB_TILE
+
+
+
+        #endregion
+
+        #region NAV_TAB_PROPS
+
+
+
+        #endregion
+
+        #region NAV_TAB_ENTITIES
+
+
+
+        #endregion
+
+        #region NAV_TAB_PLAYER
+
+
+
+        #endregion
+
         
+
     }
 
     public class DisplaySettings

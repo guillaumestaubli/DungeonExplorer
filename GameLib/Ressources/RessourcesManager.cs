@@ -91,5 +91,27 @@ namespace GameLib.Ressources
 
             Dungeon.Levels[Dungeon.CurrentLevelIndex] = level;
         }
+
+        /// <summary>
+        /// Get all the textures for the specified type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>TileTexture[0] if no textures were found for the specified type</returns>
+        public static TileTexture[] GetTileTextures(TileType type)
+        {
+            switch (type)
+            {
+                case TileType.Ground:
+                    return GroundTextures.ToArray();
+                case TileType.Wall:
+                    return WallTextures.ToArray();
+                case TileType.Door:
+                    return DoorTextures.ToArray();
+                default:
+                    return [];
+            }
+
+
+        }
     }
 }

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using GameEditor.Helper;
 using GameEditor.Logging;
 using GameLib.Files;
 using GameLib.World;
@@ -23,14 +24,6 @@ namespace GameEditor.Windows
     /// </summary>
     public partial class WindowAddRessource : Window
     {
-        private Dictionary<TileType, string> _tileTypes = new()
-        {
-            {TileType.Void, "Void Texture" },
-            {TileType.Ground, "Ground Texture" },
-            {TileType.Wall, "Wall Texture" },
-            {TileType.Door, "Door texture" }
-        };
-
         private List<string> _textureFiles = [];
 
         private TileType? _tileType = null;
@@ -44,12 +37,12 @@ namespace GameEditor.Windows
 
         private void WindowAddRessource_Loaded(object sender, RoutedEventArgs e)
         {
-            foreach (KeyValuePair<TileType, string> tileType in _tileTypes)
+            foreach (KeyValuePair<TileType, string> tileType in TextureHelper.DisplayTileTypes)
             {
                 ComboBoxItem item = new()
                 {
                     Name = $"TileType_{(int)tileType.Key}",
-                    Content = tileType.Value,
+                    Content = tileType.Value + " texture",
                     Tag = (int)tileType.Key
                 };
 

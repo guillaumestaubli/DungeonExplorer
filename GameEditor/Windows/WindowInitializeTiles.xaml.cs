@@ -1,4 +1,5 @@
-﻿using GameEditor.Logging;
+﻿using GameEditor.Helper;
+using GameEditor.Logging;
 using GameLib.Ressources;
 using GameLib.World.Tiles;
 using System;
@@ -20,13 +21,6 @@ namespace GameEditor.Windows
     /// </summary>
     public partial class WindowInitializeTiles : Window
     {
-        private Dictionary<TileType, string> _tileTypes = new()
-        {
-            {TileType.Ground, "Ground Texture" },
-            {TileType.Wall, "Wall Texture" },
-            {TileType.Door, "Door texture" }
-        };
-
         private TileType? _tileType = null;
         private TileTexture? _texture = null;
 
@@ -39,12 +33,12 @@ namespace GameEditor.Windows
 
         private void WindowInitializeTiles_Loaded(object sender, RoutedEventArgs e)
         {
-            foreach (KeyValuePair<TileType, string> tileType in _tileTypes)
+            foreach (KeyValuePair<TileType, string> tileType in TextureHelper.DisplayTileTypes)
             {
                 ComboBoxItem item = new()
                 {
                     Name = $"TileType_{(int)tileType.Key}",
-                    Content = tileType.Value,
+                    Content = tileType.Value + " texture",
                     Tag = (int)tileType.Key
                 };
 
@@ -144,28 +138,9 @@ namespace GameEditor.Windows
             if (tileType == null)
                 return;
 
-            TextureBase[] textures = [];
+            TextureBase[] textures = RessourcesManager.GetTileTextures((TileType)tileType);
 
-            switch (tileType)
-            {
-                case TileType.Ground:
-                    {
-                        textures = RessourcesManager.GroundTextures.ToArray();
-                        break;
-                    }
-                case TileType.Wall:
-                    {
-                        textures = RessourcesManager.WallTextures.ToArray();
-                        break;
-                    }
-                case TileType.Door:
-                    {
-                        textures = RessourcesManager.DoorTextures.ToArray();
-                        break;
-                    }
-            }
-
-            foreach(TextureBase texture in textures)
+            foreach (TextureBase texture in textures)
             {
                 ListBoxItem item = new()
                 {
