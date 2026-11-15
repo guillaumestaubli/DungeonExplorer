@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using GameLib.Files;
 using GameLib.Files.SaveFiles;
+using GameLib.Logging;
+using GameLib.Ressources;
 using GameLib.World.Tiles;
 using SFML.System;
 
@@ -64,6 +66,8 @@ namespace GameLib.World
             _texturesPlayerFiles = dungeonSave.RessourcesPlayer.ToList();
             _texturesPropsFiles = dungeonSave.RessourcesProps.ToList();
             _texturesWallsFiles = dungeonSave.RessourcesWalls.ToList();
+
+            RessourcesManager.Init();
 
             foreach (string levelPath in dungeonSave.Levels)
             {

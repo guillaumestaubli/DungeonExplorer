@@ -37,10 +37,17 @@ namespace GameLib.Logging
         private static void CreateFile(string path, bool erase)
         {
             if (erase && File.Exists(path))
+            {
                 File.Delete(path);
+            }
 
             if (!File.Exists(path))
-                File.Create(path);
+            {
+                FileStream stream = File.Create(path);
+
+                stream.Flush();
+                stream.Close();
+            }
         }
 
         private static string CreateLine(string level, string location, string message, Exception? e)

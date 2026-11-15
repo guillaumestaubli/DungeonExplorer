@@ -86,7 +86,7 @@ namespace GameEditor.Windows
 
                 RenderArea_ProcessMouseAndKeyboardInputs();
 
-                _renderArea.Clear(SFML.Graphics.Color.Black);
+                _renderArea.Clear(SFML.Graphics.Color.White);
 
                 DrawGround(Dungeon.CurrentLevel);
 
@@ -317,6 +317,18 @@ namespace GameEditor.Windows
             GameLib.Files.FilesManager.SaveProject();
         }
 
+        /// <summary>
+        /// Enable the user to define all the tiles of the level at once (type & texture)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_InitializeTiles_Click(object sender, RoutedEventArgs e)
+        {
+            WindowInitializeTiles windowInitializeTiles = new WindowInitializeTiles();
+
+            _ = windowInitializeTiles.ShowDialog();
+        }
+
         #endregion
 
         /// <summary>
@@ -338,7 +350,7 @@ namespace GameEditor.Windows
                     if (intersection != null)
                     {
                         if (_displaySettings.ShowTileTexture)
-                            _renderArea.Draw(tile.D_Background);
+                            _renderArea.Draw(tile.D_Background, tile.BackgroundRenderStates);
 
                         if (_displaySettings.ShowTileBorder)
                             _renderArea.Draw(tile.D_Border);

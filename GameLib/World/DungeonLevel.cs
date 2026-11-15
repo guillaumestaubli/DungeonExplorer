@@ -80,7 +80,7 @@ namespace GameLib.World
             {
                 for(int y = 0; y < _gridSize.Y; ++y)
                 {
-                    _tiles[x, y] = new(save.Tiles[x, y])
+                    _tiles[x, y] = new(save.Tiles[x, y], _tileRenderSize)
                     {
                         ShowBorders = true,
                         ShowIndex = true

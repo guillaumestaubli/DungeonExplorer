@@ -22,7 +22,7 @@
 
         <!-- Navigation -->
         <TabControl Grid.Row="0">
-            <TabItem Header="File">
+            <TabItem Header="Project">
                 <Grid Background="#202020">
                     <Border Margin="5"
                             BorderBrush="Transparent"
@@ -32,12 +32,14 @@
                             <Button Name="Btn_Save"
                                     Content="Save"
                                     Padding="20,5,20,5"
-                                    Margin="0,0,5,0" Click="Btn_Save_Click"/>
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_Save_Click"/>
 
                             <Button Name="Btn_AddTexture"
                                     Content="Add Textures"
                                     Padding="20,5,20,5"
-                                    Margin="0,0,5,0" Click="Btn_AddTextures_Click"/>
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_AddTextures_Click"/>
 
                         </StackPanel>
                     </Border>
@@ -79,20 +81,24 @@
 
                 </Grid>
             </TabItem>
-            <TabItem Header="Textures">
+            <TabItem Header="World">
                 <Grid Background="#202020">
                     <Border Margin="5"
                             BorderBrush="Transparent"
                             Background="Transparent">
                         <StackPanel Orientation="Horizontal">
 
-
+                            <Button Name="Btn_InitializeTiles"
+                                    Content="Initialize Tiles"
+                                    Padding="20,5,20,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_InitializeTiles_Click" />
 
                         </StackPanel>
                     </Border>
                 </Grid>
             </TabItem>
-            <TabItem Header="World">
+            <TabItem Header="Tile">
                 <Grid Background="#202020">
                     <Border Margin="5"
                             BorderBrush="Transparent"
