@@ -31,15 +31,21 @@
 
                             <Button Name="Btn_Save"
                                     Content="Save"
-                                    Padding="20,5,20,5"
+                                    Padding="10,5,10,5"
                                     Margin="0,0,5,0" 
                                     Click="Btn_Save_Click"/>
 
                             <Button Name="Btn_AddTexture"
                                     Content="Add Textures"
-                                    Padding="20,5,20,5"
+                                    Padding="10,5,10,5"
                                     Margin="0,0,5,0" 
                                     Click="Btn_AddTextures_Click"/>
+
+                            <Button Name="Btn_InitializeTiles"
+                                    Content="Initialize Tiles"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_InitializeTiles_Click" />
 
                         </StackPanel>
                     </Border>
@@ -88,11 +94,7 @@
                             Background="Transparent">
                         <StackPanel Orientation="Horizontal">
 
-                            <Button Name="Btn_InitializeTiles"
-                                    Content="Initialize Tiles"
-                                    Padding="20,5,20,5"
-                                    Margin="0,0,5,0" 
-                                    Click="Btn_InitializeTiles_Click" />
+                            
 
                         </StackPanel>
                     </Border>
