@@ -53,6 +53,7 @@ namespace GameEditor.Windows
 
             this.Loaded += WindowWorldEditor_Loaded;
             this.Closing += WindowWorldEditor_Closing;
+            this.KeyDown += WindowWorldEditor_KeyDown;
 
             _win32SfmlSurface = new System.Windows.Forms.Control();
             _win32SfmlSurface.Resize += Win32SfmlSurface_Resize;
@@ -214,6 +215,14 @@ namespace GameEditor.Windows
         private void WindowWorldEditor_Closing(object? sender, CancelEventArgs e)
         {
             return;
+        }
+
+        private void WindowWorldEditor_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.S))
+            {
+                GameLib.Files.FilesManager.SaveProject();
+            }
         }
 
         #endregion
