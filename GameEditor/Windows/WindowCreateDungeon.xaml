@@ -23,7 +23,7 @@
                VerticalAlignment="Top"
                FontSize="36"
                FontWeight="Bold"
-               Margin="20"/>
+               Margin="10,20,10,20"/>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -41,14 +41,14 @@
                    Content="Project name : "
                    Grid.Row="0"
                    Grid.Column="0"
-                   Margin="5"
+                   Margin="10,5,10,5"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"/>
 
             <TextBox Name="TxtBox_Name"
                      Grid.Row="0"
                      Grid.Column="1"
-                     Margin="5"
+                     Margin="10,5,10,5"
                      VerticalAlignment="Center"
                      HorizontalAlignment="Left"
                      Width="250"/>
@@ -57,7 +57,7 @@
                    Content="Directory : "
                    Grid.Row="1"
                    Grid.Column="0"
-                   Margin="5"
+                   Margin="10,5,10,5"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"/>
 
@@ -66,7 +66,7 @@
                         Grid.Column="1">
 
                 <TextBox Name="TxtBox_Dir"
-                         Margin="5,5,0,5"
+                         Margin="10,5,0,5"
                          VerticalAlignment="Center"
                          Width="350"
                          IsEnabled="False"/>
@@ -82,7 +82,7 @@
                    Content="First level size : "
                    Grid.Row="2"
                    Grid.Column="0"
-                   Margin="5"
+                   Margin="10,5,10,5"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"/>
 
