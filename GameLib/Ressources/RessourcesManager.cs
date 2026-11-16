@@ -10,12 +10,15 @@ namespace GameLib.Ressources
 {
     public static class RessourcesManager
     {
-        private static TextureBase _textureNotFound = new TextureBase(GameLibConfig.Textures.Path_Img_TextureNotFound);
-        private static TileTexture _tileTextureNotFound = new TileTexture(GameLibConfig.Textures.Path_Img_TextureNotFound);
+        private static TextureBase _textureNotFound = new(GameLibConfig.Textures.Path_Img_TextureNotFound);
+        private static TileTexture _tileTextureNotFound = new(GameLibConfig.Textures.Path_Img_TextureNotFound);
+        private static PropTexture _propTextureNotFound = new(GameLibConfig.Textures.Path_Img_TextureNotFound);
 
         private static List<TileTexture> _groundTextures = [];
         private static List<TileTexture> _wallTextures = [];
         private static List<TileTexture> _doorTextures = [];
+
+        private static List<PropTexture> _propTextures = [];
 
         #region GET_SET
 
@@ -26,24 +29,22 @@ namespace GameLib.Ressources
         public static List<TileTexture> WallTextures { get { return _wallTextures; } }
         public static List<TileTexture> DoorTextures { get { return _doorTextures; } }
 
+        public static List<PropTexture> PropTextures { get { return _propTextures; } }
+
         #endregion
 
         public static void Init()
         {
-            _groundTextures.Clear();
-            _wallTextures.Clear();
-            _doorTextures.Clear();
-
+            ClearTextures();
             LoadTextures();
         }
 
-        public static void ReloadTextures()
+        private static void ClearTextures()
         {
             _groundTextures.Clear();
             _wallTextures.Clear();
             _doorTextures.Clear();
-
-            LoadTextures();
+            _propTextures.Clear();
         }
 
         private static void LoadTextures()
@@ -56,6 +57,9 @@ namespace GameLib.Ressources
 
             foreach (string path in Dungeon.TexturesDoorsFiles)
                 _doorTextures.Add(new TileTexture(path));
+
+            foreach (string path in Dungeon.TexturesPropsFiles)
+                _propTextures.Add(new PropTexture(path));
         }
 
         public static TileTexture GetTileTexture(string name, TileType type)
@@ -90,22 +94,6 @@ namespace GameLib.Ressources
             return texture;
         }
 
-        public static void ApplyTextureToAllTiles(TileTexture texture, TileType type)
-        {
-            DungeonLevel level = Dungeon.CurrentLevel;
-
-            for (int x = 0; x < level.GridSize.X; ++x)
-            {
-                for (int y = 0; y < level.GridSize.Y; ++y)
-                {
-                    level.Tiles[x, y].TileTexture = texture;
-                    level.Tiles[x, y].Type = type;
-                }
-            }
-
-            Dungeon.Levels[Dungeon.CurrentLevelIndex] = level;
-        }
-
         /// <summary>
         /// Get all the textures for the specified type
         /// </summary>
@@ -124,7 +112,32 @@ namespace GameLib.Ressources
                 default:
                     return [];
             }
+        }
 
+        public static void ApplyTextureToAllTiles(TileTexture texture, TileType type)
+        {
+            DungeonLevel level = Dungeon.CurrentLevel;
+
+            for (int x = 0; x < level.GridSize.X; ++x)
+            {
+                for (int y = 0; y < level.GridSize.Y; ++y)
+                {
+                    level.Tiles[x, y].TileTexture = texture;
+                    level.Tiles[x, y].Type = type;
+                }
+            }
+
+            Dungeon.Levels[Dungeon.CurrentLevelIndex] = level;
+        }
+
+        public static PropTexture GetPropTexture(string name)
+        {
+            PropTexture? texture = _propTextures.Where(x => x.Name == name).FirstOrDefault();
+
+            if (texture == null)
+                return _propTextureNotFound;
+
+            return texture;
 
         }
     }

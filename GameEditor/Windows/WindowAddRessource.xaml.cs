@@ -200,7 +200,7 @@ namespace GameEditor.Windows
             }
 
             GameLib.Files.FilesManager.SaveProject();
-            GameLib.Ressources.RessourcesManager.ReloadTextures();
+            GameLib.Ressources.RessourcesManager.Init();
 
             this.Close();
         }

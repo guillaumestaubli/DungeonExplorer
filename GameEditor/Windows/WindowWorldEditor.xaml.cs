@@ -15,9 +15,9 @@ using SFML.Graphics;
 
 using GameLib;
 using GameLib.World;
-using GameLib.Core;
 using GameLib.World.Tiles;
 using GameEditor.Windows.Controls;
+using GameLib.World.Props;
 
 namespace GameEditor.Windows
 {
@@ -90,6 +90,7 @@ namespace GameEditor.Windows
                 _renderArea.Clear(new SFML.Graphics.Color(100, 100, 100));
 
                 DrawGround(Dungeon.CurrentLevel);
+                DrawProps(Dungeon.CurrentLevel);
 
                 _renderArea.Display();
             }
@@ -113,18 +114,40 @@ namespace GameEditor.Windows
 
                     FloatRect? intersection = tile.GlobalBounds.FindIntersection(viewBounds);
 
-                    if (intersection != null)
-                    {
-                        if (_displaySettings.ShowTileTexture)
-                            _renderArea.Draw(tile.D_Background, tile.BackgroundRenderStates);
+                    if (intersection == null)
+                        continue;
 
-                        if (_displaySettings.ShowTileBorder)
-                            _renderArea.Draw(tile.D_Border);
+                    if (_displaySettings.ShowTileTexture)
+                        _renderArea.Draw(tile.D_Background, tile.BackgroundRenderStates);
 
-                        if (_displaySettings.ShowTileIndex)
-                            _renderArea.Draw(tile.D_GridIndex);
-                    }
+                    if (_displaySettings.ShowTileBorder)
+                        _renderArea.Draw(tile.D_Border);
+
+                    if (_displaySettings.ShowTileIndex)
+                        _renderArea.Draw(tile.D_GridIndex);
                 }
+            }
+        }
+
+        private void DrawProps(DungeonLevel level)
+        {
+            FloatRect viewBounds = new FloatRect(_viewPosition, _view.Size);
+
+            foreach (Prop prop in level.Props)
+            {
+                FloatRect? intersection = prop.GlobalBounds.FindIntersection(viewBounds);
+
+                if (intersection == null)
+                    continue;
+
+                if (_displaySettings.ShowProps)
+                    _renderArea.Draw(prop.D_Prop, prop.D_Prop_RenderStates);
+
+                if (_displaySettings.ShowPropsRectangleHitbox)
+                    _renderArea.Draw(prop.D_RectBorders);
+
+                if (_displaySettings.ShowPropsPixelPerfectHitbox)
+                    _renderArea.Draw(prop.D_PixelPerfectBorders);
             }
         }
 

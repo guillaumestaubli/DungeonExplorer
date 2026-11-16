@@ -1,4 +1,5 @@
 ﻿using GameLib.Files.SaveFiles;
+using GameLib.World.Props;
 using GameLib.World.Tiles;
 using SFML.System;
 using System;
@@ -17,7 +18,7 @@ namespace GameLib.World
         private Vector2i _gridSize;
         private Vector2f _tileRenderSize;
         private Tile[,] _tiles;
-
+        private List<Prop> _props;
 
         #endregion
 
@@ -30,6 +31,7 @@ namespace GameLib.World
         public Vector2i GridSize { get { return _gridSize; } }
         public Vector2f TileRenderSize { get { return _tileRenderSize; } }
         public Tile[,] Tiles { get { return _tiles; } set { _tiles = value; } }
+        public List<Prop> Props { get { return _props; } set { _props = value; } }
         public Vector2f RenderSize
         {
             get
@@ -52,6 +54,7 @@ namespace GameLib.World
             _gridSize = gridSize;
             _tileRenderSize = tileRenderSize;
             _tiles = new Tile[gridSize.X, gridSize.Y];
+            _props = [];
 
             for (int x = 0; x < gridSize.X; ++x)
             {
@@ -75,6 +78,7 @@ namespace GameLib.World
             _gridSize = new(save.GridSize_X, save.GridSize_Y);
             _tileRenderSize = new(save.TileRenderSize_X, save.TileRenderSize_Y);
             _tiles = new Tile[_gridSize.X, _gridSize.Y];
+            _props = [];
 
             for (int x = 0; x < _gridSize.X; ++x)
             {
@@ -86,6 +90,11 @@ namespace GameLib.World
                         ShowIndex = true
                     };
                 }
+            }
+
+            for(int i = 0; i < save.Props.Length; ++i)
+            {
+                _props.Add(new(save.Props[i]));
             }
         }
 

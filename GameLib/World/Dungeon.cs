@@ -25,7 +25,6 @@ namespace GameLib.World
         private static List<string> _texturesPropsFiles = [];
         private static List<string> _texturesWallsFiles = [];
 
-
         #endregion
 
         #region GET_SET
