@@ -31,12 +31,17 @@
 
         </Grid>
 
-        <WrapPanel Name="WrapPanel_Textures"
-                   Grid.Row="1"
-                   Margin="10">
-            
-            
-        </WrapPanel>
+        <ScrollViewer Name="ScrollViewer_Texture"
+                      Grid.Row="1"
+                      Margin="10"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+
+            <WrapPanel Name="WrapPanel_Textures"/>
+
+        </ScrollViewer>
+
+        
 
     </Grid>
 </UserControl>

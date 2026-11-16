@@ -25,6 +25,12 @@ namespace GameEditor.Windows.Controls
         private Image? _currentImgTexture = null;
         private TileTexture? _currentTileTexture = null;
 
+        #region GET_SET
+
+        public TileTexture? CurrentTileTexture { get { return _currentTileTexture; } }
+
+        #endregion
+
         public ControlDrawWorldToolbar()
         {
             InitializeComponent();

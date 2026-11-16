@@ -64,6 +64,7 @@ namespace GameEditor.Windows
             _renderArea.SetVerticalSyncEnabled(true);
             _renderArea.SetKeyRepeatEnabled(true);
             _renderArea.MouseWheelScrolled += RenderArea_MouseWheelScrolled;
+            _renderArea.MouseButtonReleased += RenderArea_MouseButtonReleased;
 
             _renderAreaSize = new(_win32SfmlSurface.Size.Width, _win32SfmlSurface.Size.Height);
             _view = new View(new FloatRect(new Vector2f(0.0f, 0.0f), _renderAreaSize));
@@ -86,7 +87,7 @@ namespace GameEditor.Windows
 
                 RenderArea_ProcessMouseAndKeyboardInputs();
 
-                _renderArea.Clear(SFML.Graphics.Color.White);
+                _renderArea.Clear(new SFML.Graphics.Color(100, 100, 100));
 
                 DrawGround(Dungeon.CurrentLevel);
 
@@ -246,6 +247,35 @@ namespace GameEditor.Windows
             return;
         }
 
+        /// <summary>
+        /// Handle the MouseButtonReleased event of the SFML render area depending of the current toolbar
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RenderArea_MouseButtonReleased(object? sender, SFML.Window.MouseButtonEventArgs e)
+        {
+            if (_currentToolbar == null)
+                return;
+
+            if (_currentToolbar is ControlDrawWorldToolbar)
+            {
+                ControlDrawWorldToolbar toolbar = (ControlDrawWorldToolbar)_currentToolbar;
+
+                if (toolbar.CurrentTileTexture == null)
+                    return;
+
+                Vector2i gridIndex = Dungeon.ConvertWorldCoordsToGridIndex(e.Position);
+
+                Tile tile = Dungeon.GetTile(gridIndex);
+
+                tile.TileTexture = toolbar.CurrentTileTexture;
+
+                Dungeon.UpdateTile(tile, gridIndex);
+
+                return;
+            }
+        }
+
         #endregion
 
         #region WINDOW_EVENTS
@@ -285,13 +315,13 @@ namespace GameEditor.Windows
         private void WindowWorldEditor_KeyDown(object sender, KeyEventArgs e)
         {
             // LCtrl + S => Save
-            if(Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.S))
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.S))
             {
                 GameLib.Files.FilesManager.SaveProject();
             }
         }
 
-        
+
 
         #endregion
 
@@ -498,7 +528,7 @@ namespace GameEditor.Windows
 
         #endregion
 
-        
+
 
     }
 

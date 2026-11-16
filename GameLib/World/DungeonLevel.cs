@@ -76,9 +76,9 @@ namespace GameLib.World
             _tileRenderSize = new(save.TileRenderSize_X, save.TileRenderSize_Y);
             _tiles = new Tile[_gridSize.X, _gridSize.Y];
 
-            for(int x = 0; x < _gridSize.X; ++x)
+            for (int x = 0; x < _gridSize.X; ++x)
             {
-                for(int y = 0; y < _gridSize.Y; ++y)
+                for (int y = 0; y < _gridSize.Y; ++y)
                 {
                     _tiles[x, y] = new(save.Tiles[x, y], _tileRenderSize)
                     {
@@ -87,6 +87,19 @@ namespace GameLib.World
                     };
                 }
             }
+        }
+
+        public Tile GetTile(Vector2i gridIndex)
+        {
+            if (gridIndex.X < 0 || gridIndex.X >= _gridSize.X || gridIndex.Y < 0 || gridIndex.Y >= _gridSize.Y)
+                throw new IndexOutOfRangeException("The index given is out of the level grid range");
+
+            return _tiles[gridIndex.X, gridIndex.Y];
+        }
+
+        public void UpdateTile(Tile tile, Vector2i gridIndex)
+        {
+            _tiles[gridIndex.X, gridIndex.Y] = tile;
         }
     }
 }

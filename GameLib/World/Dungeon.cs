@@ -86,7 +86,7 @@ namespace GameLib.World
                 _currentLevelIndex = 0;
             else
             {
-                for(int i = 0; i < _levels.Count; ++i)
+                for (int i = 0; i < _levels.Count; ++i)
                 {
                     if (_levels[i].ID == firstLevel.ID)
                     {
@@ -97,16 +97,6 @@ namespace GameLib.World
             }
 
             return;
-        }
-
-        public static Tile GetTile(Vector2f screenCoords)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static Tile GetTile(Vector2i gridIndex)
-        {
-            throw new NotImplementedException();
         }
 
         public static void AddTileTextureFile(string file, TileType type)
@@ -129,6 +119,43 @@ namespace GameLib.World
                         break;
                     }
             }
+        }
+
+        public static Vector2i ConvertWorldCoordsToGridIndex(Vector2f screenCoords)
+        {
+            int x = (int)(screenCoords.X / _levels[_currentLevelIndex].TileRenderSize.X);
+            int y = (int)(screenCoords.Y / _levels[_currentLevelIndex].TileRenderSize.Y);
+
+            return new(x, y);
+        }
+
+        public static Vector2i ConvertWorldCoordsToGridIndex(Vector2i screenCoords)
+        {
+            int x = screenCoords.X / (int)_levels[_currentLevelIndex].TileRenderSize.X;
+            int y = screenCoords.Y / (int)_levels[_currentLevelIndex].TileRenderSize.Y;
+
+            return new(x, y);
+        }
+
+        public static Tile GetTile(Vector2i gridIndex)
+        {
+            return _levels[_currentLevelIndex].GetTile(gridIndex);
+        }
+
+        public static Tile GetTile(Vector2f screenCoords)
+        {
+            Vector2i index = ConvertWorldCoordsToGridIndex(screenCoords);
+
+            return GetTile(index);
+        }
+
+        public static void UpdateTile(Tile tile, Vector2i gridIndex)
+        {
+            DungeonLevel level = _levels[_currentLevelIndex];
+
+            level.UpdateTile(tile, gridIndex);
+
+            _levels[_currentLevelIndex] = level;
         }
     }
 }
