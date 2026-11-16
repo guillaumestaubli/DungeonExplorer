@@ -34,6 +34,20 @@ namespace GameLib.Ressources
             _wallTextures.Clear();
             _doorTextures.Clear();
 
+            LoadTextures();
+        }
+
+        public static void ReloadTextures()
+        {
+            _groundTextures.Clear();
+            _wallTextures.Clear();
+            _doorTextures.Clear();
+
+            LoadTextures();
+        }
+
+        private static void LoadTextures()
+        {
             foreach (string path in Dungeon.TexturesGroundFiles)
                 _groundTextures.Add(new TileTexture(path));
 
