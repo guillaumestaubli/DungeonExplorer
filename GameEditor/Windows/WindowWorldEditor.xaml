@@ -35,11 +35,17 @@
                                     Margin="0,0,5,0" 
                                     Click="Btn_Save_Click"/>
 
-                            <Button Name="Btn_AddTexture"
-                                    Content="Add Textures"
+                            <Button Name="Btn_AddTileTextures"
+                                    Content="Add Tile Textures"
                                     Padding="10,5,10,5"
                                     Margin="0,0,5,0" 
-                                    Click="Btn_AddTextures_Click"/>
+                                    Click="Btn_AddTileTextures_Click"/>
+
+                            <Button Name="Btn_AddPropTextures"
+                                    Content="Add Prop Textures"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_AddPropTextures_Click"/>
 
                             <Button Name="Btn_InitializeTiles"
                                     Content="Initialize Tiles"

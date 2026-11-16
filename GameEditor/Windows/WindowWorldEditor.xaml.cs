@@ -350,15 +350,27 @@ namespace GameEditor.Windows
         }
 
         /// <summary>
-        /// Handle the Click event on Btn_AddTexture
+        /// Handle the Click event on Btn_AddTileTextures
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Btn_AddTextures_Click(object sender, RoutedEventArgs e)
+        private void Btn_AddTileTextures_Click(object sender, RoutedEventArgs e)
         {
-            WindowAddRessource windowAddRessource = new WindowAddRessource();
+            WindowAddTileTexture window = new WindowAddTileTexture();
 
-            _ = windowAddRessource.ShowDialog();
+            _ = window.ShowDialog();
+        }
+
+        /// <summary>
+        /// Handle the Click event on Btn_AddPropTextures
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_AddPropTextures_Click(object sender, RoutedEventArgs e)
+        {
+            WindowAddPropTexture window = new WindowAddPropTexture();
+
+            _ = window.ShowDialog();
         }
 
         /// <summary>
@@ -563,6 +575,7 @@ namespace GameEditor.Windows
 
             Dungeon.UpdateTile(tile, gridIndex);
         }
+
     }
 
     public class DisplaySettings

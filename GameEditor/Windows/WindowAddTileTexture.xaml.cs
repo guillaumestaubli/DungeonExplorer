@@ -20,15 +20,15 @@ using GameLib.World.Tiles;
 namespace GameEditor.Windows
 {
     /// <summary>
-    /// Logique d'interaction pour WindowAddRessource.xaml
+    /// Logique d'interaction pour WindowAddTileTexture.xaml
     /// </summary>
-    public partial class WindowAddRessource : Window
+    public partial class WindowAddTileTexture : Window
     {
         private List<string> _textureFiles = [];
 
         private TileType? _tileType = null;
 
-        public WindowAddRessource()
+        public WindowAddTileTexture()
         {
             InitializeComponent();
 
@@ -181,7 +181,7 @@ namespace GameEditor.Windows
                 {
                     errorFiles.Add(file);
 
-                    Logger.Error($"{nameof(WindowAddRessource)}.{nameof(Btn_Validate_Click)}", $"An error occured during the copy of the file : {file}", null);
+                    Logger.Error($"{nameof(WindowAddTileTexture)}.{nameof(Btn_Validate_Click)}", $"An error occured during the copy of the file : {file}", null);
                 }
             }
 
@@ -194,7 +194,7 @@ namespace GameEditor.Windows
                     text += $"> {file}\n";
                 }
 
-                string caption = "GameEditor - WindowAddRessource";
+                string caption = "GameEditor - WindowAddTileTexture";
 
                 _ = System.Windows.MessageBox.Show(text, caption, MessageBoxButton.OK, MessageBoxImage.Error);
             }
