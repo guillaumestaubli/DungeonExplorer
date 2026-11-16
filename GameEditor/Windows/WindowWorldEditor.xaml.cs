@@ -259,18 +259,7 @@ namespace GameEditor.Windows
 
             if (_currentToolbar is ControlDrawWorldToolbar)
             {
-                ControlDrawWorldToolbar toolbar = (ControlDrawWorldToolbar)_currentToolbar;
-
-                if (toolbar.CurrentTileTexture == null)
-                    return;
-
-                Vector2i gridIndex = Dungeon.ConvertWorldCoordsToGridIndex(e.Position);
-
-                Tile tile = Dungeon.GetTile(gridIndex);
-
-                tile.TileTexture = toolbar.CurrentTileTexture;
-
-                Dungeon.UpdateTile(tile, gridIndex);
+                DrawSelectedTextureOnClickedTile(e);
 
                 return;
             }
@@ -529,7 +518,28 @@ namespace GameEditor.Windows
         #endregion
 
 
+        /// <summary>
+        /// Draw the selected texture on the clicked tile if a texture is selected
+        /// </summary>
+        /// <param name="e">EventArgs of the triggered event</param>
+        private void DrawSelectedTextureOnClickedTile(SFML.Window.MouseButtonEventArgs e)
+        {
+            if (_currentToolbar == null)
+                return;
 
+            ControlDrawWorldToolbar toolbar = (ControlDrawWorldToolbar)_currentToolbar;
+
+            if (toolbar.CurrentTileTexture == null)
+                return;
+
+            Vector2i gridIndex = Dungeon.ConvertWorldCoordsToGridIndex(e.Position);
+
+            Tile tile = Dungeon.GetTile(gridIndex);
+
+            tile.TileTexture = toolbar.CurrentTileTexture;
+
+            Dungeon.UpdateTile(tile, gridIndex);
+        }
     }
 
     public class DisplaySettings
