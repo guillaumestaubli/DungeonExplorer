@@ -17,9 +17,9 @@ using System.Windows.Shapes;
 namespace GameEditor.Windows.Controls
 {
     /// <summary>
-    /// Logique d'interaction pour ControlDrawWorldToolbar.xaml
+    /// Logique d'interaction pour ControlDrawTileToolbar.xaml
     /// </summary>
-    public partial class ControlDrawWorldToolbar : UserControl
+    public partial class ControlDrawTileToolbar : UserControl
     {
         private TileType? _tileType = null;
         private Image? _currentImgTexture = null;
@@ -32,7 +32,7 @@ namespace GameEditor.Windows.Controls
 
         #endregion
 
-        public ControlDrawWorldToolbar()
+        public ControlDrawTileToolbar()
         {
             InitializeComponent();
 

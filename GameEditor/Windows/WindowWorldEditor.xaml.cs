@@ -283,7 +283,7 @@ namespace GameEditor.Windows
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || _dragMove_Running)
                 return;
 
-            if (_currentToolbar is ControlDrawWorldToolbar)
+            if (_currentToolbar is ControlDrawTileToolbar)
             {
                 DrawSelectedTextureOnClickedTile(e);
 
@@ -533,7 +533,7 @@ namespace GameEditor.Windows
         /// <param name="e"></param>
         private void Btn_DrawTile_Click(object sender, RoutedEventArgs e)
         {
-            _currentToolbar = new ControlDrawWorldToolbar();
+            _currentToolbar = new ControlDrawTileToolbar();
 
             this.ToolbarContainer.Child = _currentToolbar;
         }
@@ -603,7 +603,7 @@ namespace GameEditor.Windows
             if (_currentToolbar == null)
                 return;
 
-            ControlDrawWorldToolbar toolbar = (ControlDrawWorldToolbar)_currentToolbar;
+            ControlDrawTileToolbar toolbar = (ControlDrawTileToolbar)_currentToolbar;
 
             if (toolbar.CurrentTileTexture == null)
                 return;
