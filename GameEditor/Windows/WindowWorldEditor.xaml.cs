@@ -700,7 +700,7 @@ namespace GameEditor.Windows
         [DisplaySettingDisplayName("Show Props Rectangle Hitbox")]
         public bool ShowPropsRectangleHitbox { get; set; } = false;
         [DisplaySettingDisplayName("Show Props Pixel Perfect Hitbox")]
-        public bool ShowPropsPixelPerfectHitbox { get; set; } = false;
+        public bool ShowPropsPixelPerfectHitbox { get; set; } = true;
 
         [DisplaySettingDisplayName("Show Entities")]
         public bool ShowEntities { get; set; } = true;
