@@ -17,8 +17,4 @@
     <ProjectReference Include="..\GameLib\GameLib.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Windows\Controls\WorldToolbar\" />
-  </ItemGroup>
-
 </Project>
