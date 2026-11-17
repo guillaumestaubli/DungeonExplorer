@@ -522,23 +522,41 @@ namespace GameEditor.Windows
             _ = MessageBox.Show(text, caption, MessageBoxButton.OK);
         }
 
+        #endregion
+
+        #region NAV_TAB_TILE
+
         /// <summary>
         /// Handle the Click event on Btn_DrawWorld
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Btn_DrawWorld_Click(object sender, RoutedEventArgs e)
+        private void Btn_DrawTile_Click(object sender, RoutedEventArgs e)
         {
             _currentToolbar = new ControlDrawWorldToolbar();
 
             this.ToolbarContainer.Child = _currentToolbar;
         }
 
-        #endregion
+        /// <summary>
+        /// Handle the Click event on Btn_InspectTile
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_InspectTile_Click(object sender, RoutedEventArgs e)
+        {
 
-        #region NAV_TAB_TILE
+        }
 
+        /// <summary>
+        /// Handle the Click event on Btn_EditTile
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_EditTile_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
 
         #endregion
 
@@ -549,6 +567,16 @@ namespace GameEditor.Windows
             _currentToolbar = new ControlAddPropToolbar();
 
             this.ToolbarContainer.Child = _currentToolbar;
+        }
+
+        private void Btn_InspectProp_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Btn_EditProp_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         #endregion
@@ -609,6 +637,8 @@ namespace GameEditor.Windows
 
             Dungeon.AddProp(prop);
         }
+
+        
     }
 
     public class DisplaySettings

@@ -106,12 +106,6 @@
                                     Margin="0,0,5,0" 
                                     Click="Btn_EditWorldSize_Click"/>
 
-                            <Button Name="Btn_DrawWorld"
-                                    Content="Draw"
-                                    Padding="10,5,10,5"
-                                    Margin="0,0,5,0" 
-                                    Click="Btn_DrawWorld_Click"/>
-
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -123,7 +117,23 @@
                             Background="Transparent">
                         <StackPanel Orientation="Horizontal">
 
+                            <Button Name="Btn_DrawTile"
+                                    Content="Draw"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_DrawTile_Click"/>
 
+                            <Button Name="Btn_InspectTile"
+                                    Content="Inspect"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0"
+                                    Click="Btn_InspectTile_Click"/>
+
+                            <Button Name="Btn_EditTile"
+                                    Content="Edit"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0"
+                                    Click="Btn_EditTile_Click"/>
 
                         </StackPanel>
                     </Border>
@@ -137,11 +147,22 @@
                         <StackPanel Orientation="Horizontal">
 
                             <Button Name="Btn_AddProp"
-                                    Content="Add prop"
+                                    Content="Add"
                                     Padding="10,5,10,5"
                                     Margin="0,0,5,0"
                                     Click="Btn_AddProp_Click"/>
 
+                            <Button Name="Btn_InspectProp"
+                                    Content="Inspect"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0"
+                                    Click="Btn_InspectProp_Click"/>
+
+                            <Button Name="Btn_EditProp"
+                                    Content="Edit"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0"
+                                    Click="Btn_EditProp_Click"/>
 
                         </StackPanel>
                     </Border>
