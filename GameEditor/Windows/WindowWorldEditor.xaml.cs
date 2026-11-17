@@ -18,6 +18,8 @@ using GameLib.World;
 using GameLib.World.Tiles;
 using GameEditor.Windows.Controls;
 using GameLib.World.Props;
+using GameEditor.Windows.Controls.TileToolbar;
+using GameEditor.Windows.Controls.PropToolbar;
 
 namespace GameEditor.Windows
 {

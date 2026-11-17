@@ -1,5 +1,4 @@
-﻿using GameEditor.Helper;
-using GameLib.Ressources;
+﻿using GameLib.Ressources;
 using GameLib.World.Tiles;
 using System;
 using System.Collections.Generic;
@@ -14,90 +13,34 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GameEditor.Windows.Controls
+namespace GameEditor.Windows.Controls.PropToolbar
 {
     /// <summary>
-    /// Logique d'interaction pour ControlDrawTileToolbar.xaml
+    /// Logique d'interaction pour ControlAddPropToolbar.xaml
     /// </summary>
-    public partial class ControlDrawTileToolbar : UserControl
+    public partial class ControlAddPropToolbar : UserControl
     {
-        private TileType? _tileType = null;
         private Image? _currentImgTexture = null;
-        private TileTexture? _currentTileTexture = null;
+        private PropTexture? _currentPropTexture = null;
 
         #region GET_SET
 
-        public TileType? CurrentTileType { get { return _tileType; } }
-        public TileTexture? CurrentTileTexture { get { return _currentTileTexture; } }
+        public PropTexture? CurrentPropTexture { get { return _currentPropTexture; } }
 
         #endregion
 
-        public ControlDrawTileToolbar()
+        public ControlAddPropToolbar()
         {
             InitializeComponent();
 
-            this.Loaded += ControlDrawWorldToolbar_Loaded;
+            this.Loaded += ControlAddPropToolbar_Loaded;
         }
 
-        private void ControlDrawWorldToolbar_Loaded(object sender, RoutedEventArgs e)
-        {
-            foreach (KeyValuePair<TileType, string> tileType in TextureHelper.DisplayTileTypes)
-            {
-                ComboBoxItem item = new()
-                {
-                    Name = $"TileType_{(int)tileType.Key}",
-                    Content = tileType.Value + " texture",
-                    Tag = (int)tileType.Key
-                };
-
-                this.ComboBox_Type.Items.Add(item);
-            }
-        }
-
-        private void ComboBox_Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            _tileType = null;
-
-            ComboBoxItem? item = (ComboBoxItem?)this.ComboBox_Type.SelectedItem;
-
-            if (item == null)
-            {
-                UpdateTextureList(null);
-                return;
-            }
-
-            string? tag = item.Tag.ToString();
-
-            if (tag == null)
-            {
-                UpdateTextureList(null);
-                return;
-            }
-
-            int index = 0;
-
-            if (!int.TryParse(tag, out index))
-            {
-                UpdateTextureList(null);
-                return;
-            }
-
-            _tileType = (TileType)index;
-
-            UpdateTextureList(_tileType);
-
-            _currentImgTexture = null;
-            _currentTileTexture = null;
-        }
-
-        private void UpdateTextureList(TileType? tileType)
+        private void ControlAddPropToolbar_Loaded(object sender, RoutedEventArgs e)
         {
             this.WrapPanel_Textures.Children.Clear();
 
-            if (tileType == null)
-                return;
-
-            TextureBase[] textures = RessourcesManager.GetTileTextures((TileType)tileType);
+            TextureBase[] textures = RessourcesManager.PropTextures.ToArray();
 
             foreach (TextureBase texture in textures)
             {
@@ -143,16 +86,13 @@ namespace GameEditor.Windows.Controls
             if (sender is not Image)
                 return;
 
-            if (_tileType == null)
-                return;
-
             if (_currentImgTexture != null)
             {
                 ((Border)_currentImgTexture.Parent).BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C2C2C2"));
             }
 
             _currentImgTexture = (Image)sender;
-            _currentTileTexture = RessourcesManager.GetTileTexture((string)_currentImgTexture.Tag, (TileType)_tileType);
+            _currentPropTexture = RessourcesManager.GetPropTexture((string)_currentImgTexture.Tag);
 
             ((Border)_currentImgTexture.Parent).BorderBrush = Brushes.Red;
         }
