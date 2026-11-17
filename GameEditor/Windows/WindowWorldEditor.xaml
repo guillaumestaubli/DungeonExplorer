@@ -34,7 +34,13 @@
                                     Padding="10,5,10,5"
                                     Margin="0,0,5,0" 
                                     Click="Btn_Save_Click"/>
-
+                            
+                            <Button Name="Btn_WorldMap"
+                                    Content="World Map"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_WorldMap_Click"/>
+                            
                             <Button Name="Btn_AddTileTextures"
                                     Content="Add Tile Textures"
                                     Padding="10,5,10,5"
@@ -46,12 +52,6 @@
                                     Padding="10,5,10,5"
                                     Margin="0,0,5,0" 
                                     Click="Btn_AddPropTextures_Click"/>
-
-                            <Button Name="Btn_InitializeTiles"
-                                    Content="Initialize Tiles"
-                                    Padding="10,5,10,5"
-                                    Margin="0,0,5,0" 
-                                    Click="Btn_InitializeTiles_Click" />
 
                         </StackPanel>
                     </Border>
@@ -93,18 +93,23 @@
 
                 </Grid>
             </TabItem>
-            <TabItem Header="World">
+            <TabItem Header="Level">
                 <Grid Background="#282828">
                     <Border Margin="5"
                             BorderBrush="Transparent"
                             Background="Transparent">
                         <StackPanel Orientation="Horizontal">
 
-                            <Button Name="Btn_EditWorldSize"
-                                    Content="Edit Size"
+                            <Button Name="Btn_InitializeTiles"
+                                    Content="Initialize Tiles"
                                     Padding="10,5,10,5"
                                     Margin="0,0,5,0" 
-                                    Click="Btn_EditWorldSize_Click"/>
+                                    Click="Btn_InitializeTiles_Click" />
+
+                            <Button Name="Btn_ViewLevel"
+                                    Content="Details"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" Click="Btn_ViewLevel_Click"/>
 
                         </StackPanel>
                     </Border>
@@ -175,7 +180,23 @@
                             Background="Transparent">
                         <StackPanel Orientation="Horizontal">
 
+                            <Button Name="Btn_AddEntity"
+                                    Content="Add"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_AddEntity_Click"/>
 
+                            <Button Name="Btn_InspectEntity"
+                                    Content="Inspect"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_InspectEntity_Click"/>
+
+                            <Button Name="Btn_EditEntity"
+                                    Content="Edit"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_EditEntity_Click"/>
 
                         </StackPanel>
                     </Border>

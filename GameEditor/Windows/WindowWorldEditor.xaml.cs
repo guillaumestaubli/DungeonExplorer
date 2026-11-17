@@ -13,13 +13,14 @@ using System.Reflection;
 using SFML.System;
 using SFML.Graphics;
 
-using GameLib;
 using GameLib.World;
 using GameLib.World.Tiles;
-using GameEditor.Windows.Controls;
 using GameLib.World.Props;
+
 using GameEditor.Windows.Controls.TileToolbar;
 using GameEditor.Windows.Controls.PropToolbar;
+using GameEditor.Windows.Controls.EntityToolbar;
+using GameEditor.Windows.Controls.LevelToolbar;
 
 namespace GameEditor.Windows
 {
@@ -383,17 +384,7 @@ namespace GameEditor.Windows
             _ = window.ShowDialog();
         }
 
-        /// <summary>
-        /// Handle the Click event on Btn_InitializeTiles
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Btn_InitializeTiles_Click(object sender, RoutedEventArgs e)
-        {
-            WindowInitializeTiles windowInitializeTiles = new WindowInitializeTiles();
 
-            _ = windowInitializeTiles.ShowDialog();
-        }
 
         #endregion
 
@@ -509,19 +500,25 @@ namespace GameEditor.Windows
 
         #endregion
 
-        #region NAV_TAB_WORLD
+        #region NAV_TAB_LEVEL
 
         /// <summary>
-        /// Handle the Click event on Btn_EditWorldSize
+        /// Handle the Click event on Btn_InitializeTiles
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Btn_EditWorldSize_Click(object sender, RoutedEventArgs e)
+        private void Btn_InitializeTiles_Click(object sender, RoutedEventArgs e)
         {
-            string text = "Not implemented";
-            string caption = "DungeonExplorer - GameEditor - Info";
+            WindowInitializeTiles windowInitializeTiles = new WindowInitializeTiles();
 
-            _ = MessageBox.Show(text, caption, MessageBoxButton.OK);
+            _ = windowInitializeTiles.ShowDialog();
+        }
+
+        private void Btn_ViewLevel_Click(object sender, RoutedEventArgs e)
+        {
+            _currentToolbar = new ControlViewLevelToolbar();
+
+            this.ToolbarContainer.Child = _currentToolbar;
         }
 
         #endregion
@@ -547,7 +544,9 @@ namespace GameEditor.Windows
         /// <param name="e"></param>
         private void Btn_InspectTile_Click(object sender, RoutedEventArgs e)
         {
+            _currentToolbar = new ControlViewTileToolbar();
 
+            this.ToolbarContainer.Child = _currentToolbar;
         }
 
         /// <summary>
@@ -557,7 +556,9 @@ namespace GameEditor.Windows
         /// <param name="e"></param>
         private void Btn_EditTile_Click(object sender, RoutedEventArgs e)
         {
+            _currentToolbar = new ControlEditTileToolbar();
 
+            this.ToolbarContainer.Child = _currentToolbar;
         }
 
         #endregion
@@ -573,19 +574,42 @@ namespace GameEditor.Windows
 
         private void Btn_InspectProp_Click(object sender, RoutedEventArgs e)
         {
+            _currentToolbar = new ControlViewPropToolbar();
 
+            this.ToolbarContainer.Child = _currentToolbar;
         }
 
         private void Btn_EditProp_Click(object sender, RoutedEventArgs e)
         {
+            _currentToolbar = new ControlEditPropToolbar();
 
+            this.ToolbarContainer.Child = _currentToolbar;
         }
 
         #endregion
 
         #region NAV_TAB_ENTITIES
 
+        private void Btn_AddEntity_Click(object sender, RoutedEventArgs e)
+        {
+            _currentToolbar = new ControlAddEntityToolbar();
 
+            this.ToolbarContainer.Child = _currentToolbar;
+        }
+
+        private void Btn_InspectEntity_Click(object sender, RoutedEventArgs e)
+        {
+            _currentToolbar = new ControlViewEntityToolbar();
+
+            this.ToolbarContainer.Child = _currentToolbar;
+        }
+
+        private void Btn_EditEntity_Click(object sender, RoutedEventArgs e)
+        {
+            _currentToolbar = new ControlEditEntityToolbar();
+
+            this.ToolbarContainer.Child = _currentToolbar;
+        }
 
         #endregion
 
@@ -599,7 +623,7 @@ namespace GameEditor.Windows
         /// <summary>
         /// Draw the selected texture on the clicked tile if a texture is selected
         /// </summary>
-        /// <param name="e">EventArgs of the triggered event</param>
+        /// <param name="e">EventArgs of the base event</param>
         private void DrawSelectedTextureOnClickedTile(SFML.Window.MouseButtonEventArgs e)
         {
             if (_currentToolbar == null)
@@ -623,6 +647,10 @@ namespace GameEditor.Windows
             Dungeon.UpdateTile(tile, gridIndex);
         }
 
+        /// <summary>
+        /// Add the selected prop on the clicked tile if a prop is selected
+        /// </summary>
+        /// <param name="e">EventArgs of the base event</param>
         private void DrawSelectedPropOnClickedTile(SFML.Window.MouseButtonEventArgs e)
         {
             if (_currentToolbar == null)
@@ -640,7 +668,12 @@ namespace GameEditor.Windows
             Dungeon.AddProp(prop);
         }
 
-        
+        private void Btn_WorldMap_Click(object sender, RoutedEventArgs e)
+        {
+            WindowWorldMap windowWorldMap = new();
+
+            _ = windowWorldMap.ShowDialog();
+        }
     }
 
     public class DisplaySettings
