@@ -23,7 +23,7 @@
         <!-- Navigation -->
         <TabControl Grid.Row="0">
             <TabItem Header="Project">
-                <Grid Background="#202020">
+                <Grid Background="#282828">
                     <Border Margin="5"
                             BorderBrush="Transparent"
                             Background="Transparent">
@@ -58,7 +58,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Display">
-                <Grid Background="#202020">
+                <Grid Background="#282828">
                     <Border Margin="5"
                             BorderBrush="Transparent"
                             Background="Transparent">
@@ -94,7 +94,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="World">
-                <Grid Background="#202020">
+                <Grid Background="#282828">
                     <Border Margin="5"
                             BorderBrush="Transparent"
                             Background="Transparent">
@@ -117,7 +117,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Tile">
-                <Grid Background="#202020">
+                <Grid Background="#282828">
                     <Border Margin="5"
                             BorderBrush="Transparent"
                             Background="Transparent">
@@ -130,12 +130,17 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Props">
-                <Grid Background="#202020">
+                <Grid Background="#282828">
                     <Border Margin="5"
                             BorderBrush="Transparent"
                             Background="Transparent">
                         <StackPanel Orientation="Horizontal">
 
+                            <Button Name="Btn_AddProp"
+                                    Content="Add prop"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0"
+                                    Click="Btn_AddProp_Click"/>
 
 
                         </StackPanel>
@@ -143,7 +148,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Entities">
-                <Grid Background="#202020">
+                <Grid Background="#282828">
                     <Border Margin="5"
                             BorderBrush="Transparent"
                             Background="Transparent">
@@ -156,7 +161,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Player">
-                <Grid Background="#202020">
+                <Grid Background="#282828">
                     <Border Margin="5"
                             BorderBrush="Transparent"
                             Background="Transparent">

@@ -138,7 +138,6 @@ namespace GameLib.Ressources
                 return _propTextureNotFound;
 
             return texture;
-
         }
     }
 }

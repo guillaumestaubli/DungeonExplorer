@@ -40,8 +40,8 @@ namespace GameLib.World.Props
         {
             get
             {
-                float oX = _origin.X;
-                float oY = _origin.Y;
+                float oX = _renderPosition.X;
+                float oY = _renderPosition.Y;
                 float dX = _renderSize.X / 2.0f;
                 float dY = _renderSize.Y / 2.0f;
 
@@ -53,16 +53,16 @@ namespace GameLib.World.Props
 
         #endregion
 
-        public Prop(Vector2i gridIndex, PropTexture texture)
+        public Prop(Vector2i gridIndex, Vector2f renderSize, PropTexture texture)
         {
             _id = Guid.NewGuid();
             _gridIndex = gridIndex;
 
-            float o_x = texture.Image.Size.X / 2.0f;
-            float o_y = texture.Image.Size.Y / 2.0f;
+            float o_x = renderSize.X / 2.0f;
+            float o_y = renderSize.Y / 2.0f;
             _origin = new(o_x, o_y);
 
-            _renderSize = (Vector2f)texture.Image.Size;
+            _renderSize = renderSize;
 
             float r_x = (gridIndex.X * Dungeon.CurrentLevel.TileRenderSize.X) + (Dungeon.CurrentLevel.TileRenderSize.X / 2.0f);
             float r_y = (gridIndex.Y * Dungeon.CurrentLevel.TileRenderSize.Y) + (Dungeon.CurrentLevel.TileRenderSize.Y / 2.0f);
@@ -97,8 +97,8 @@ namespace GameLib.World.Props
 
         private VertexArray CreateVertexArrayProp()
         {
-            float oX = _origin.X;
-            float oY = _origin.Y;
+            float oX = _renderPosition.X;
+            float oY = _renderPosition.Y;
 
             float dX = _renderSize.X / 2.0f;
             float dY = _renderSize.Y / 2.0f;
@@ -109,28 +109,28 @@ namespace GameLib.World.Props
             {
                 Position = new(oX - dX, oY - dY),
                 TexCoords = new(0.0f, 0.0f),
-                Color = Color.Transparent
+                Color = Color.White
             };
 
             array[1] = new()
             {
                 Position = new(oX - dX, oY + dY),
                 TexCoords = new(0.0f, _texture.Image.Size.Y),
-                Color = Color.Transparent
+                Color = Color.White
             };
 
             array[2] = new()
             {
                 Position = new(oX + dX, oY - dY),
                 TexCoords = new(_texture.Image.Size.X, 0.0f),
-                Color = Color.Transparent
+                Color = Color.White
             };
 
             array[3] = new()
             {
                 Position = new(oX + dX, oY + dY),
                 TexCoords = (Vector2f)_texture.Image.Size,
-                Color = Color.Transparent
+                Color = Color.White
             };
 
             return array;
@@ -138,8 +138,8 @@ namespace GameLib.World.Props
 
         private VertexArray CreateVertexArrayRectBorders()
         {
-            float oX = _origin.X;
-            float oY = _origin.Y;
+            float oX = _renderPosition.X;
+            float oY = _renderPosition.Y;
 
             float dX = _renderSize.X / 2.0f;
             float dY = _renderSize.Y / 2.0f;

@@ -256,5 +256,32 @@ namespace GameLib.Files
             return ior;
         }
 
+        public static IOResult CopyPropTextureInProject(string sourceFileName)
+        {
+            FileInfo origin = new FileInfo(sourceFileName);
+
+            if (!origin.Exists)
+                return IOResult.DONT_EXISTS;
+
+            string destFilename = Config.PathDirResProps;
+
+            DirectoryInfo destDir = new DirectoryInfo(destFilename);
+
+            bool exists = destDir.EnumerateFiles().Where(x => x.Name == origin.Name).Count() > 0;
+
+            if (exists)
+                return IOResult.ALREADY_EXISTS;
+
+            destFilename += "\\";
+            destFilename += sourceFileName.Split('\\').Last();
+
+            IOResult ior = IOHelper.CopyFile(sourceFileName, destFilename);
+
+            if (ior == IOResult.OK)
+                Dungeon.AddPropTextureFile(destFilename);
+
+            return ior;
+        }
+
     }
 }

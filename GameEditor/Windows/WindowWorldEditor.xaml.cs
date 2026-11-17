@@ -280,11 +280,19 @@ namespace GameEditor.Windows
             if (_currentToolbar == null)
                 return;
 
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || _dragMove_Running)
+                return;
+
             if (_currentToolbar is ControlDrawWorldToolbar)
             {
                 DrawSelectedTextureOnClickedTile(e);
 
                 return;
+            }
+
+            if (_currentToolbar is ControlAddPropToolbar)
+            {
+                DrawSelectedPropOnClickedTile(e);
             }
         }
 
@@ -536,7 +544,12 @@ namespace GameEditor.Windows
 
         #region NAV_TAB_PROPS
 
+        private void Btn_AddProp_Click(object sender, RoutedEventArgs e)
+        {
+            _currentToolbar = new ControlAddPropToolbar();
 
+            this.ToolbarContainer.Child = _currentToolbar;
+        }
 
         #endregion
 
@@ -567,15 +580,35 @@ namespace GameEditor.Windows
             if (toolbar.CurrentTileTexture == null)
                 return;
 
-            Vector2i gridIndex = Dungeon.ConvertWorldCoordsToGridIndex(e.Position);
+            if (toolbar.CurrentTileType == null)
+                return;
+
+            Vector2i gridIndex = Dungeon.ConvertWorldCoordsToGridIndex(_renderArea.MapPixelToCoords(e.Position));
 
             Tile tile = Dungeon.GetTile(gridIndex);
 
             tile.TileTexture = toolbar.CurrentTileTexture;
+            tile.Type = (TileType)toolbar.CurrentTileType;
 
             Dungeon.UpdateTile(tile, gridIndex);
         }
 
+        private void DrawSelectedPropOnClickedTile(SFML.Window.MouseButtonEventArgs e)
+        {
+            if (_currentToolbar == null)
+                return;
+
+            ControlAddPropToolbar toolbar = (ControlAddPropToolbar)_currentToolbar;
+
+            if (toolbar.CurrentPropTexture == null)
+                return;
+
+            Vector2i gridIndex = Dungeon.ConvertWorldCoordsToGridIndex(_renderArea.MapPixelToCoords(e.Position));
+
+            Prop prop = new(gridIndex, Dungeon.CurrentLevel.TileRenderSize, toolbar.CurrentPropTexture);
+
+            Dungeon.AddProp(prop);
+        }
     }
 
     public class DisplaySettings

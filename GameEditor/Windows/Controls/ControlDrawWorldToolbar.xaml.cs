@@ -27,6 +27,7 @@ namespace GameEditor.Windows.Controls
 
         #region GET_SET
 
+        public TileType? CurrentTileType { get { return _tileType; } }
         public TileTexture? CurrentTileTexture { get { return _currentTileTexture; } }
 
         #endregion

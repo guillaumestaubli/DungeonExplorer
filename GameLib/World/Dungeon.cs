@@ -6,6 +6,7 @@ using GameLib.Files;
 using GameLib.Files.SaveFiles;
 using GameLib.Logging;
 using GameLib.Ressources;
+using GameLib.World.Props;
 using GameLib.World.Tiles;
 using SFML.System;
 
@@ -120,6 +121,11 @@ namespace GameLib.World
             }
         }
 
+        public static void AddPropTextureFile(string file)
+        {
+            _texturesPropsFiles.Add(file);
+        }
+
         public static Vector2i ConvertWorldCoordsToGridIndex(Vector2f screenCoords)
         {
             int x = (int)(screenCoords.X / _levels[_currentLevelIndex].TileRenderSize.X);
@@ -153,6 +159,15 @@ namespace GameLib.World
             DungeonLevel level = _levels[_currentLevelIndex];
 
             level.UpdateTile(tile, gridIndex);
+
+            _levels[_currentLevelIndex] = level;
+        }
+
+        public static void AddProp(Prop prop)
+        {
+            DungeonLevel level = _levels[_currentLevelIndex];
+
+            level.Props.Add(prop);
 
             _levels[_currentLevelIndex] = level;
         }
