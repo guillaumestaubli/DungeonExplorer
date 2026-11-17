@@ -384,6 +384,13 @@ namespace GameEditor.Windows
             _ = window.ShowDialog();
         }
 
+        private void Btn_WorldMap_Click(object sender, RoutedEventArgs e)
+        {
+            WindowWorldMap windowWorldMap = new();
+
+            _ = windowWorldMap.ShowDialog();
+        }
+
 
 
         #endregion
@@ -668,12 +675,7 @@ namespace GameEditor.Windows
             Dungeon.AddProp(prop);
         }
 
-        private void Btn_WorldMap_Click(object sender, RoutedEventArgs e)
-        {
-            WindowWorldMap windowWorldMap = new();
-
-            _ = windowWorldMap.ShowDialog();
-        }
+        
     }
 
     public class DisplaySettings
