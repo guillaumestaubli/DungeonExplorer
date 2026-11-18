@@ -15,7 +15,7 @@ namespace GameEditor.Windows.Controls.TileToolbar
     /// <summary>
     /// Logique d'interaction pour ControlEditTileToolbar.xaml
     /// </summary>
-    public partial class ControlEditTileToolbar : Window
+    public partial class ControlEditTileToolbar : UserControl
     {
         public ControlEditTileToolbar()
         {

@@ -60,11 +60,7 @@ namespace GameLib.World
             {
                 for (int y = 0; y < gridSize.Y; ++y)
                 {
-                    _tiles[x, y] = new Tile(TileType.Void, new Vector2i(x, y), _tileRenderSize)
-                    {
-                        ShowBorders = true,
-                        ShowIndex = true
-                    };
+                    _tiles[x, y] = new Tile(TileType.Void, new Vector2i(x, y), _tileRenderSize);
                 }
             }
 
@@ -84,15 +80,11 @@ namespace GameLib.World
             {
                 for (int y = 0; y < _gridSize.Y; ++y)
                 {
-                    _tiles[x, y] = new(save.Tiles[x, y], _tileRenderSize)
-                    {
-                        ShowBorders = true,
-                        ShowIndex = true
-                    };
+                    _tiles[x, y] = new(save.Tiles[x, y], _tileRenderSize);
                 }
             }
 
-            for(int i = 0; i < save.Props.Length; ++i)
+            for (int i = 0; i < save.Props.Length; ++i)
             {
                 _props.Add(new(save.Props[i]));
             }

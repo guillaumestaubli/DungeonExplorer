@@ -289,13 +289,19 @@ namespace GameEditor.Windows
             if (_currentToolbar is ControlDrawTileToolbar)
             {
                 DrawSelectedTextureOnClickedTile(e);
-
                 return;
             }
 
             if (_currentToolbar is ControlAddPropToolbar)
             {
                 DrawSelectedPropOnClickedTile(e);
+                return;
+            }
+
+            if (_currentToolbar is ControlViewTileToolbar)
+            {
+                LoadSelectedTileOnTileDetailsToolbar(e);
+                return;
             }
         }
 
@@ -675,7 +681,19 @@ namespace GameEditor.Windows
             Dungeon.AddProp(prop);
         }
 
-        
+        private void LoadSelectedTileOnTileDetailsToolbar(SFML.Window.MouseButtonEventArgs e)
+        {
+            if (_currentToolbar == null)
+                return;
+
+            Vector2i gridIndex = Dungeon.ConvertWorldCoordsToGridIndex(_renderArea.MapPixelToCoords(e.Position));
+
+            Tile tile = Dungeon.GetTile(gridIndex);
+
+            ((ControlViewTileToolbar)_currentToolbar).LoadTile(tile);
+        }
+
+
     }
 
     public class DisplaySettings
@@ -700,7 +718,7 @@ namespace GameEditor.Windows
         [DisplaySettingDisplayName("Show Props Rectangle Hitbox")]
         public bool ShowPropsRectangleHitbox { get; set; } = false;
         [DisplaySettingDisplayName("Show Props Pixel Perfect Hitbox")]
-        public bool ShowPropsPixelPerfectHitbox { get; set; } = true;
+        public bool ShowPropsPixelPerfectHitbox { get; set; } = false;
 
         [DisplaySettingDisplayName("Show Entities")]
         public bool ShowEntities { get; set; } = true;

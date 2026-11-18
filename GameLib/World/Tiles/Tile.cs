@@ -17,8 +17,6 @@ namespace GameLib.World.Tiles
         private Vector2i _gridIndex;
         private Vector2f _renderPosition;
         private Vector2f _renderSize;
-        private bool _showBorders;
-        private bool _showIndex;
         private Color _borderColor;
         private TileTexture _tileTexture;
 
@@ -35,8 +33,6 @@ namespace GameLib.World.Tiles
         public TileType Type { get { return _type; } set { _type = value; } }
         public Vector2i GridIndex { get { return _gridIndex; } }
         public FloatRect GlobalBounds { get { return new FloatRect(_renderPosition, _renderSize); } }
-        public bool ShowBorders { get { return _showBorders; } set { _showBorders = value; } }
-        public bool ShowIndex { get { return _showIndex; } set { _showIndex = value; } }
         public Color BorderColor { get { return _borderColor; } set { _borderColor = value; } }
         public RenderStates BackgroundRenderStates { get { return _backgroundRenderStates; } }
 
@@ -63,8 +59,6 @@ namespace GameLib.World.Tiles
             _gridIndex = gridIndex;
             _renderSize = renderSize;
             _renderPosition = new Vector2f(gridIndex.X * _renderSize.X, gridIndex.Y * _renderSize.Y);
-            _showBorders = false;
-            _showIndex = false;
             _borderColor = Color.White;
             _tileTexture = RessourcesManager.TileTextureNotFound;
             _backgroundRenderStates = new(_tileTexture.Texture)
@@ -87,8 +81,6 @@ namespace GameLib.World.Tiles
             _gridIndex = new(save.GridIndex_X, save.GridIndex_Y);
             _renderSize = new(renderSize.X, renderSize.Y);
             _renderPosition = new(_gridIndex.X * _renderSize.X, _gridIndex.Y * _renderSize.Y);
-            _showBorders = false;
-            _showIndex = false;
             _borderColor = Color.White;
             _tileTexture = RessourcesManager.GetTileTexture(save.Texture, _type);
 
