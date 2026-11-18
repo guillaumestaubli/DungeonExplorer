@@ -15,6 +15,7 @@ namespace GameLib.World.Props
         private Vector2f _renderSize;
         private Vector2f _renderPosition;
         private PropTexture _texture;
+        private Vector2f[] _globalPointsPixelPerfectBorder;
 
         private VertexArray _vaProp;
         private RenderStates _renderStates;
@@ -28,6 +29,7 @@ namespace GameLib.World.Props
         public Vector2f RenderSize { get { return _renderSize; } }
         public Vector2f RenderPosition { get { return _renderPosition; } }
         public PropTexture Texture { get { return _texture; } }
+        public Vector2f[] GlobalPointsPixelPerfectBorder { get { return _globalPointsPixelPerfectBorder; } }
 
         public VertexArray D_Prop { get { return _vaProp; } }
         public RenderStates D_Prop_RenderStates { get { return _renderStates; } }
@@ -51,6 +53,9 @@ namespace GameLib.World.Props
 
             _texture = texture;
 
+            Vector2f scale = new(_renderSize.X / _texture.Image.Size.X, _renderSize.Y / _texture.Image.Size.Y);
+            _globalPointsPixelPerfectBorder = _texture.GetGlobalPointsPixelPerfectBorder(_renderPosition, scale);
+
             _vaProp = CreateVertexArrayProp();
             _renderStates = CreatePropRenderStates();
             _vaRectBorders = CreateVertexArrayRectBorders();
@@ -64,6 +69,10 @@ namespace GameLib.World.Props
             _renderSize = new(save.RenderSize_X, save.RenderSize_Y);
             _renderPosition = new(save.RenderPosition_X, save.RenderPosition_Y);
             _texture = RessourcesManager.GetPropTexture(save.TextureName);
+
+            Vector2f scale = new(_renderSize.X / _texture.Image.Size.X, _renderSize.Y / _texture.Image.Size.Y);
+            _globalPointsPixelPerfectBorder = _texture.GetGlobalPointsPixelPerfectBorder(_renderPosition, scale);
+
             _vaProp = CreateVertexArrayProp();
             _renderStates = CreatePropRenderStates();
             _vaRectBorders = CreateVertexArrayRectBorders();
@@ -153,7 +162,35 @@ namespace GameLib.World.Props
 
         private VertexArray CreateVertexArrayPixelPerfectBorders()
         {
-            return new(PrimitiveType.LineStrip, 0);
+            // add 1 more vertex to close the linestrip and form a loop
+            VertexArray array = new VertexArray(PrimitiveType.LineStrip, (uint)_globalPointsPixelPerfectBorder.Length + 1);
+
+            Vector2f scale = new()
+            {
+                X = _renderSize.X / _texture.Image.Size.X,
+                Y = _renderSize.Y / _texture.Image.Size.Y
+            };
+
+            // draw each point of the line
+            for (uint i = 0; i < _globalPointsPixelPerfectBorder.Length; ++i)
+            {
+                Vertex vertex = new()
+                {
+                    Position = _globalPointsPixelPerfectBorder[i],
+                    Color = Color.Magenta
+                };
+
+                array[i] = vertex;
+            }
+
+            // draw the first point again to close the linestrip loop
+            array[(uint)_globalPointsPixelPerfectBorder.Length] = new Vertex()
+            {
+                Position = _globalPointsPixelPerfectBorder[0],
+                Color = Color.Magenta
+            };
+
+            return array;
         }
     }
 }
