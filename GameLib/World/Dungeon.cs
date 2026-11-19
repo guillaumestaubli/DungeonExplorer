@@ -16,7 +16,7 @@ namespace GameLib.World
     {
         #region ATTTRIBUTES
 
-        private static List<DungeonLevel> _levels = new List<DungeonLevel>();
+        private static List<Level> _levels = new List<Level>();
         private static int _currentLevelIndex = 0;
 
         private static List<string> _texturesDoorsFiles = [];
@@ -30,8 +30,8 @@ namespace GameLib.World
 
         #region GET_SET
 
-        public static List<DungeonLevel> Levels { get { return _levels; } }
-        public static DungeonLevel CurrentLevel { get { return _levels[CurrentLevelIndex]; } }
+        public static List<Level> Levels { get { return _levels; } }
+        public static Level CurrentLevel { get { return _levels[CurrentLevelIndex]; } }
         public static int CurrentLevelIndex { get { return _currentLevelIndex; } }
 
         public static List<string> TexturesDoorsFiles { get { return _texturesDoorsFiles; } set { _texturesDoorsFiles = value; } }
@@ -47,7 +47,7 @@ namespace GameLib.World
         {
             bool outSuccess = true;
 
-            DungeonLevel firstLevel = new DungeonLevel(0, gridSize, tileRenderSize, "level_0");
+            Level firstLevel = new Level(0, gridSize, tileRenderSize, "level_0");
 
             _levels.Add(firstLevel);
 
@@ -73,14 +73,14 @@ namespace GameLib.World
             {
                 LevelSave levelSave = FilesManager.LoadLevelSave(levelPath);
 
-                DungeonLevel level = new(levelSave);
+                Level level = new(levelSave);
 
                 _levels.Add(level);
             }
 
             LevelSave firstLevelSave = FilesManager.LoadLevelSave(dungeonSave.PathFirstLevel);
 
-            DungeonLevel? firstLevel = _levels.Where(x => x.ID.ToString() == firstLevelSave.ID).FirstOrDefault();
+            Level? firstLevel = _levels.Where(x => x.ID.ToString() == firstLevelSave.ID).FirstOrDefault();
 
             if (firstLevel == null)
                 _currentLevelIndex = 0;
@@ -156,7 +156,7 @@ namespace GameLib.World
 
         public static void UpdateTile(Tile tile, Vector2i gridIndex)
         {
-            DungeonLevel level = _levels[_currentLevelIndex];
+            Level level = _levels[_currentLevelIndex];
 
             level.UpdateTile(tile, gridIndex);
 
@@ -165,7 +165,7 @@ namespace GameLib.World
 
         public static void AddProp(Prop prop)
         {
-            DungeonLevel level = _levels[_currentLevelIndex];
+            Level level = _levels[_currentLevelIndex];
 
             level.Props.Add(prop);
 

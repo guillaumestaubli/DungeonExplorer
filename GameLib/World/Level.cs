@@ -8,7 +8,7 @@ using System.Text;
 
 namespace GameLib.World
 {
-    public class DungeonLevel
+    public class Level
     {
         #region ATTTRIBUTES
 
@@ -46,7 +46,7 @@ namespace GameLib.World
 
         #endregion
 
-        public DungeonLevel(int index, Vector2i gridSize, Vector2f tileRenderSize, string name)
+        public Level(int index, Vector2i gridSize, Vector2f tileRenderSize, string name)
         {
             _id = Guid.NewGuid();
             _index = index;
@@ -66,7 +66,7 @@ namespace GameLib.World
 
         }
 
-        public DungeonLevel(LevelSave save)
+        public Level(LevelSave save)
         {
             _id = new Guid(save.ID);
             _index = save.Index;

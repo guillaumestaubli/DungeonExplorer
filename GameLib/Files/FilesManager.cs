@@ -198,7 +198,7 @@ namespace GameLib.Files
 
             _ = IOHelper.WriteToFile(Config.PathFileDungeon, dungeonSaveJson, false, Encoding.UTF8);
 
-            foreach(DungeonLevel level in Dungeon.Levels)
+            foreach(Level level in Dungeon.Levels)
             {
                 LevelSave levelSave = new LevelSave(level);
 

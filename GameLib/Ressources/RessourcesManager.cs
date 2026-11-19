@@ -116,7 +116,7 @@ namespace GameLib.Ressources
 
         public static void ApplyTextureToAllTiles(TileTexture texture, TileType type)
         {
-            DungeonLevel level = Dungeon.CurrentLevel;
+            Level level = Dungeon.CurrentLevel;
 
             for (int x = 0; x < level.GridSize.X; ++x)
             {

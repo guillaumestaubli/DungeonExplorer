@@ -105,7 +105,7 @@ namespace GameEditor.Windows
         /// Draw only the visible part of the map to increase performances on large maps
         /// </summary>
         /// <param name="level">level to draw</param>
-        private void DrawGround(DungeonLevel level)
+        private void DrawGround(Level level)
         {
             FloatRect viewBounds = new FloatRect(_viewPosition, _view.Size);
 
@@ -132,7 +132,7 @@ namespace GameEditor.Windows
             }
         }
 
-        private void DrawProps(DungeonLevel level)
+        private void DrawProps(Level level)
         {
             FloatRect viewBounds = new FloatRect(_viewPosition, _view.Size);
 
@@ -472,7 +472,7 @@ namespace GameEditor.Windows
         private void InitializeDisplayMenu()
         {
             StackPanel[] panels = [StckPanel_DisplayTile, StckPanel_DisplayProps, StckPanel_DisplayEntities, StckPanel_DisplayPlayer];
-            int[] itemsPerPanel = [5, 3, 4, 3];
+            int[] itemsPerPanel = [5, 3, 4, 4];
             int panelIndex = 0;
             int itemCounter = 0;
 
@@ -735,6 +735,8 @@ namespace GameEditor.Windows
         public bool ShowPlayerRectangleHitbox { get; set; } = false;
         [DisplaySettingDisplayName("Show Player Pixel Perfect Hitbox")]
         public bool ShowPlayerPixelPerfectHitbox { get; set; } = false;
+        [DisplaySettingDisplayName("Show Player Spawn Point")]
+        public bool ShowPlayerSpawnPoint { get; set; } = false;
     }
 
     [AttributeUsage(AttributeTargets.Property, Inherited = false)]

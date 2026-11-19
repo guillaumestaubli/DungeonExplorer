@@ -25,7 +25,7 @@ namespace GameLib.Files.SaveFiles
 
         }
 
-        internal LevelSave(DungeonLevel level)
+        internal LevelSave(Level level)
         {
             ID = level.ID.ToString();
             Index = level.Index;
