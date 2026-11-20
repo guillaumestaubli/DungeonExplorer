@@ -123,7 +123,7 @@ namespace GameLib.World.Props
 
         private VertexArray CreateVertexArrayRectBorders()
         {
-            Color color = Color.Green;
+            Color color = GameLibConfig.Textures.Color_RectBounds;
 
             VertexArray array = new(PrimitiveType.LineStrip, 5);
 
@@ -177,7 +177,7 @@ namespace GameLib.World.Props
                 Vertex vertex = new()
                 {
                     Position = _globalPointsPixelPerfectBorder[i],
-                    Color = Color.Magenta
+                    Color = GameLibConfig.Textures.Color_PixelPerfectBounds
                 };
 
                 array[i] = vertex;
@@ -187,7 +187,7 @@ namespace GameLib.World.Props
             array[(uint)_globalPointsPixelPerfectBorder.Length] = new Vertex()
             {
                 Position = _globalPointsPixelPerfectBorder[0],
-                Color = Color.Magenta
+                Color = GameLibConfig.Textures.Color_PixelPerfectBounds
             };
 
             return array;

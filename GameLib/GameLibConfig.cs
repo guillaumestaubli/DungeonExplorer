@@ -20,6 +20,10 @@ namespace GameLib
         public static class Textures
         {
             public const string Path_Img_TextureNotFound = @"DefaultRessources\texture_not_found.png";
+
+            public static Color Color_RectBounds { get; set; } = Color.Green;
+            public static Color Color_PixelPerfectBounds { get; set; } = Color.Magenta;
+            public static Color Color_WallHitbox { get; set; } = Color.Yellow;
         }
 
         public static class Fonts
