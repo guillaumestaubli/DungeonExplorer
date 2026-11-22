@@ -1,4 +1,5 @@
 ﻿using GameLib.Entities;
+using GameLib.Files.SaveFiles;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -33,7 +34,7 @@ namespace GameLib.Ressources
         {
             _action = action;
             _textureLines = lines;
-            
+
             int nbCol = _textureLines.OrderBy(x => x.TexturesCount).Last().TexturesCount;
             int nbLines = _textureLines.Length;
 
@@ -42,6 +43,19 @@ namespace GameLib.Ressources
                 X = (int)this.Image.Size.X / nbCol,
                 Y = (int)this.Image.Size.Y / nbLines
             };
+        }
+
+        public PlayerTexture(PlayerTextureSave save) : base(save.File)
+        {
+            _action = save.Action;
+            _tileSize = new(save.TileSize_X, save.TileSize_Y);
+
+            _textureLines = new PlayerTextureLine[save.Lines.Length];
+
+            for (int i = 0; i < save.Lines.Length; ++i)
+            {
+                _textureLines[i] = new PlayerTextureLine(save.Lines[i]);
+            }
         }
     }
 
@@ -59,6 +73,13 @@ namespace GameLib.Ressources
             LineIndex = lineIndex;
             Direction = direction;
             TexturesCount = texturesCount;
+        }
+
+        public PlayerTextureLine(PlayerTextureLineSave save)
+        {
+            LineIndex = save.LineIndex;
+            Direction = save.Direction;
+            TexturesCount = save.TexturesCount;
         }
     }
 }

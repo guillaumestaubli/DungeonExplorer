@@ -15,6 +15,8 @@ namespace GameLib.Entities
         Run = 3,
         Attack = 4,
         Walk_Attack = 5,
-        Run_Attack = 6
+        Run_Attack = 6,
+        Hurt = 7,
+        Death = 8
     }
 }

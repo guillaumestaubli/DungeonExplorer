@@ -1,0 +1,274 @@
+﻿<Window x:Class="GameEditor.Windows.WindowAddPlayerTexture"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GameEditor.Windows"
+        mc:Ignorable="d"
+        Title="DungeonExplorer - GameEditor - Add Player Texture" 
+        Height="450" 
+        Width="800"
+        ThemeMode="Dark">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="Add Player Texture"
+               Grid.Row="0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               FontSize="28"
+               FontWeight="Bold"
+               Margin="10"/>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Texture file : "
+                       Grid.Row="0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="10,5,5,5"/>
+
+                <TextBox Name="TxtBox_TextureFile"
+                         Grid.Column="1"
+                         IsEnabled="False"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Stretch"
+                         Margin="5,5,5,5"/>
+
+                <Button Name="Btn_Browse"
+                        Content="Browse"
+                        Grid.Column="2"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="5,5,10,5"
+                        Padding="10,0,10,0" Click="Btn_Browse_Click"/>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Label Content="Texture Preview : "
+                       Grid.Column="1"
+                       Grid.Row="0"
+                       Margin="5,5,10,5"/>
+
+                <Border Grid.Row="1"
+                        Grid.Column="1"
+                        BorderBrush="#C2C2C2"
+                        Background="#282828"
+                        Margin="5,5,10,5">
+
+                    <Image Name="Img_TexturePreview"
+                           VerticalAlignment="Stretch"
+                           HorizontalAlignment="Stretch"/>
+
+                </Border>
+
+                <!-- ACTION SELECTION -->
+                <Grid Grid.Row="0"
+                      Grid.Column="0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Action : "
+                           Grid.Column="0"
+                           Margin="10,5,5,5"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"/>
+
+                    <ComboBox Name="ComboBox_Action"
+                              Grid.Column="1"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              Margin="5,5,5,5"/>
+
+                </Grid>
+
+                <!-- TEXTURE LINES DEFINITION -->
+                <Grid Grid.Row="1"
+                      Grid.Column="0">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Line index"
+                           Grid.Row="0"
+                           Grid.Column="0"
+                           Margin="10,5,5,5"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"/>
+
+                    <Label Content="Textures count"
+                           Grid.Row="0"
+                           Grid.Column="1"
+                           Margin="5,5,5,5"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"/>
+
+                    <Label Content="Direction"
+                           Grid.Row="0"
+                           Grid.Column="2"
+                           Margin="5,5,10,5"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"/>
+
+                    <!-- LINE INDEX -->
+                    <TextBox Name="TxtBox_LineIndex_0"
+                             Grid.Row="1"
+                             Grid.Column="0"
+                             IsEnabled="False"
+                             Text="0"
+                             Margin="10,5,5,5"/>
+
+                    <TextBox Name="TxtBox_LineIndex_1"
+                             Grid.Row="2"
+                             Grid.Column="0"
+                             IsEnabled="False"
+                             Text="1"
+                             Margin="10,5,5,5"/>
+
+                    <TextBox Name="TxtBox_LineIndex_2"
+                             Grid.Row="3"
+                             Grid.Column="0"
+                             IsEnabled="False"
+                             Text="2"
+                             Margin="10,5,5,5"/>
+
+                    <TextBox Name="TxtBox_LineIndex_3"
+                             Grid.Row="4"
+                             Grid.Column="0"
+                             IsEnabled="False"
+                             Text="3"
+                             Margin="10,5,5,5"/>
+
+                    <!-- TEXTURES COUNT -->
+                    <TextBox Name="TxtBox_TexCount_0"
+                             Grid.Row="1"
+                             Grid.Column="1"
+                             Text="0"
+                             Margin="5,5,5,5"
+                             PreviewTextInput="TxtBox_Validation_Number_Integer"/>
+
+                    <TextBox Name="TxtBox_TexCount_1"
+                             Grid.Row="2"
+                             Grid.Column="1"
+                             Text="0"
+                             Margin="5,5,5,5"
+                             PreviewTextInput="TxtBox_Validation_Number_Integer"/>
+
+                    <TextBox Name="TxtBox_TexCount_2"
+                             Grid.Row="3"
+                             Grid.Column="1"
+                             Text="0"
+                             Margin="5,5,5,5"
+                             PreviewTextInput="TxtBox_Validation_Number_Integer"/>
+
+                    <TextBox Name="TxtBox_TexCount_3"
+                             Grid.Row="4"
+                             Grid.Column="1"
+                             Text="0"
+                             Margin="5,5,5,5"
+                             PreviewTextInput="TxtBox_Validation_Number_Integer"/>
+
+                    <!-- DIRECTION -->
+                    <ComboBox Name="ComboBox_Direction_0"
+                              Grid.Row="1"
+                              Grid.Column="2"
+                              Margin="10,5,5,5">
+                        <ComboBoxItem Name="Item_North_0" Content="North" Tag="1"/>
+                        <ComboBoxItem Name="Item_South_0" Content="South" Tag="2"/>
+                        <ComboBoxItem Name="Item_West_0" Content="West" Tag="3"/>
+                        <ComboBoxItem Name="Item_East_0" Content="East" Tag="4"/>
+                    </ComboBox>
+
+                    <ComboBox Name="ComboBox_Direction_1"
+                              Grid.Row="2"
+                              Grid.Column="2"
+                              Margin="10,5,5,5">
+                        <ComboBoxItem Name="Item_North_1" Content="North" Tag="1"/>
+                        <ComboBoxItem Name="Item_South_1" Content="South" Tag="2"/>
+                        <ComboBoxItem Name="Item_West_1" Content="West" Tag="3"/>
+                        <ComboBoxItem Name="Item_East_1" Content="East" Tag="4"/>
+                    </ComboBox>
+
+                    <ComboBox Name="ComboBox_Direction_2"
+                              Grid.Row="3"
+                              Grid.Column="2"
+                              Margin="10,5,5,5">
+                        <ComboBoxItem Name="Item_North_2" Content="North" Tag="1"/>
+                        <ComboBoxItem Name="Item_South_2" Content="South" Tag="2"/>
+                        <ComboBoxItem Name="Item_West_2" Content="West" Tag="3"/>
+                        <ComboBoxItem Name="Item_East_2" Content="East" Tag="4"/>
+                    </ComboBox>
+
+                    <ComboBox Name="ComboBox_Direction_3"
+                              Grid.Row="4"
+                              Grid.Column="2"
+                              Margin="10,5,5,5">
+                        <ComboBoxItem Name="Item_North_3" Content="North" Tag="1"/>
+                        <ComboBoxItem Name="Item_South_3" Content="South" Tag="2"/>
+                        <ComboBoxItem Name="Item_West_3" Content="West" Tag="3"/>
+                        <ComboBoxItem Name="Item_East_3" Content="East" Tag="4"/>
+                    </ComboBox>
+
+                </Grid>
+
+            </Grid>
+
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Name="Btn_Validate"
+                    Content="Add to project"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Margin="5,10,10,10"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch" 
+                    Click="Btn_Validate_Click"/>
+
+        </Grid>
+
+
+    </Grid>
+</Window>

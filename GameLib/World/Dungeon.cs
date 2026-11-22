@@ -73,6 +73,7 @@ namespace GameLib.World
 
             DungeonSave dungeonSave = FilesManager.LoadDungeonSave(path);
 
+            // Load textures
             _texturesDoorsFiles = dungeonSave.RessourcesDoors.ToList();
             _texturesEntitiesFiles = dungeonSave.RessourcesEntities.ToList();
             _texturesGroundFiles = dungeonSave.RessourcesGrounds.ToList();
@@ -82,6 +83,7 @@ namespace GameLib.World
 
             RessourcesManager.Init();
 
+            // load levels
             foreach (string levelPath in dungeonSave.Levels)
             {
                 LevelSave levelSave = FilesManager.LoadLevelSave(levelPath);
@@ -126,22 +128,11 @@ namespace GameLib.World
 
             Vector2f size = _levels[_currentLevelIndex].TileRenderSize;
 
-            string path = @"D:\WORKSPACE\PROJ_C_SHARP\DungeonExplorer\Assets\Male_Character\Sword\With_shadow\Sword_Idle_with_shadow.png";
-            Entities.Action action = Entities.Action.Idle;
-
-            PlayerTextureLine[] textureLines =
-            [
-                new(0, Direction.South, 12),
-                new(1, Direction.West, 12),
-                new(2, Direction.East, 12),
-                new(3, Direction.North, 4),
-            ];
-
-            PlayerTexture texture = new(path, action, textureLines);
+            PlayerTexture texture = RessourcesManager.PlayerTextures.First();
 
             Dictionary<Entities.Action, PlayerTexture> textures = new()
             {
-                {action, texture },
+                {texture.Action, texture },
             };
 
             _player = new(position, size, textures);
@@ -184,6 +175,12 @@ namespace GameLib.World
         public static void AddPropTextureFile(string file)
         {
             _texturesPropsFiles.Add(file);
+        }
+
+        public static void AddPlayerTextureFile(string imgFile, string jsonFile)
+        {
+            _texturesPlayerFiles.Add(imgFile);
+            _texturesPlayerFiles.Add(jsonFile);
         }
 
         /// <summary>

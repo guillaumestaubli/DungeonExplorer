@@ -1,5 +1,6 @@
 ﻿using GameLib.Files.SaveFiles;
 using GameLib.Logging;
+using GameLib.Ressources;
 using GameLib.World;
 using GameLib.World.Tiles;
 using SFML.System;
@@ -55,7 +56,7 @@ namespace GameLib.Files
 
                 string dirMain = "";
 
-                for(int i = 0; i < pathArray.Length - 1; ++i)
+                for (int i = 0; i < pathArray.Length - 1; ++i)
                 {
                     dirMain += $@"{pathArray[i]}\";
                 }
@@ -198,7 +199,7 @@ namespace GameLib.Files
 
             _ = IOHelper.WriteToFile(Config.PathFileDungeon, dungeonSaveJson, false, Encoding.UTF8);
 
-            foreach(Level level in Dungeon.Levels)
+            foreach (Level level in Dungeon.Levels)
             {
                 LevelSave levelSave = new LevelSave(level);
 
@@ -235,7 +236,7 @@ namespace GameLib.Files
                         destFilename = Config.PathDirResWalls;
                         break;
                     }
-                
+
             }
 
             DirectoryInfo destDir = new DirectoryInfo(destFilename);
@@ -281,6 +282,103 @@ namespace GameLib.Files
                 Dungeon.AddPropTextureFile(destFilename);
 
             return ior;
+        }
+
+
+        public static IOResult CopyPlayerTextureInProject(string sourceFileName, Entities.Action action, PlayerTextureLine[] lines)
+        {
+            string destImgPath = "";
+
+            IOResult ior = CopyPlayerTextureImage(sourceFileName, out destImgPath);
+
+            if (ior != IOResult.OK)
+                return ior;
+
+            string destJsonPath = destImgPath.Split('.').First() + ".json";
+
+            PlayerTexture texture = new(destImgPath, action, lines);
+
+            PlayerTextureSave save = new(texture);
+
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(save, Newtonsoft.Json.Formatting.Indented);
+
+            ior = CreatePlayerTextureJsonFile(destJsonPath, json);
+
+            if (ior != IOResult.OK)
+                return ior;
+
+            Dungeon.AddPlayerTextureFile(destImgPath, destJsonPath);
+
+            return IOResult.OK;
+        }
+
+        private static IOResult CopyPlayerTextureImage(string sourceFileName, out string destFilename)
+        {
+            FileInfo origin = new FileInfo(sourceFileName);
+            destFilename = Config.PathDirResPlayer;
+
+            if (!origin.Exists)
+                return IOResult.DONT_EXISTS;
+
+            DirectoryInfo destDir = new DirectoryInfo(destFilename);
+
+            bool exists = destDir.EnumerateFiles().Where(x => x.Name == origin.Name).Count() > 0;
+
+            if (exists)
+                return IOResult.ALREADY_EXISTS;
+
+            destFilename += "\\";
+            destFilename += sourceFileName.Split('\\').Last();
+
+            IOResult ior = IOHelper.CopyFile(sourceFileName, destFilename);
+
+            if (ior == IOResult.OK)
+                Dungeon.AddPropTextureFile(destFilename);
+
+            return ior;
+        }
+
+        private static IOResult CreatePlayerTextureJsonFile(string destFileName, string json)
+        {
+            FileInfo file = new(destFileName);
+
+            if (file.Exists)
+                return IOResult.ALREADY_EXISTS;
+
+            IOResult ior = IOHelper.CreateFile(destFileName);
+
+            if (ior != IOResult.OK)
+                return ior;
+
+            ior = IOHelper.WriteToFile(destFileName, json, false, Encoding.UTF8);
+
+            return ior;
+        }
+
+
+
+        public static IOResult LoadPlayerTexture(string jsonPath, out PlayerTextureSave? save)
+        {
+            save = null;
+
+            FileInfo file = new(jsonPath);
+
+            if (!file.Exists)
+                return IOResult.DONT_EXISTS;
+
+            string content = "";
+
+            IOResult ior = IOHelper.ReadToEnd(jsonPath, out content);
+
+            if (ior != IOResult.OK)
+                return ior;
+
+            save = Newtonsoft.Json.JsonConvert.DeserializeObject<PlayerTextureSave?>(content);
+
+            if (save == null)
+                return IOResult.ERROR;
+
+            return IOResult.OK;
         }
 
     }

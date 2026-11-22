@@ -1,4 +1,6 @@
-﻿using GameLib.Logging;
+﻿using GameLib.Files;
+using GameLib.Files.SaveFiles;
+using GameLib.Logging;
 using GameLib.World;
 using GameLib.World.Tiles;
 using System;
@@ -20,6 +22,8 @@ namespace GameLib.Ressources
 
         private static List<PropTexture> _propTextures = [];
 
+        private static List<PlayerTexture> _playerTextures = [];
+
         #region GET_SET
 
         public static TextureBase TextureNotFound { get { return _textureNotFound; } }
@@ -30,6 +34,8 @@ namespace GameLib.Ressources
         public static List<TileTexture> DoorTextures { get { return _doorTextures; } }
 
         public static List<PropTexture> PropTextures { get { return _propTextures; } }
+
+        public static List<PlayerTexture> PlayerTextures { get { return _playerTextures; } }
 
         #endregion
 
@@ -45,6 +51,7 @@ namespace GameLib.Ressources
             _wallTextures.Clear();
             _doorTextures.Clear();
             _propTextures.Clear();
+            _playerTextures.Clear();
         }
 
         private static void LoadTextures()
@@ -60,6 +67,24 @@ namespace GameLib.Ressources
 
             foreach (string path in Dungeon.TexturesPropsFiles)
                 _propTextures.Add(new PropTexture(path));
+
+            List<string> jsonPlayerTexFiles = Dungeon.TexturesPlayerFiles.Where(x => x.Split('.').Last() == "json").ToList();
+
+            foreach (string path in jsonPlayerTexFiles)
+            {
+                PlayerTextureSave? save = null;
+
+                IOResult ior = FilesManager.LoadPlayerTexture(path, out save);
+
+                if (ior != IOResult.OK || save == null)
+                {
+                    Logger.Error($"{nameof(RessourcesManager)}.{nameof(LoadTextures)}", $"Failed to load player texture with IOResult = {ior}, save == null : {save == null}, path : {path}", null);
+                    continue;
+                }
+
+                _playerTextures.Add(new(save));
+            }
+
         }
 
         public static TileTexture GetTileTexture(string name, TileType type)

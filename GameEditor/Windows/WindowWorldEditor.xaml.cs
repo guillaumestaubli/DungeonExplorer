@@ -469,7 +469,9 @@ namespace GameEditor.Windows
 
         private void Btn_AddPlayerTexture_Click(object sender, RoutedEventArgs e)
         {
+            WindowAddPlayerTexture window = new();
 
+            _ = window.ShowDialog();
         }
 
         #endregion
