@@ -53,6 +53,12 @@
                                     Margin="0,0,5,0" 
                                     Click="Btn_AddPropTextures_Click"/>
 
+                            <Button Name="Btn_AddPlayerTexture"
+                                    Content="Add Player Texture"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_AddPlayerTexture_Click"/>
+
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -209,7 +215,23 @@
                             Background="Transparent">
                         <StackPanel Orientation="Horizontal">
 
+                            <Button Name="Btn_ViewPlayer"
+                                    Content="Inspect"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_ViewPlayer_Click"/>
 
+                            <Button Name="Btn_EditPlayer"
+                                    Content="Edit"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_EditPlayer_Click"/>
+
+                            <Button Name="Btn_ControlPlayer"
+                                    Content="Control"
+                                    Padding="10,5,10,5"
+                                    Margin="0,0,5,0" 
+                                    Click="Btn_ControlPlayer_Click"/>
 
                         </StackPanel>
                     </Border>

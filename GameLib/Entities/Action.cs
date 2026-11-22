@@ -4,6 +4,9 @@ using System.Text;
 
 namespace GameLib.Entities
 {
+    /// <summary>
+    /// Actions of the entities
+    /// </summary>
     public enum Action
     {
         None = 0,

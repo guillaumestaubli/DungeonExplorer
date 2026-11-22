@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GameLib.Entities;
 using GameLib.Files;
 using GameLib.Files.SaveFiles;
 using GameLib.Logging;
@@ -18,6 +19,7 @@ namespace GameLib.World
 
         private static List<Level> _levels = new List<Level>();
         private static int _currentLevelIndex = 0;
+        private static Player _player = new();
 
         private static List<string> _texturesDoorsFiles = [];
         private static List<string> _texturesEntitiesFiles = [];
@@ -33,6 +35,7 @@ namespace GameLib.World
         public static List<Level> Levels { get { return _levels; } }
         public static Level CurrentLevel { get { return _levels[CurrentLevelIndex]; } }
         public static int CurrentLevelIndex { get { return _currentLevelIndex; } }
+        public static Player Player { get { return _player; } }
 
         public static List<string> TexturesDoorsFiles { get { return _texturesDoorsFiles; } set { _texturesDoorsFiles = value; } }
         public static List<string> TexturesEntitiesFiles { get { return _texturesEntitiesFiles; } set { _texturesEntitiesFiles = value; } }
@@ -43,6 +46,12 @@ namespace GameLib.World
 
         #endregion
 
+        /// <summary>
+        /// Create a new project
+        /// </summary>
+        /// <param name="gridSize"></param>
+        /// <param name="tileRenderSize"></param>
+        /// <returns></returns>
         public static bool CreateNewDungeon(Vector2i gridSize, Vector2f tileRenderSize)
         {
             bool outSuccess = true;
@@ -54,6 +63,10 @@ namespace GameLib.World
             return outSuccess;
         }
 
+        /// <summary>
+        /// Load a project from a file (.dungeon)
+        /// </summary>
+        /// <param name="path">path of the .dungeon file</param>
         public static void LoadFromFile(string path)
         {
             _levels.Clear();
@@ -96,9 +109,52 @@ namespace GameLib.World
                 }
             }
 
+            DEV_CreatePlayer();
+
             return;
         }
 
+        private static void DEV_CreatePlayer()
+        {
+            Vector2i gridIndex = new(5, 5);
+
+            Vector2f position = new()
+            {
+                X = gridIndex.X * _levels[_currentLevelIndex].TileRenderSize.X,
+                Y = gridIndex.Y * _levels[_currentLevelIndex].TileRenderSize.Y
+            };
+
+            Vector2f size = _levels[_currentLevelIndex].TileRenderSize;
+
+            string path = @"D:\WORKSPACE\PROJ_C_SHARP\DungeonExplorer\Assets\Male_Character\Sword\With_shadow\Sword_Idle_with_shadow.png";
+            Entities.Action action = Entities.Action.Idle;
+
+            PlayerTextureLine[] textureLines =
+            [
+                new(0, Direction.South, 12),
+                new(1, Direction.West, 12),
+                new(2, Direction.East, 12),
+                new(3, Direction.North, 4),
+            ];
+
+            PlayerTexture texture = new(path, action, textureLines);
+
+            Dictionary<Entities.Action, PlayerTexture> textures = new()
+            {
+                {action, texture },
+            };
+
+            _player = new(position, size, textures);
+
+        }
+
+        #region GAME_EDITOR
+
+        /// <summary>
+        /// Add a texture file in the tiles textures files list
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="type"></param>
         public static void AddTileTextureFile(string file, TileType type)
         {
             switch (type)
@@ -121,11 +177,20 @@ namespace GameLib.World
             }
         }
 
+        /// <summary>
+        /// Add a texture file in the props textures files list
+        /// </summary>
+        /// <param name="file"></param>
         public static void AddPropTextureFile(string file)
         {
             _texturesPropsFiles.Add(file);
         }
 
+        /// <summary>
+        /// Convert screen/world coordinates to grid index for the current level
+        /// </summary>
+        /// <param name="screenCoords"></param>
+        /// <returns></returns>
         public static Vector2i ConvertWorldCoordsToGridIndex(Vector2f screenCoords)
         {
             int x = (int)(screenCoords.X / _levels[_currentLevelIndex].TileRenderSize.X);
@@ -134,19 +199,21 @@ namespace GameLib.World
             return new(x, y);
         }
 
-        public static Vector2i ConvertWorldCoordsToGridIndex(Vector2i screenCoords)
-        {
-            int x = screenCoords.X / (int)_levels[_currentLevelIndex].TileRenderSize.X;
-            int y = screenCoords.Y / (int)_levels[_currentLevelIndex].TileRenderSize.Y;
-
-            return new(x, y);
-        }
-
+        /// <summary>
+        /// Get a tile from the current level from grid coordinates
+        /// </summary>
+        /// <param name="gridIndex"></param>
+        /// <returns></returns>
         public static Tile GetTile(Vector2i gridIndex)
         {
             return _levels[_currentLevelIndex].GetTile(gridIndex);
         }
 
+        /// <summary>
+        /// Get a tile from the current level from screen coordinates
+        /// </summary>
+        /// <param name="screenCoords"></param>
+        /// <returns></returns>
         public static Tile GetTile(Vector2f screenCoords)
         {
             Vector2i index = ConvertWorldCoordsToGridIndex(screenCoords);
@@ -154,6 +221,11 @@ namespace GameLib.World
             return GetTile(index);
         }
 
+        /// <summary>
+        /// Update the specified tile in the current level
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <param name="gridIndex"></param>
         public static void UpdateTile(Tile tile, Vector2i gridIndex)
         {
             Level level = _levels[_currentLevelIndex];
@@ -163,6 +235,10 @@ namespace GameLib.World
             _levels[_currentLevelIndex] = level;
         }
 
+        /// <summary>
+        /// Add a Prop in the current level
+        /// </summary>
+        /// <param name="prop"></param>
         public static void AddProp(Prop prop)
         {
             Level level = _levels[_currentLevelIndex];
@@ -170,6 +246,83 @@ namespace GameLib.World
             level.Props.Add(prop);
 
             _levels[_currentLevelIndex] = level;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Move the player of the specified offset. 
+        /// TODO : Check for collisions between player/entities and player/walls
+        /// </summary>
+        /// <param name="offset"></param>
+        public static void MovePlayer(Vector2f offset)
+        {
+            Direction direction = GetGlobalPlayerDirection(offset);
+
+            _player.Move(offset, direction);
+        }
+
+        /// <summary>
+        /// Get the global direction depending on the movement
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        private static Direction GetGlobalPlayerDirection(Vector2f offset)
+        {
+            Direction direction = Direction.None;
+
+            if (offset.Y >= 0) // => South
+            {
+                if (offset.X >= 0) // => South East
+                {
+                    if (Math.Abs(offset.Y) >= Math.Abs(offset.X))
+                    {
+                        direction = Direction.South;
+                    }
+                    else
+                    {
+                        direction = Direction.East;
+                    }
+                }
+                else // => South West
+                {
+                    if (Math.Abs(offset.Y) >= Math.Abs(offset.X))
+                    {
+                        direction = Direction.South;
+                    }
+                    else
+                    {
+                        direction = Direction.West;
+                    }
+                }
+            }
+            else // => North
+            {
+                if (offset.X >= 0) // => North East
+                {
+                    if (Math.Abs(offset.Y) >= Math.Abs(offset.X))
+                    {
+                        direction = Direction.North;
+                    }
+                    else
+                    {
+                        direction = Direction.East;
+                    }
+                }
+                else // => North West
+                {
+                    if (Math.Abs(offset.Y) >= Math.Abs(offset.X))
+                    {
+                        direction = Direction.North;
+                    }
+                    else
+                    {
+                        direction = Direction.West;
+                    }
+                }
+            }
+
+            return direction;
         }
     }
 }

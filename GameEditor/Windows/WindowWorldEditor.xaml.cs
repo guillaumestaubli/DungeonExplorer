@@ -21,6 +21,7 @@ using GameEditor.Windows.Controls.TileToolbar;
 using GameEditor.Windows.Controls.PropToolbar;
 using GameEditor.Windows.Controls.EntityToolbar;
 using GameEditor.Windows.Controls.LevelToolbar;
+using GameLib.Entities;
 
 namespace GameEditor.Windows
 {
@@ -40,6 +41,8 @@ namespace GameEditor.Windows
         private System.Windows.Forms.Control _win32SfmlSurface;
         private DisplaySettings _displaySettings = new();
         private Control? _currentToolbar = null;
+
+        private bool _playerControl = false;
 
         /// <summary>
         /// Initialize a new instance of the world editor with a world to open
@@ -94,6 +97,7 @@ namespace GameEditor.Windows
 
                 DrawGround(Dungeon.CurrentLevel);
                 DrawProps(Dungeon.CurrentLevel);
+                DrawPlayer(Dungeon.Player);
 
                 _renderArea.Display();
             }
@@ -154,6 +158,26 @@ namespace GameEditor.Windows
             }
         }
 
+        private void DrawPlayer(Player player)
+        {
+            FloatRect viewBounds = new FloatRect(_viewPosition, _view.Size);
+
+            FloatRect? intersection = player.GlobalBounds.FindIntersection(viewBounds);
+
+            if (intersection == null)
+                return;
+
+            if (_displaySettings.ShowPlayer)
+                _renderArea.Draw(player.D_Player, player.D_Player_RenderStates);
+
+            if (_displaySettings.ShowPlayerRectangleHitbox)
+                _renderArea.Draw(player.D_RectBounds);
+
+            if (_displaySettings.ShowPlayerPixelPerfectHitbox)
+                _renderArea.Draw(player.D_PixelPerfectBounds);
+
+        }
+
         #endregion
 
         #region SFML_RENDER_AREA
@@ -186,10 +210,27 @@ namespace GameEditor.Windows
             if (!_isCursorInRenderArea)
                 return;
 
-            bool isLCtrlPressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LControl);
-            bool isLeftMouseDown = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Left);
+            bool LCTRL_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LControl);
+            bool LMouse_Pressed = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Left);
 
-            RenderArea_HandleDragMove(isLCtrlPressed, isLeftMouseDown);
+            if (LCTRL_Pressed && LMouse_Pressed)
+            {
+                RenderArea_HandleDragMove(LCTRL_Pressed, LMouse_Pressed);
+                return;
+            }
+
+            bool W_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.W);
+            bool A_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.A);
+            bool S_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.S);
+            bool D_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.D);
+
+            if (_playerControl && (W_Pressed || A_Pressed || S_Pressed || D_Pressed))
+            {
+                bool LSFHIT_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LShift);
+
+                RenderArea_HandleMovePlayer(W_Pressed, A_Pressed, S_Pressed, D_Pressed, LSFHIT_Pressed);
+                return;
+            }
         }
 
         /// <summary>
@@ -226,6 +267,35 @@ namespace GameEditor.Windows
 
                 _dragMove_Running = false;
             }
+        }
+
+        /// <summary>
+        /// Handle the player movements depending on wich key is pressed
+        /// </summary>
+        /// <param name="w_pressed"></param>
+        /// <param name="a_pressed"></param>
+        /// <param name="s_pressed"></param>
+        /// <param name="d_pressed"></param>
+        /// <param name="lshift_pressed"></param>
+        private void RenderArea_HandleMovePlayer(bool w_pressed, bool a_pressed, bool s_pressed, bool d_pressed, bool lshift_pressed)
+        {
+            float move = 2.0f;
+
+            Vector2f offset = new(0.0f, 0.0f);
+
+            if (w_pressed)
+                offset.Y -= move;
+
+            if (s_pressed)
+                offset.Y += move;
+
+            if (a_pressed)
+                offset.X -= move;
+
+            if (d_pressed)
+                offset.X += move;
+
+            Dungeon.MovePlayer(offset);
         }
 
         /// <summary>
@@ -397,7 +467,10 @@ namespace GameEditor.Windows
             _ = windowWorldMap.ShowDialog();
         }
 
+        private void Btn_AddPlayerTexture_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
 
         #endregion
 
@@ -628,7 +701,20 @@ namespace GameEditor.Windows
 
         #region NAV_TAB_PLAYER
 
+        private void Btn_ViewPlayer_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
+
+        private void Btn_EditPlayer_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Btn_ControlPlayer_Click(object sender, RoutedEventArgs e)
+        {
+            _playerControl = !_playerControl;
+        }
 
         #endregion
 

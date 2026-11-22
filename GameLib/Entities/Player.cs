@@ -1,14 +1,19 @@
-﻿using GameLib.Ressources;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Timers;
+using System.Text;
+
 using SFML.Graphics;
 using SFML.System;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
+using GameLib.Ressources;
 
 namespace GameLib.Entities
 {
     public class Player
     {
+        private bool _initialized = false;
         private Guid _id;
         private Direction _direction;
         private Action _action;
@@ -16,9 +21,14 @@ namespace GameLib.Entities
         private Vector2f _renderPosition;
         private Vector2f _renderSize;
 
-        private PlayerTexture _texture;
+        private Dictionary<Action, PlayerTexture> _textures;
+
+        private Timer _texTimer;
+        private double _texTimerInterval = 200; // [ms]
+        private int _texCurrentIndex = 0;
 
         private VertexArray _vaPlayer;
+        private RenderStates _vaPlayerRenderStates;
         private VertexArray _vaRectBounds;
         private VertexArray _vaPixelPerfectBounds;
 
@@ -30,16 +40,44 @@ namespace GameLib.Entities
         public Vector2f RenderPosition { get { return _renderPosition; } }
         public Vector2f RenderSize { get { return _renderSize; } }
         public FloatRect GlobalBounds { get { return new(_renderPosition, _renderSize); } }
-        public PlayerTexture Texture { get { return _texture; } }
+        public Dictionary<Action, PlayerTexture> Textures { get { return _textures; } }
 
         public VertexArray D_Player { get { return _vaPlayer; } }
+        public RenderStates D_Player_RenderStates { get { return _vaPlayerRenderStates; } }
         public VertexArray D_RectBounds { get { return _vaRectBounds; } }
         public VertexArray D_PixelPerfectBounds { get { return _vaPixelPerfectBounds; } }
 
         #endregion
 
-        public Player(Vector2f position, Vector2f size, PlayerTexture texture)
+        public Player()
         {
+            _id = Guid.NewGuid();
+            _direction = Direction.None;
+            _action = Action.None;
+
+            _renderPosition = new(0.0f, 0.0f);
+            _renderSize = new(0.0f, 0.0f);
+
+            PlayerTextureLine line = new(0, Direction.None, 1);
+
+            PlayerTexture texture = new(GameLibConfig.Textures.Path_Img_TextureNotFound, Action.None, [line]);
+
+            _textures = new()
+            {
+                { Action.None, texture }
+            };
+
+            _texTimer = new(_texTimerInterval);
+
+            _vaPlayer = GenerateVertexArrayPlayer();
+            _vaPlayerRenderStates = new(texture.Texture);
+            _vaRectBounds = GenerateVertexArrayRectBounds();
+            _vaPixelPerfectBounds = GenerateVertexArrayRectBounds();
+        }
+
+        public Player(Vector2f position, Vector2f size, Dictionary<Action, PlayerTexture> textures)
+        {
+            _initialized = true;
             _id = Guid.NewGuid();
             _direction = Direction.South;
             _action = Action.Idle;
@@ -47,18 +85,99 @@ namespace GameLib.Entities
             _renderPosition = position;
             _renderSize = size;
 
-            _texture = texture;
+            _textures = textures;
+
+            _texTimer = new(_texTimerInterval);
+            _texTimer.Elapsed += OnTexTimerElapsed;
+            _texTimer.AutoReset = true;
+            _texTimer.Enabled = true;
 
             _vaPlayer = GenerateVertexArrayPlayer();
+
+            PlayerTexture texture = _textures[_action];
+            _vaPlayerRenderStates = new(texture.Texture);
+
             _vaRectBounds = GenerateVertexArrayRectBounds();
             _vaPixelPerfectBounds = GenerateVertexArrayPixelPerfectBounds();
         }
 
-        private VertexArray GenerateVertexArrayPlayer()
+        /// <summary>
+        /// Triggered each time the interval is reached. Update the _texCurrentIndex used to draw the correct texture part for the animation
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTexTimerElapsed(object? sender, ElapsedEventArgs e)
         {
-            return new VertexArray(PrimitiveType.TriangleStrip, 0);
+            ++_texCurrentIndex;
+
+            PlayerTexture texture = _textures[_action];
+
+            PlayerTextureLine line = texture.Lines.First(x => x.Direction == _direction);
+
+            if (_texCurrentIndex >= line.TexturesCount)
+                _texCurrentIndex = 0;
+
+            _vaPlayer.Dispose();
+            _vaPlayer = GenerateVertexArrayPlayer();
         }
 
+        /// <summary>
+        /// Generate the VertexArray representing the Player
+        /// </summary>
+        /// <returns></returns>
+        private VertexArray GenerateVertexArrayPlayer()
+        {
+            if (!_initialized)
+                return new(PrimitiveType.TriangleStrip, 0);
+
+            VertexArray array = new(PrimitiveType.TriangleStrip, 4);
+            Color color = Color.White;
+
+            PlayerTexture texture = _textures[_action];
+
+            PlayerTextureLine line = texture.Lines.First(x => x.Direction == _direction);
+
+            Vector2f texCoords = new()
+            {
+                X = _texCurrentIndex * texture.TileSize.X,
+                Y = line.LineIndex * texture.TileSize.Y
+            };
+
+            array[0] = new()
+            {
+                Position = _renderPosition + new Vector2f(0.0f, 0.0f),
+                Color = color,
+                TexCoords = texCoords + new Vector2f(0.0f, 0.0f)
+            };
+
+            array[1] = new()
+            {
+                Position = _renderPosition + new Vector2f(0.0f, _renderSize.Y),
+                Color = color,
+                TexCoords = texCoords + new Vector2f(0.0f, texture.TileSize.Y)
+            };
+
+            array[2] = new()
+            {
+                Position = _renderPosition + new Vector2f(_renderSize.X, 0.0f),
+                Color = color,
+                TexCoords = texCoords + new Vector2f(texture.TileSize.X, 0.0f)
+            };
+
+            array[3] = new()
+            {
+                Position = _renderPosition + new Vector2f(_renderSize.X, _renderSize.Y),
+                Color = color,
+                TexCoords = texCoords + new Vector2f(texture.TileSize.X, texture.TileSize.Y)
+            };
+
+            return array;
+        }
+
+        /// <summary>
+        /// Generate the VertexArray representing the globalBounds of the Player
+        /// </summary>
+        /// <returns></returns>
         private VertexArray GenerateVertexArrayRectBounds()
         {
             VertexArray array = new(PrimitiveType.LineStrip, 5);
@@ -96,9 +215,30 @@ namespace GameLib.Entities
             return array;
         }
 
+        /// <summary>
+        /// Generate the VertexArray representing the pixel perfect bounds of the Player
+        /// </summary>
+        /// <returns></returns>
         private VertexArray GenerateVertexArrayPixelPerfectBounds()
         {
+            if (!_initialized)
+                return new(PrimitiveType.LineStrip, 0);
+
             return new VertexArray(PrimitiveType.LineStrip, 0);
+        }
+
+        /// <summary>
+        /// Move the player of the specified offset. The direction is used to update the texture
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="direction"></param>
+        public void Move(Vector2f offset, Direction direction)
+        {
+            _direction = direction;
+            _renderPosition += offset;
+
+            _vaPlayer.Dispose();
+            _vaPlayer = GenerateVertexArrayPlayer();
         }
     }
 }
