@@ -55,6 +55,7 @@ namespace GameLib
             public const Keyboard.Key KeyMoveSprint = Keyboard.Key.LShift;
 
             public const float MoveOffsetPerFrame = 2.0f; // [px/frame]
+            public const float SprintRatio = 1.75f;
         }
     }
 }

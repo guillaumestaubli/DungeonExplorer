@@ -269,7 +269,7 @@ namespace GameLib.World
             float delta = GameLibConfig.Controls.MoveOffsetPerFrame;
 
             if (sprintPressed)
-                delta *= 2.0f;
+                delta *= GameLibConfig.Controls.SprintRatio;
 
             Vector2f offset = new(0.0f, 0.0f);
 
@@ -288,7 +288,11 @@ namespace GameLib.World
             Direction direction = GetGlobalPlayerDirection(offset);
 
             _player.Move(offset, direction);
-            _player.SetAction(Entities.Action.Walk);
+
+            if (sprintPressed)
+                _player.SetAction(Entities.Action.Run);
+            else
+                _player.SetAction(Entities.Action.Walk);
         }
 
 
