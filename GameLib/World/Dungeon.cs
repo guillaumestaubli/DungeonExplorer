@@ -10,6 +10,7 @@ using GameLib.Ressources;
 using GameLib.World.Props;
 using GameLib.World.Tiles;
 using SFML.System;
+using SFML.Window;
 
 namespace GameLib.World
 {
@@ -128,12 +129,12 @@ namespace GameLib.World
 
             Vector2f size = _levels[_currentLevelIndex].TileRenderSize;
 
-            PlayerTexture texture = RessourcesManager.PlayerTextures.First();
+            Dictionary<Entities.Action, PlayerTexture> textures = new();
 
-            Dictionary<Entities.Action, PlayerTexture> textures = new()
+            foreach (PlayerTexture texture in RessourcesManager.PlayerTextures)
             {
-                {texture.Action, texture },
-            };
+                textures.Add(texture.Action, texture);
+            }
 
             _player = new(position, size, textures);
 
@@ -248,16 +249,48 @@ namespace GameLib.World
         #endregion
 
         /// <summary>
-        /// Move the player of the specified offset. 
-        /// TODO : Check for collisions between player/entities and player/walls
+        /// Handle the player movements based on the keyboard inputs
         /// </summary>
-        /// <param name="offset"></param>
-        public static void MovePlayer(Vector2f offset)
+        public static void MovePlayer()
         {
+            bool northPressed = Keyboard.IsKeyPressed(GameLibConfig.Controls.KeyMoveNorth);
+            bool southPressed = Keyboard.IsKeyPressed(GameLibConfig.Controls.KeyMoveSouth);
+            bool westPressed = Keyboard.IsKeyPressed(GameLibConfig.Controls.KeyMoveWest);
+            bool eastPressed = Keyboard.IsKeyPressed(GameLibConfig.Controls.KeyMoveEast);
+
+            bool sprintPressed = Keyboard.IsKeyPressed(GameLibConfig.Controls.KeyMoveSprint);
+
+            if (!northPressed && !southPressed && !westPressed && !eastPressed)
+            {
+                _player.SetAction(Entities.Action.Idle);
+                return;
+            }
+
+            float delta = GameLibConfig.Controls.MoveOffsetPerFrame;
+
+            if (sprintPressed)
+                delta *= 2.0f;
+
+            Vector2f offset = new(0.0f, 0.0f);
+
+            if (northPressed)
+                offset.Y -= delta;
+
+            if (southPressed)
+                offset.Y += delta;
+
+            if (westPressed)
+                offset.X -= delta;
+
+            if (eastPressed)
+                offset.X += delta;
+
             Direction direction = GetGlobalPlayerDirection(offset);
 
             _player.Move(offset, direction);
+            _player.SetAction(Entities.Action.Walk);
         }
+
 
         /// <summary>
         /// Get the global direction depending on the movement

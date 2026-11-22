@@ -119,6 +119,7 @@ namespace GameLib.Entities
 
             _vaPlayer.Dispose();
             _vaPlayer = GenerateVertexArrayPlayer();
+            _vaPlayerRenderStates = new(texture.Texture);
         }
 
         /// <summary>
@@ -239,6 +240,11 @@ namespace GameLib.Entities
 
             _vaPlayer.Dispose();
             _vaPlayer = GenerateVertexArrayPlayer();
+        }
+
+        public void SetAction(Action action = Action.Idle)
+        {
+            this._action = action;
         }
     }
 }

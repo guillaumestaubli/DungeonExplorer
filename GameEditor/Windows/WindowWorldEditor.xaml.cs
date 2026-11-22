@@ -217,14 +217,8 @@ namespace GameEditor.Windows
 
             if (_playerControl)
             {
-                bool W_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.W);
-                bool A_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.A);
-                bool S_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.S);
-                bool D_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.D);
-
-                bool LSFHIT_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LShift);
-
-                RenderArea_HandleMovePlayer(W_Pressed, A_Pressed, S_Pressed, D_Pressed, LSFHIT_Pressed);
+                Dungeon.MovePlayer();
+                CenterViewOnPlayer();
             }
         }
 
@@ -264,35 +258,6 @@ namespace GameEditor.Windows
 
                 _dragMove_Running = false;
             }
-        }
-
-        /// <summary>
-        /// Handle the player movements depending on wich key is pressed
-        /// </summary>
-        /// <param name="w_pressed"></param>
-        /// <param name="a_pressed"></param>
-        /// <param name="s_pressed"></param>
-        /// <param name="d_pressed"></param>
-        /// <param name="lshift_pressed"></param>
-        private void RenderArea_HandleMovePlayer(bool w_pressed, bool a_pressed, bool s_pressed, bool d_pressed, bool lshift_pressed)
-        {
-            float move = 2.0f;
-
-            Vector2f offset = new(0.0f, 0.0f);
-
-            if (w_pressed)
-                offset.Y -= move;
-
-            if (s_pressed)
-                offset.Y += move;
-
-            if (a_pressed)
-                offset.X -= move;
-
-            if (d_pressed)
-                offset.X += move;
-
-            Dungeon.MovePlayer(offset);
         }
 
         /// <summary>
@@ -713,6 +678,9 @@ namespace GameEditor.Windows
         private void Btn_ControlPlayer_Click(object sender, RoutedEventArgs e)
         {
             _playerControl = !_playerControl;
+
+            if (_playerControl)
+                CenterViewOnPlayer();
         }
 
         #endregion
@@ -778,7 +746,11 @@ namespace GameEditor.Windows
             ((ControlViewTileToolbar)_currentToolbar).LoadTile(tile);
         }
 
-
+        private void CenterViewOnPlayer()
+        {
+            _view.Center = Dungeon.Player.RenderPosition;
+            _renderArea.SetView(_view);
+        }
     }
 
     public class DisplaySettings

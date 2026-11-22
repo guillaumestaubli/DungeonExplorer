@@ -1,4 +1,5 @@
 ﻿using SFML.Graphics;
+using SFML.Window;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -42,6 +43,18 @@ namespace GameLib
                 CalibriLight = new Font(Path_Font_CalibriLight);
                 Consola = new Font(Path_Font_Consola);
             }
+        }
+
+        public static class Controls
+        {
+            public const Keyboard.Key KeyMoveNorth = Keyboard.Key.W;
+            public const Keyboard.Key KeyMoveSouth = Keyboard.Key.S;
+            public const Keyboard.Key KeyMoveWest = Keyboard.Key.A;
+            public const Keyboard.Key KeyMoveEast = Keyboard.Key.D;
+
+            public const Keyboard.Key KeyMoveSprint = Keyboard.Key.LShift;
+
+            public const float MoveOffsetPerFrame = 2.0f; // [px/frame]
         }
     }
 }
