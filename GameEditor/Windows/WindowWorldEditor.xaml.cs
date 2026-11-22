@@ -213,23 +213,18 @@ namespace GameEditor.Windows
             bool LCTRL_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LControl);
             bool LMouse_Pressed = SFML.Window.Mouse.IsButtonPressed(SFML.Window.Mouse.Button.Left);
 
-            if (LCTRL_Pressed && LMouse_Pressed)
-            {
-                RenderArea_HandleDragMove(LCTRL_Pressed, LMouse_Pressed);
-                return;
-            }
+            RenderArea_HandleDragMove(LCTRL_Pressed, LMouse_Pressed);
 
-            bool W_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.W);
-            bool A_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.A);
-            bool S_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.S);
-            bool D_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.D);
-
-            if (_playerControl && (W_Pressed || A_Pressed || S_Pressed || D_Pressed))
+            if (_playerControl)
             {
+                bool W_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.W);
+                bool A_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.A);
+                bool S_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.S);
+                bool D_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.D);
+
                 bool LSFHIT_Pressed = SFML.Window.Keyboard.IsKeyPressed(SFML.Window.Keyboard.Key.LShift);
 
                 RenderArea_HandleMovePlayer(W_Pressed, A_Pressed, S_Pressed, D_Pressed, LSFHIT_Pressed);
-                return;
             }
         }
 
@@ -254,6 +249,8 @@ namespace GameEditor.Windows
                 else
                 {
                     Vector2i delta = currentMousePosition - _dragMove_LastMousePosition;
+
+                    delta = (Vector2i)((Vector2f)delta * _viewZoomFactor);
 
                     _view.Move((Vector2f)delta * -1.0f);
                     _renderArea.SetView(_view);
