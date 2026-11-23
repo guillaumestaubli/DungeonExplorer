@@ -335,6 +335,12 @@ namespace GameEditor.Windows
                 LoadSelectedTileOnTileDetailsToolbar(e);
                 return;
             }
+
+            if (_currentToolbar is ControlViewPropToolbar)
+            {
+                LoadSelectedPropOnPropDetailsToolbar(e);
+                return;
+            }
         }
 
         #endregion
@@ -744,6 +750,21 @@ namespace GameEditor.Windows
             Tile tile = World.GetTile(gridIndex);
 
             ((ControlViewTileToolbar)_currentToolbar).LoadTile(tile);
+        }
+
+        private void LoadSelectedPropOnPropDetailsToolbar(SFML.Window.MouseButtonEventArgs e)
+        {
+            if (_currentToolbar == null)
+                return;
+
+            Vector2i gridIndex = World.ConvertWorldCoordsToGridIndex(_renderArea.MapPixelToCoords(e.Position));
+
+            Prop? prop = World.GetProp(gridIndex);
+
+            if (prop == null)
+                return;
+
+            ((ControlViewPropToolbar)_currentToolbar).LoadProp(prop);
         }
 
         private void CenterViewOnPlayer()

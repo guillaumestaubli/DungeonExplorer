@@ -246,6 +246,30 @@ namespace GameLib.World
             _levels[_currentLevelIndex] = level;
         }
 
+        public static Prop? GetProp(Vector2i gridIndex)
+        {
+            foreach (Prop prop in _levels[_currentLevelIndex].Props)
+            {
+                if (prop.GridIndex == gridIndex)
+                    return prop;
+            }
+
+            return null;
+        }
+
+        public static List<Prop> GetProps(Vector2i gridIndex)
+        {
+            List<Prop> props = [];
+
+            foreach (Prop prop in _levels[_currentLevelIndex].Props)
+            {
+                if (prop.GridIndex == gridIndex)
+                    props.Add(prop);
+            }
+
+            return props;
+        }
+
         #endregion
 
         /// <summary>
