@@ -56,19 +56,19 @@ namespace GameLib.Ressources
 
         private static void LoadTextures()
         {
-            foreach (string path in Dungeon.TexturesGroundFiles)
+            foreach (string path in World.World.TexturesGroundFiles)
                 _groundTextures.Add(new TileTexture(path));
 
-            foreach (string path in Dungeon.TexturesWallsFiles)
+            foreach (string path in World.World.TexturesWallsFiles)
                 _wallTextures.Add(new TileTexture(path));
 
-            foreach (string path in Dungeon.TexturesDoorsFiles)
+            foreach (string path in World.World.TexturesDoorsFiles)
                 _doorTextures.Add(new TileTexture(path));
 
-            foreach (string path in Dungeon.TexturesPropsFiles)
+            foreach (string path in World.World.TexturesPropsFiles)
                 _propTextures.Add(new PropTexture(path));
 
-            List<string> jsonPlayerTexFiles = Dungeon.TexturesPlayerFiles.Where(x => x.Split('.').Last() == "json").ToList();
+            List<string> jsonPlayerTexFiles = World.World.TexturesPlayerFiles.Where(x => x.Split('.').Last() == "json").ToList();
 
             foreach (string path in jsonPlayerTexFiles)
             {
@@ -141,7 +141,7 @@ namespace GameLib.Ressources
 
         public static void ApplyTextureToAllTiles(TileTexture texture, TileType type)
         {
-            Level level = Dungeon.CurrentLevel;
+            Level level = World.World.CurrentLevel;
 
             for (int x = 0; x < level.GridSize.X; ++x)
             {
@@ -152,7 +152,7 @@ namespace GameLib.Ressources
                 }
             }
 
-            Dungeon.Levels[Dungeon.CurrentLevelIndex] = level;
+            World.World.Levels[World.World.CurrentLevelIndex] = level;
         }
 
         public static PropTexture GetPropTexture(string name)

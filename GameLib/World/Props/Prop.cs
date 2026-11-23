@@ -47,8 +47,8 @@ namespace GameLib.World.Props
 
             _renderSize = renderSize;
 
-            float r_x = _gridIndex.X * Dungeon.CurrentLevel.TileRenderSize.X;
-            float r_y = _gridIndex.Y * Dungeon.CurrentLevel.TileRenderSize.Y;
+            float r_x = _gridIndex.X * World.CurrentLevel.TileRenderSize.X;
+            float r_y = _gridIndex.Y * World.CurrentLevel.TileRenderSize.Y;
             _renderPosition = new(r_x, r_y);
 
             _texture = texture;

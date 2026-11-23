@@ -21,7 +21,7 @@ namespace GameEditor
         public const float ZOOM_IN_FACTOR = 0.875f;
         public const float ZOOM_OUT_FACTOR = 1.125f;
 
-        public static class DungeonCreation
+        public static class WorldCreation
         {
             public static string ProjectName { get; set; } = "";
             public static string ProjectDir { get; set; } = "";

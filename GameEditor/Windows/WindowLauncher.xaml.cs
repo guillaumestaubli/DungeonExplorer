@@ -40,7 +40,7 @@ namespace GameEditor.Windows
             {
                 foreach(FileInfo file in subDir.GetFiles())
                 {
-                    if(file.Name.Split('.').Last() == "dungeon")
+                    if(file.Name.Split('.').Last() == "world")
                     {
                         _filename = file.FullName;
                         break;
@@ -54,7 +54,7 @@ namespace GameEditor.Windows
             if(_filename != null)
             {
                 this.TxtBox_FilePath.Text = _filename;
-                this.Btn_LoadDungeon.IsEnabled = true;
+                this.Btn_LoadWorld.IsEnabled = true;
             }
         }
 
@@ -63,7 +63,7 @@ namespace GameEditor.Windows
             OpenFileDialog dialog = new()
             {
                 InitialDirectory = GameEditorConfig.Path_Base_Projects_Dir,
-                Filter = $"Dungeon file (*.{GameLib.GameLibConfig.Global.Ext_DungeonBaseFile}) | *.{GameLib.GameLibConfig.Global.Ext_DungeonBaseFile}",
+                Filter = $"World file (*.{GameLib.GameLibConfig.Global.Ext_WorldBaseFile}) | *.{GameLib.GameLibConfig.Global.Ext_WorldBaseFile}",
                 FilterIndex = 1,
                 RestoreDirectory = true
             };
@@ -74,18 +74,18 @@ namespace GameEditor.Windows
             {
                 _filename = dialog.FileName;
                 this.TxtBox_FilePath.Text = _filename;
-                this.Btn_LoadDungeon.IsEnabled = true;
+                this.Btn_LoadWorld.IsEnabled = true;
             }
             else
             {
                 _filename = null;
                 this.TxtBox_FilePath.Text = "";
-                this.Btn_LoadDungeon.IsEnabled = false;
+                this.Btn_LoadWorld.IsEnabled = false;
             }
 
         }
 
-        private void Btn_LoadDungeon_Click(object sender, RoutedEventArgs e)
+        private void Btn_LoadWorld_Click(object sender, RoutedEventArgs e)
         {
             if (_filename == null)
                 throw new Exception();
@@ -97,9 +97,9 @@ namespace GameEditor.Windows
             this.Close();
         }
 
-        private void Btn_CreateNewDungeon_Click(object sender, RoutedEventArgs e)
+        private void Btn_CreateNewWorld_Click(object sender, RoutedEventArgs e)
         {
-            WindowCreateDungeon window = new();
+            WindowCreateWorld window = new();
 
             bool? result = window.ShowDialog();
 
@@ -109,9 +109,9 @@ namespace GameEditor.Windows
             }
 
             string path = GameLib.Files.FilesManager.CreateNewProject(
-                dungeonName: GameEditorConfig.DungeonCreation.ProjectName,
-                dirMain: GameEditorConfig.DungeonCreation.ProjectDir,
-                gridSize: new(GameEditorConfig.DungeonCreation.Level_X, GameEditorConfig.DungeonCreation.Level_Y),
+                worldName: GameEditorConfig.WorldCreation.ProjectName,
+                dirMain: GameEditorConfig.WorldCreation.ProjectDir,
+                gridSize: new(GameEditorConfig.WorldCreation.Level_X, GameEditorConfig.WorldCreation.Level_Y),
                 tileRenderSize: new(64.0f, 64.0f)
                 );
 

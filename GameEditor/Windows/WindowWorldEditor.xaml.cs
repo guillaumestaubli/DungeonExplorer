@@ -47,12 +47,12 @@ namespace GameEditor.Windows
         /// <summary>
         /// Initialize a new instance of the world editor with a world to open
         /// </summary>
-        /// <param name="path">Path of the .dungeon file to open</param>
+        /// <param name="path">Path of the .world file to open</param>
         public WindowWorldEditor(string path)
         {
             InitializeComponent();
 
-            Dungeon.LoadFromFile(path);
+            World.LoadFromFile(path);
 
             this.Loaded += WindowWorldEditor_Loaded;
             this.Closing += WindowWorldEditor_Closing;
@@ -95,9 +95,9 @@ namespace GameEditor.Windows
 
                 _renderArea.Clear(new SFML.Graphics.Color(100, 100, 100));
 
-                DrawGround(Dungeon.CurrentLevel);
-                DrawProps(Dungeon.CurrentLevel);
-                DrawPlayer(Dungeon.Player);
+                DrawGround(World.CurrentLevel);
+                DrawProps(World.CurrentLevel);
+                DrawPlayer(World.Player);
 
                 _renderArea.Display();
             }
@@ -217,7 +217,7 @@ namespace GameEditor.Windows
 
             if (_playerControl)
             {
-                Dungeon.MovePlayer();
+                World.MovePlayer();
                 CenterViewOnPlayer();
             }
         }
@@ -703,14 +703,14 @@ namespace GameEditor.Windows
             if (toolbar.CurrentTileType == null)
                 return;
 
-            Vector2i gridIndex = Dungeon.ConvertWorldCoordsToGridIndex(_renderArea.MapPixelToCoords(e.Position));
+            Vector2i gridIndex = World.ConvertWorldCoordsToGridIndex(_renderArea.MapPixelToCoords(e.Position));
 
-            Tile tile = Dungeon.GetTile(gridIndex);
+            Tile tile = World.GetTile(gridIndex);
 
             tile.TileTexture = toolbar.CurrentTileTexture;
             tile.Type = (TileType)toolbar.CurrentTileType;
 
-            Dungeon.UpdateTile(tile, gridIndex);
+            World.UpdateTile(tile, gridIndex);
         }
 
         /// <summary>
@@ -727,11 +727,11 @@ namespace GameEditor.Windows
             if (toolbar.CurrentPropTexture == null)
                 return;
 
-            Vector2i gridIndex = Dungeon.ConvertWorldCoordsToGridIndex(_renderArea.MapPixelToCoords(e.Position));
+            Vector2i gridIndex = World.ConvertWorldCoordsToGridIndex(_renderArea.MapPixelToCoords(e.Position));
 
-            Prop prop = new(gridIndex, Dungeon.CurrentLevel.TileRenderSize, toolbar.CurrentPropTexture);
+            Prop prop = new(gridIndex, World.CurrentLevel.TileRenderSize, toolbar.CurrentPropTexture);
 
-            Dungeon.AddProp(prop);
+            World.AddProp(prop);
         }
 
         private void LoadSelectedTileOnTileDetailsToolbar(SFML.Window.MouseButtonEventArgs e)
@@ -739,16 +739,16 @@ namespace GameEditor.Windows
             if (_currentToolbar == null)
                 return;
 
-            Vector2i gridIndex = Dungeon.ConvertWorldCoordsToGridIndex(_renderArea.MapPixelToCoords(e.Position));
+            Vector2i gridIndex = World.ConvertWorldCoordsToGridIndex(_renderArea.MapPixelToCoords(e.Position));
 
-            Tile tile = Dungeon.GetTile(gridIndex);
+            Tile tile = World.GetTile(gridIndex);
 
             ((ControlViewTileToolbar)_currentToolbar).LoadTile(tile);
         }
 
         private void CenterViewOnPlayer()
         {
-            _view.Center = Dungeon.Player.RenderPosition;
+            _view.Center = World.Player.RenderPosition;
             _renderArea.SetView(_view);
         }
     }

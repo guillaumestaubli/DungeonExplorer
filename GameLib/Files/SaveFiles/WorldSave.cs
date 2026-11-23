@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GameLib.Files.SaveFiles
 {
-    public class DungeonSave
+    public class WorldSave
     {
         public string PathLevels { get; set; } = "Levels";
         public string PathFirstLevel { get; set; } = "Levels\\level_0.json";
@@ -18,7 +18,7 @@ namespace GameLib.Files.SaveFiles
         public string[] RessourcesProps { get; set; } = [];
         public string[] RessourcesWalls { get; set; } = [];
 
-        public DungeonSave()
+        public WorldSave()
         {
 
         }

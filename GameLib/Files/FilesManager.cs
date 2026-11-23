@@ -27,7 +27,7 @@ namespace GameLib.Files
             private const string DIR_RESSOURCES_WALLS_NAME = "Walls";
 
             private static string _dirMain = "";
-            private static string _dungeonName = "";
+            private static string _worldName = "";
 
             private static string _pathDirLevels = "";
             private static string _pathDirRessources = "";
@@ -38,21 +38,21 @@ namespace GameLib.Files
             private static string _pathDirResProps = "";
             private static string _pathDirResWalls = "";
 
-            private static string _pathFileDungeon = "";
+            private static string _pathFileWorld = "";
 
-            internal static void Init(string dirMain, string dungeonName)
+            internal static void Init(string dirMain, string worldName)
             {
                 _dirMain = dirMain;
-                _dungeonName = dungeonName;
+                _worldName = worldName;
 
-                _pathFileDungeon = $@"{_dirMain}\{_dungeonName}.{GameLibConfig.Global.Ext_DungeonBaseFile}";
+                _pathFileWorld = $@"{_dirMain}\{_worldName}.{GameLibConfig.Global.Ext_WorldBaseFile}";
 
                 InitSubDirectories();
             }
 
-            internal static void Init(string dungeonFile)
+            internal static void Init(string worldFile)
             {
-                string[] pathArray = dungeonFile.Split('\\');
+                string[] pathArray = worldFile.Split('\\');
 
                 string dirMain = "";
 
@@ -65,7 +65,7 @@ namespace GameLib.Files
 
                 InitSubDirectories();
 
-                _pathFileDungeon = dungeonFile;
+                _pathFileWorld = worldFile;
             }
 
             private static void InitSubDirectories()
@@ -82,7 +82,7 @@ namespace GameLib.Files
 
             #region GET_SET
 
-            public static string DungeonName { get { return _dungeonName; } }
+            public static string WorldName { get { return _worldName; } }
             public static string PathDirMain { get { return _dirMain; } }
             public static string PathDirLevels { get { return _pathDirLevels; } }
             public static string PathDirRessources { get { return _pathDirRessources; } }
@@ -93,15 +93,15 @@ namespace GameLib.Files
             public static string PathDirResProps { get { return _pathDirResProps; } }
             public static string PathDirResWalls { get { return _pathDirResWalls; } }
 
-            public static string PathFileDungeon { get { return _pathFileDungeon; } }
+            public static string PathFileWorld { get { return _pathFileWorld; } }
 
             #endregion
 
         }
 
-        public static string CreateNewProject(string dungeonName, string dirMain, Vector2i gridSize, Vector2f tileRenderSize)
+        public static string CreateNewProject(string worldName, string dirMain, Vector2i gridSize, Vector2f tileRenderSize)
         {
-            Config.Init(dirMain, dungeonName);
+            Config.Init(dirMain, worldName);
 
             _ = IOHelper.CreateDirectory(Config.PathDirMain);
             _ = IOHelper.CreateDirectory(Config.PathDirLevels);
@@ -113,11 +113,11 @@ namespace GameLib.Files
             _ = IOHelper.CreateDirectory(Config.PathDirResProps);
             _ = IOHelper.CreateDirectory(Config.PathDirResWalls);
 
-            _ = IOHelper.CreateFile(Config.PathFileDungeon);
+            _ = IOHelper.CreateFile(Config.PathFileWorld);
 
-            Dungeon.CreateNewDungeon(gridSize, tileRenderSize);
+            World.World.CreateNewWorld(gridSize, tileRenderSize);
 
-            DungeonSave dungeonSave = new()
+            WorldSave worldSave = new()
             {
                 PathLevels = Config.PathDirLevels,
                 PathFirstLevel = Config.PathDirLevels + "\\" + "level_0.json",
@@ -132,21 +132,21 @@ namespace GameLib.Files
                 RessourcesWalls = []
             };
 
-            string dungeonSaveJson = Newtonsoft.Json.JsonConvert.SerializeObject(dungeonSave, Newtonsoft.Json.Formatting.Indented);
+            string worldSaveJson = Newtonsoft.Json.JsonConvert.SerializeObject(worldSave, Newtonsoft.Json.Formatting.Indented);
 
-            IOHelper.WriteToFile(Config.PathFileDungeon, dungeonSaveJson, false, Encoding.UTF8);
+            IOHelper.WriteToFile(Config.PathFileWorld, worldSaveJson, false, Encoding.UTF8);
 
-            LevelSave levelSave = new(Dungeon.CurrentLevel);
+            LevelSave levelSave = new(World.World.CurrentLevel);
 
             string levelSaveJson = Newtonsoft.Json.JsonConvert.SerializeObject(levelSave, Newtonsoft.Json.Formatting.Indented);
 
-            IOHelper.CreateFile(dungeonSave.PathFirstLevel);
-            IOHelper.WriteToFile(dungeonSave.PathFirstLevel, levelSaveJson, false, Encoding.UTF8);
+            IOHelper.CreateFile(worldSave.PathFirstLevel);
+            IOHelper.WriteToFile(worldSave.PathFirstLevel, levelSaveJson, false, Encoding.UTF8);
 
-            return Config.PathFileDungeon;
+            return Config.PathFileWorld;
         }
 
-        public static DungeonSave LoadDungeonSave(string path)
+        public static WorldSave LoadWorldSave(string path)
         {
             Config.Init(path);
 
@@ -155,14 +155,14 @@ namespace GameLib.Files
             IOResult ior = IOHelper.ReadToEnd(path, out content);
 
             if (ior != IOResult.OK)
-                throw new Exception("Failed to read .dungeon file");
+                throw new Exception("Failed to read .world file");
 
-            DungeonSave? dungeonSave = Newtonsoft.Json.JsonConvert.DeserializeObject<DungeonSave>(content);
+            WorldSave? worldSave = Newtonsoft.Json.JsonConvert.DeserializeObject<WorldSave>(content);
 
-            if (dungeonSave == null)
-                throw new Exception("Failed to deserialize .dungeon file content");
+            if (worldSave == null)
+                throw new Exception("Failed to deserialize .world file content");
 
-            return dungeonSave;
+            return worldSave;
         }
 
         public static LevelSave LoadLevelSave(string path)
@@ -184,28 +184,28 @@ namespace GameLib.Files
 
         public static void SaveProject()
         {
-            DungeonSave dungeonSave = LoadDungeonSave(Config.PathFileDungeon);
+            WorldSave worldSave = LoadWorldSave(Config.PathFileWorld);
 
-            dungeonSave.LevelCount = Dungeon.Levels.Count;
+            worldSave.LevelCount = World.World.Levels.Count;
 
-            dungeonSave.RessourcesDoors = Dungeon.TexturesDoorsFiles.ToArray();
-            dungeonSave.RessourcesEntities = Dungeon.TexturesEntitiesFiles.ToArray();
-            dungeonSave.RessourcesGrounds = Dungeon.TexturesGroundFiles.ToArray();
-            dungeonSave.RessourcesPlayer = Dungeon.TexturesPlayerFiles.ToArray();
-            dungeonSave.RessourcesProps = Dungeon.TexturesPropsFiles.ToArray();
-            dungeonSave.RessourcesWalls = Dungeon.TexturesWallsFiles.ToArray();
+            worldSave.RessourcesDoors = World.World.TexturesDoorsFiles.ToArray();
+            worldSave.RessourcesEntities = World.World.TexturesEntitiesFiles.ToArray();
+            worldSave.RessourcesGrounds = World.World.TexturesGroundFiles.ToArray();
+            worldSave.RessourcesPlayer = World.World.TexturesPlayerFiles.ToArray();
+            worldSave.RessourcesProps = World.World.TexturesPropsFiles.ToArray();
+            worldSave.RessourcesWalls = World.World.TexturesWallsFiles.ToArray();
 
-            string dungeonSaveJson = Newtonsoft.Json.JsonConvert.SerializeObject(dungeonSave, Newtonsoft.Json.Formatting.Indented);
+            string worldSaveJson = Newtonsoft.Json.JsonConvert.SerializeObject(worldSave, Newtonsoft.Json.Formatting.Indented);
 
-            _ = IOHelper.WriteToFile(Config.PathFileDungeon, dungeonSaveJson, false, Encoding.UTF8);
+            _ = IOHelper.WriteToFile(Config.PathFileWorld, worldSaveJson, false, Encoding.UTF8);
 
-            foreach (Level level in Dungeon.Levels)
+            foreach (Level level in World.World.Levels)
             {
                 LevelSave levelSave = new LevelSave(level);
 
                 string levelSaveJson = Newtonsoft.Json.JsonConvert.SerializeObject(levelSave, Newtonsoft.Json.Formatting.Indented);
 
-                _ = IOHelper.WriteToFile(dungeonSave.PathFirstLevel, levelSaveJson, false, Encoding.UTF8);
+                _ = IOHelper.WriteToFile(worldSave.PathFirstLevel, levelSaveJson, false, Encoding.UTF8);
             }
         }
 
@@ -252,7 +252,7 @@ namespace GameLib.Files
             IOResult ior = IOHelper.CopyFile(sourceFileName, destFilename);
 
             if (ior == IOResult.OK)
-                Dungeon.AddTileTextureFile(destFilename, type);
+                World.World.AddTileTextureFile(destFilename, type);
 
             return ior;
         }
@@ -279,7 +279,7 @@ namespace GameLib.Files
             IOResult ior = IOHelper.CopyFile(sourceFileName, destFilename);
 
             if (ior == IOResult.OK)
-                Dungeon.AddPropTextureFile(destFilename);
+                World.World.AddPropTextureFile(destFilename);
 
             return ior;
         }
@@ -307,7 +307,7 @@ namespace GameLib.Files
             if (ior != IOResult.OK)
                 return ior;
 
-            Dungeon.AddPlayerTextureFile(destImgPath, destJsonPath);
+            World.World.AddPlayerTextureFile(destImgPath, destJsonPath);
 
             return IOResult.OK;
         }
@@ -333,7 +333,7 @@ namespace GameLib.Files
             IOResult ior = IOHelper.CopyFile(sourceFileName, destFilename);
 
             if (ior == IOResult.OK)
-                Dungeon.AddPropTextureFile(destFilename);
+                World.World.AddPropTextureFile(destFilename);
 
             return ior;
         }

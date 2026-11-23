@@ -54,13 +54,13 @@
 
                 </StackPanel>
 
-                <Button Name="Btn_LoadDungeon"
+                <Button Name="Btn_LoadWorld"
                         Content="Load"
                         IsEnabled="False"
                         HorizontalAlignment="Left"
                         Padding="50,5,50,5"
                         Margin="10,10,10,30" 
-                        Click="Btn_LoadDungeon_Click"/>
+                        Click="Btn_LoadWorld_Click"/>
 
             </StackPanel>
 
@@ -70,14 +70,14 @@
                     BorderBrush="#C2C2C2"
                     BorderThickness="1"/>
 
-            <Button Name="Btn_CreateNewDungeon"
-                    Content="Create new dungeon"
+            <Button Name="Btn_CreateNewWorld"
+                    Content="Create new world"
                     Grid.Row="1"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Padding="50,5,50,5"
                     Margin="10,30,10,10" 
-                    Click="Btn_CreateNewDungeon_Click"/>
+                    Click="Btn_CreateNewWorld_Click"/>
 
         </Grid>
         

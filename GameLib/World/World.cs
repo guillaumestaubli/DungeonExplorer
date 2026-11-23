@@ -14,7 +14,7 @@ using SFML.Window;
 
 namespace GameLib.World
 {
-    public static class Dungeon
+    public static class World
     {
         #region ATTTRIBUTES
 
@@ -53,7 +53,7 @@ namespace GameLib.World
         /// <param name="gridSize"></param>
         /// <param name="tileRenderSize"></param>
         /// <returns></returns>
-        public static bool CreateNewDungeon(Vector2i gridSize, Vector2f tileRenderSize)
+        public static bool CreateNewWorld(Vector2i gridSize, Vector2f tileRenderSize)
         {
             bool outSuccess = true;
 
@@ -65,27 +65,27 @@ namespace GameLib.World
         }
 
         /// <summary>
-        /// Load a project from a file (.dungeon)
+        /// Load a project from a file (.world)
         /// </summary>
-        /// <param name="path">path of the .dungeon file</param>
+        /// <param name="path">path of the .world file</param>
         public static void LoadFromFile(string path)
         {
             _levels.Clear();
 
-            DungeonSave dungeonSave = FilesManager.LoadDungeonSave(path);
+            WorldSave worldSave = FilesManager.LoadWorldSave(path);
 
             // Load textures
-            _texturesDoorsFiles = dungeonSave.RessourcesDoors.ToList();
-            _texturesEntitiesFiles = dungeonSave.RessourcesEntities.ToList();
-            _texturesGroundFiles = dungeonSave.RessourcesGrounds.ToList();
-            _texturesPlayerFiles = dungeonSave.RessourcesPlayer.ToList();
-            _texturesPropsFiles = dungeonSave.RessourcesProps.ToList();
-            _texturesWallsFiles = dungeonSave.RessourcesWalls.ToList();
+            _texturesDoorsFiles = worldSave.RessourcesDoors.ToList();
+            _texturesEntitiesFiles = worldSave.RessourcesEntities.ToList();
+            _texturesGroundFiles = worldSave.RessourcesGrounds.ToList();
+            _texturesPlayerFiles = worldSave.RessourcesPlayer.ToList();
+            _texturesPropsFiles = worldSave.RessourcesProps.ToList();
+            _texturesWallsFiles = worldSave.RessourcesWalls.ToList();
 
             RessourcesManager.Init();
 
             // load levels
-            foreach (string levelPath in dungeonSave.Levels)
+            foreach (string levelPath in worldSave.Levels)
             {
                 LevelSave levelSave = FilesManager.LoadLevelSave(levelPath);
 
@@ -94,7 +94,7 @@ namespace GameLib.World
                 _levels.Add(level);
             }
 
-            LevelSave firstLevelSave = FilesManager.LoadLevelSave(dungeonSave.PathFirstLevel);
+            LevelSave firstLevelSave = FilesManager.LoadLevelSave(worldSave.PathFirstLevel);
 
             Level? firstLevel = _levels.Where(x => x.ID.ToString() == firstLevelSave.ID).FirstOrDefault();
 

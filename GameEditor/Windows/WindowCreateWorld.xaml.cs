@@ -17,9 +17,9 @@ using System.Windows.Shapes;
 namespace GameEditor.Windows
 {
     /// <summary>
-    /// Logique d'interaction pour WindowCreateDungeon.xaml
+    /// Logique d'interaction pour WindowCreateWorld.xaml
     /// </summary>
-    public partial class WindowCreateDungeon : Window
+    public partial class WindowCreateWorld : Window
     {
         private string _projectBaseDir = GameEditorConfig.Path_Base_Projects_Dir;
 
@@ -28,14 +28,14 @@ namespace GameEditor.Windows
         private int _firstLevel_X = 0;
         private int _firstLevel_Y = 0;
 
-        public WindowCreateDungeon()
+        public WindowCreateWorld()
         {
             InitializeComponent();
 
-            this.Loaded += WindowCreateDungeon_Loaded;
+            this.Loaded += WindowCreateWorld_Loaded;
         }
 
-        private void WindowCreateDungeon_Loaded(object sender, RoutedEventArgs e)
+        private void WindowCreateWorld_Loaded(object sender, RoutedEventArgs e)
         {
             this.TxtBox_Dir.Text = GameEditorConfig.Path_Base_Projects_Dir;
         }
@@ -96,7 +96,7 @@ namespace GameEditor.Windows
             if (!FetchValuesFromInputs())
             {
                 string message =
-                    $"An error occured during {nameof(WindowCreateDungeon)}.{nameof(FetchValuesFromInputs)}. " +
+                    $"An error occured during {nameof(WindowCreateWorld)}.{nameof(FetchValuesFromInputs)}. " +
                     $"Impossible to fetch user inputs.";
 
                 string caption = $"DungeonExplorer - GameEditor";
@@ -106,10 +106,10 @@ namespace GameEditor.Windows
                 return;
             }
 
-            GameEditorConfig.DungeonCreation.ProjectName = _projectName;
-            GameEditorConfig.DungeonCreation.ProjectDir = _projectDir;
-            GameEditorConfig.DungeonCreation.Level_X = _firstLevel_X;
-            GameEditorConfig.DungeonCreation.Level_Y = _firstLevel_Y;
+            GameEditorConfig.WorldCreation.ProjectName = _projectName;
+            GameEditorConfig.WorldCreation.ProjectDir = _projectDir;
+            GameEditorConfig.WorldCreation.Level_X = _firstLevel_X;
+            GameEditorConfig.WorldCreation.Level_Y = _firstLevel_Y;
 
             this.DialogResult = true;
             this.Close();
@@ -123,7 +123,7 @@ namespace GameEditor.Windows
 
             if(_projectName.Length == 0)
             {
-                Debug.WriteLine($"> ERROR : WindowCreateDungeon.FetchValuesFromInputs : _projectName.Length == 0");
+                Debug.WriteLine($"> ERROR : WindowCreateWorld.FetchValuesFromInputs : _projectName.Length == 0");
                 outSuccess = false;
             }
 
@@ -131,25 +131,25 @@ namespace GameEditor.Windows
 
             if(_projectDir.Length == 0)
             {
-                Debug.WriteLine($"> ERROR : WindowCreateDungeon.FetchValuesFromInputs : _projectDir.Length == 0");
+                Debug.WriteLine($"> ERROR : WindowCreateWorld.FetchValuesFromInputs : _projectDir.Length == 0");
                 outSuccess = false;
             }
 
             if (Directory.Exists(_projectDir))
             {
-                Debug.WriteLine($"> ERROR : WindowCreateDungeon.FetchValuesFromInputs : directory with name \"{_projectDir}\" already exists");
+                Debug.WriteLine($"> ERROR : WindowCreateWorld.FetchValuesFromInputs : directory with name \"{_projectDir}\" already exists");
                 outSuccess = false;
             }
 
             if(!int.TryParse(this.TxtBox_Level_X.Text, CultureInfo.InvariantCulture, out _firstLevel_X))
             {
-                Debug.WriteLine($"> ERROR : WindowCreateDungeon.FetchValuesFromInputs : failed to parse first level X value to int");
+                Debug.WriteLine($"> ERROR : WindowCreateWorld.FetchValuesFromInputs : failed to parse first level X value to int");
                 outSuccess = false;
             }
 
             if(!int.TryParse(this.TxtBox_Level_Y.Text, CultureInfo.InvariantCulture, out _firstLevel_Y))
             {
-                Debug.WriteLine($"> ERROR : WindowCreateDungeon.FetchValuesFromInputs : failed to parse first level Y value to int");
+                Debug.WriteLine($"> ERROR : WindowCreateWorld.FetchValuesFromInputs : failed to parse first level Y value to int");
                 outSuccess = false;
             }
 

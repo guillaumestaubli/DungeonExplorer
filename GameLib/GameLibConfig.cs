@@ -11,7 +11,7 @@ namespace GameLib
         public static class Global
         {
             public const bool FlushLogsOnStartup = true;
-            public const string Ext_DungeonBaseFile = "dungeon";
+            public const string Ext_WorldBaseFile = "world";
 
             private static bool _isInPlayMode = true;
             public static bool IsInPlayMode { get { return _isInPlayMode; } set { _isInPlayMode = value; } }
