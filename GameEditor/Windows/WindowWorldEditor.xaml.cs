@@ -39,6 +39,8 @@ namespace GameEditor.Windows
         private View _view;
         private RenderWindow _renderArea;
         private System.Windows.Forms.Control _win32SfmlSurface;
+        private Stopwatch _renderAreaClock;
+        private long _renderAreaClockElapsedMs = 0;
         private DisplaySettings _displaySettings = new();
         private Control? _currentToolbar = null;
 
@@ -75,6 +77,9 @@ namespace GameEditor.Windows
             _renderAreaSize = new(_win32SfmlSurface.Size.Width, _win32SfmlSurface.Size.Height);
             _view = new View(new FloatRect(new Vector2f(0.0f, 0.0f), _renderAreaSize));
 
+            _renderAreaClock = new();
+            _renderAreaClock.Start();
+
             CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
 
@@ -87,20 +92,25 @@ namespace GameEditor.Windows
         /// <param name="e"></param>
         private void CompositionTarget_Rendering(object? sender, EventArgs e)
         {
-            if (_renderArea != null)
-            {
-                _renderArea.DispatchEvents();
+            if (_renderArea == null)
+                return;
 
-                RenderArea_ProcessMouseAndKeyboardInputs();
+            _renderArea.DispatchEvents();
 
-                _renderArea.Clear(new SFML.Graphics.Color(100, 100, 100));
+            RenderArea_ProcessMouseAndKeyboardInputs();
 
-                DrawGround(World.CurrentLevel);
-                DrawProps(World.CurrentLevel);
-                DrawPlayer(World.Player);
+            _renderAreaClockElapsedMs = _renderAreaClock.ElapsedMilliseconds;
+            _renderAreaClock.Restart();
 
-                _renderArea.Display();
-            }
+            World.RenderFrame(_renderAreaClockElapsedMs);
+
+            _renderArea.Clear(new SFML.Graphics.Color(100, 100, 100));
+
+            DrawGround(World.CurrentLevel);
+            DrawProps(World.CurrentLevel);
+            DrawPlayer(World.Player);
+
+            _renderArea.Display();
 
             return;
         }
@@ -789,30 +799,33 @@ namespace GameEditor.Windows
         public bool ShowTileTexture { get; set; } = true;
 
         [DisplaySettingDisplayName("Show Wall Hitbox")]
-        public bool ShowWallHitbox { get; set; } = false;
+        public bool ShowWallHitbox { get; set; } = true;
+
 
         [DisplaySettingDisplayName("Show Props")]
         public bool ShowProps { get; set; } = true;
         [DisplaySettingDisplayName("Show Props Rectangle Hitbox")]
-        public bool ShowPropsRectangleHitbox { get; set; } = false;
+        public bool ShowPropsRectangleHitbox { get; set; } = true;
         [DisplaySettingDisplayName("Show Props Pixel Perfect Hitbox")]
-        public bool ShowPropsPixelPerfectHitbox { get; set; } = false;
+        public bool ShowPropsPixelPerfectHitbox { get; set; } = true;
+
 
         [DisplaySettingDisplayName("Show Entities")]
         public bool ShowEntities { get; set; } = true;
         [DisplaySettingDisplayName("Show Entities Rectangle Hitbox")]
-        public bool ShowEntitiesRectangleHitbox { get; set; } = false;
+        public bool ShowEntitiesRectangleHitbox { get; set; } = true;
         [DisplaySettingDisplayName("Show Entities Pixel Perfect Hitbox")]
-        public bool ShowEntitiesPixelPerfectHitbox { get; set; } = false;
+        public bool ShowEntitiesPixelPerfectHitbox { get; set; } = true;
         [DisplaySettingDisplayName("Show Entities Paths")]
         public bool ShowEntitiesPaths { get; set; } = false;
+
 
         [DisplaySettingDisplayName("Show Player")]
         public bool ShowPlayer { get; set; } = true;
         [DisplaySettingDisplayName("Show Player Rectangle Hitbox")]
-        public bool ShowPlayerRectangleHitbox { get; set; } = false;
+        public bool ShowPlayerRectangleHitbox { get; set; } = true;
         [DisplaySettingDisplayName("Show Player Pixel Perfect Hitbox")]
-        public bool ShowPlayerPixelPerfectHitbox { get; set; } = false;
+        public bool ShowPlayerPixelPerfectHitbox { get; set; } = true;
         [DisplaySettingDisplayName("Show Player Spawn Point")]
         public bool ShowPlayerSpawnPoint { get; set; } = false;
     }

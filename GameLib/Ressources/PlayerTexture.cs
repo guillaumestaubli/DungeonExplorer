@@ -107,6 +107,9 @@ namespace GameLib.Ressources
                 }
             }
 
+            if (texIndex >= _pixelPerfectBorder[lineIndex].Count)
+                texIndex = 0;
+
             return _pixelPerfectBorder[lineIndex][texIndex];
         }
 

@@ -111,20 +111,21 @@ namespace GameLib.Entities
         {
             ++_texCurrentIndex;
 
-            PlayerTexture texture = _textures[_action];
-            PlayerTextureLine line = texture.Lines.First(x => x.Direction == _direction);
+            int texCount = _textures[_action].Lines.First(x => x.Direction == _direction).TexturesCount;
 
-            if (_texCurrentIndex >= line.TexturesCount)
+            if (_texCurrentIndex >= texCount)
                 _texCurrentIndex = 0;
+        }
 
-            Vector2f[] localPoints = texture.GetPixelPerfectBorderPoints(_direction, _texCurrentIndex);
+        public void UpdateDrawables(long elapsedMs)
+        {
+            Vector2f[] localPoints = _textures[_action].GetPixelPerfectBorderPoints(_direction, _texCurrentIndex);
             _pixelPerfectBorderPoints = RessourcesHelper.GetGlobalPointsPixelPerfectBorder(localPoints, _renderPosition);
 
             _vaPlayer = GenerateVertexArrayPlayer();
-            _vaPlayerRenderStates = new(texture.Texture);
-
+            _vaPlayerRenderStates = new(_textures[_action].Texture);
+            _vaRectBounds = GenerateVertexArrayRectBounds();
             _vaPixelPerfectBounds = GenerateVertexArrayPixelPerfectBounds();
-
         }
 
         /// <summary>
@@ -262,11 +263,17 @@ namespace GameLib.Entities
         /// <param name="direction"></param>
         public void Move(Vector2f offset, Direction direction)
         {
-            _direction = direction;
             _renderPosition += offset;
 
-            _vaPlayer.Dispose();
-            _vaPlayer = GenerateVertexArrayPlayer();
+            // update and check for errors in texture when changing player direction
+            if (_direction != direction)
+            {
+                _direction = direction;
+
+                int texCount = _textures[_action].Lines.First(x => x.Direction == _direction).TexturesCount;
+                if (_texCurrentIndex >= texCount)
+                    _texCurrentIndex = 0;
+            }
         }
 
         public void SetAction(Action action = Action.Idle)

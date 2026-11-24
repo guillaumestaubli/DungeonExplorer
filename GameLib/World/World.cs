@@ -273,6 +273,20 @@ namespace GameLib.World
 
         #endregion
 
+        #region RENDERING
+
+        /// <summary>
+        /// Update the drawables of the game needed to draw the frame on the screen
+        /// </summary>
+        /// <param name="elapsedMs"></param>
+        public static void RenderFrame(long elapsedMs)
+        {
+            _player.UpdateDrawables(elapsedMs);
+        }
+
+        #endregion
+
+
         /// <summary>
         /// Handle the player movements based on the keyboard inputs
         /// </summary>
