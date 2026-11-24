@@ -57,5 +57,10 @@ namespace GameLib
             public const float MoveOffsetPerFrame = 2.0f; // [px/frame]
             public const float SprintRatio = 1.75f;
         }
+
+        public static class Collisions
+        {
+            public const int WallCollisionsCheckRadius = 1;
+        }
     }
 }

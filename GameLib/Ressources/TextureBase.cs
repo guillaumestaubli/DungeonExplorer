@@ -36,7 +36,7 @@ namespace GameLib.Ressources
             _texture = new(_image)
             {
                 Smooth = true,
-                Repeated = true
+                Repeated = false
             };
         }
     }

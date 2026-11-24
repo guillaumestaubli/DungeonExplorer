@@ -42,6 +42,7 @@ namespace GameLib.Entities
         public Vector2f RenderSize { get { return _renderSize; } }
         public FloatRect GlobalBounds { get { return new(_renderPosition, _renderSize); } }
         public Dictionary<Action, PlayerTexture> Textures { get { return _textures; } }
+        public Vector2f[] PixelPerfectBorderPoints { get { return _pixelPerfectBorderPoints; } }
 
         public VertexArray D_Player { get { return _vaPlayer; } }
         public RenderStates D_Player_RenderStates { get { return _vaPlayerRenderStates; } }

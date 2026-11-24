@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GameLib.Core;
 using GameLib.Entities;
 using GameLib.Files;
 using GameLib.Files.SaveFiles;
@@ -323,6 +324,8 @@ namespace GameLib.World
 
             if (eastPressed)
                 offset.X += delta;
+
+            offset = CollisionHelper.DetectAndCorrectPlayerCollisionsWhenMoving(offset);
 
             Direction direction = GetGlobalPlayerDirection(offset);
 

@@ -140,8 +140,14 @@ namespace GameEditor.Windows
                     if (_displaySettings.ShowTileBorder)
                         _renderArea.Draw(tile.D_Border);
 
+                    if ((tile.Type == TileType.Wall || tile.Type == TileType.Door) && _displaySettings.ShowWallHitbox)
+                        _renderArea.Draw(tile.D_Hitbox);
+
                     if (_displaySettings.ShowTileIndex)
                         _renderArea.Draw(tile.D_GridIndex);
+
+                    if (_displaySettings.ShowTileType)
+                        _renderArea.Draw(tile.D_TileType);
                 }
             }
         }
@@ -787,7 +793,7 @@ namespace GameEditor.Windows
     public class DisplaySettings
     {
         [DisplaySettingDisplayName("Show Tile Border")]
-        public bool ShowTileBorder { get; set; } = true;
+        public bool ShowTileBorder { get; set; } = false;
 
         [DisplaySettingDisplayName("Show Tile Index")]
         public bool ShowTileIndex { get; set; } = true;

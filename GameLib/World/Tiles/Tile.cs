@@ -4,6 +4,7 @@ using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace GameLib.World.Tiles
@@ -23,7 +24,9 @@ namespace GameLib.World.Tiles
         private VertexArray _vaBackground;
         private RenderStates _backgroundRenderStates;
         private VertexArray _vaBorder;
+        private VertexArray _vaRectHitbox;
         private Text _txtIndex;
+        private Text _txtType;
 
         #endregion
 
@@ -32,8 +35,9 @@ namespace GameLib.World.Tiles
         public Guid ID { get { return _id; } }
         public TileType Type { get { return _type; } set { _type = value; } }
         public Vector2i GridIndex { get { return _gridIndex; } }
+        public Vector2f RenderPosition { get { return _renderPosition; } }
+        public Vector2f RenderSize { get { return _renderSize; } }
         public FloatRect GlobalBounds { get { return new FloatRect(_renderPosition, _renderSize); } }
-        public Color BorderColor { get { return _borderColor; } set { _borderColor = value; } }
         public RenderStates BackgroundRenderStates { get { return _backgroundRenderStates; } }
 
         public TileTexture TileTexture
@@ -42,13 +46,16 @@ namespace GameLib.World.Tiles
             set
             {
                 _tileTexture = value;
-                UpdateVertexArrayBackground();
+                _vaBackground = GenerateVertexArrayBackground();
+                _backgroundRenderStates = new(_tileTexture.Texture);
             }
         }
 
         public VertexArray D_Background { get { return _vaBackground; } }
         public VertexArray D_Border { get { return _vaBorder; } }
+        public VertexArray D_Hitbox { get { return _vaRectHitbox; } }
         public Text D_GridIndex { get { return _txtIndex; } }
+        public Text D_TileType { get { return _txtType; } }
 
         #endregion
 
@@ -61,17 +68,13 @@ namespace GameLib.World.Tiles
             _renderPosition = new Vector2f(gridIndex.X * _renderSize.X, gridIndex.Y * _renderSize.Y);
             _borderColor = Color.White;
             _tileTexture = RessourcesManager.TileTextureNotFound;
-            _backgroundRenderStates = new(_tileTexture.Texture)
-            {
-                BlendMode = BlendMode.None
-            };
 
-            _vaBackground = new VertexArray(PrimitiveType.TriangleStrip, 4);
-            _vaBorder = new VertexArray(PrimitiveType.LineStrip, 5);
+            _vaBackground = GenerateVertexArrayBackground();
+            _backgroundRenderStates = new(_tileTexture.Texture);
+            _vaBorder = GenerateVertexArrayBorder();
+            _vaRectHitbox = GenerateVertexArrayHitbox();
             _txtIndex = GenerateTxtTileIndex();
-
-            UpdateVertexArrayBorder();
-            UpdateVertexArrayBackground();
+            _txtType = GenerateTxtTileType();
         }
 
         public Tile(TileSave save, Vector2f renderSize)
@@ -84,12 +87,12 @@ namespace GameLib.World.Tiles
             _borderColor = Color.White;
             _tileTexture = RessourcesManager.GetTileTexture(save.Texture, _type);
 
-            _vaBackground = new VertexArray(PrimitiveType.TriangleStrip, 4);
-            _vaBorder = new VertexArray(PrimitiveType.LineStrip, 5);
+            _vaBackground = GenerateVertexArrayBackground();
+            _backgroundRenderStates = new(_tileTexture.Texture);
+            _vaBorder = GenerateVertexArrayBorder();
+            _vaRectHitbox = GenerateVertexArrayHitbox();
             _txtIndex = GenerateTxtTileIndex();
-
-            UpdateVertexArrayBorder();
-            UpdateVertexArrayBackground();
+            _txtType = GenerateTxtTileType();
         }
 
         private Text GenerateTxtTileIndex()
@@ -105,70 +108,126 @@ namespace GameLib.World.Tiles
             return txt;
         }
 
-        private void UpdateVertexArrayBackground()
+        private Text GenerateTxtTileType()
         {
-            _vaBackground[0] = new Vertex
+            Text txt = new(GameLibConfig.Fonts.Arial, $"[{_type.ToString()}]", 12u)
+            {
+                Position = _renderPosition + new Vector2f(5.0f, 20.0f),
+                FillColor = Color.Black,
+                OutlineColor = Color.White,
+                OutlineThickness = 0.75f
+            };
+
+            return txt;
+        }
+
+        private VertexArray GenerateVertexArrayBackground()
+        {
+            VertexArray array = new(PrimitiveType.TriangleStrip, 4u);
+
+            array[0] = new Vertex
             {
                 Position = _renderPosition,
                 Color = Color.White,
                 TexCoords = new Vector2f(0.0f, 0.0f)
             };
 
-            _vaBackground[1] = new Vertex
+            array[1] = new Vertex
             {
                 Position = _renderPosition + new Vector2f(0.0f, _renderSize.Y),
                 Color = Color.White,
                 TexCoords = new Vector2f(0.0f, _tileTexture.Texture.Size.Y)
             };
 
-            _vaBackground[2] = new Vertex
+            array[2] = new Vertex
             {
                 Position = _renderPosition + new Vector2f(_renderSize.X, 0.0f),
                 Color = Color.White,
                 TexCoords = new Vector2f(_tileTexture.Texture.Size.X, 0.0f)
             };
 
-            _vaBackground[3] = new Vertex
+            array[3] = new Vertex
             {
                 Position = _renderPosition + _renderSize,
                 Color = Color.White,
                 TexCoords = (Vector2f)_tileTexture.Texture.Size
             };
 
-            _backgroundRenderStates = new(_tileTexture.Texture);
+            return array;
         }
 
-        private void UpdateVertexArrayBorder()
+        private VertexArray GenerateVertexArrayBorder()
         {
-            _vaBorder[0] = new Vertex
+            VertexArray array = new(PrimitiveType.LineStrip, 5u);
+
+            array[0] = new Vertex
             {
                 Position = _renderPosition,
                 Color = _borderColor
             };
 
-            _vaBorder[1] = new Vertex
+            array[1] = new Vertex
             {
                 Position = _renderPosition + new Vector2f(0.0f, _renderSize.Y),
                 Color = _borderColor
             };
 
-            _vaBorder[2] = new Vertex
+            array[2] = new Vertex
             {
                 Position = _renderPosition + _renderSize,
                 Color = _borderColor
             };
 
-            _vaBorder[3] = new Vertex
+            array[3] = new Vertex
             {
                 Position = _renderPosition + new Vector2f(_renderSize.X, 0.0f),
                 Color = _borderColor
             };
 
-            _vaBorder[4] = new Vertex
+            array[4] = new Vertex
             {
                 Position = _renderPosition,
                 Color = _borderColor
             };
+
+            return array;
+        }
+
+        private VertexArray GenerateVertexArrayHitbox()
+        {
+            VertexArray array = new(PrimitiveType.LineStrip, 5u);
+
+            array[0] = new Vertex
+            {
+                Position = _renderPosition,
+                Color = GameLibConfig.Textures.Color_WallHitbox
+            };
+
+            array[1] = new Vertex
+            {
+                Position = _renderPosition + new Vector2f(0.0f, _renderSize.Y),
+                Color = GameLibConfig.Textures.Color_WallHitbox
+            };
+
+            array[2] = new Vertex
+            {
+                Position = _renderPosition + _renderSize,
+                Color = GameLibConfig.Textures.Color_WallHitbox
+            };
+
+            array[3] = new Vertex
+            {
+                Position = _renderPosition + new Vector2f(_renderSize.X, 0.0f),
+                Color = GameLibConfig.Textures.Color_WallHitbox
+            };
+
+            array[4] = new Vertex
+            {
+                Position = _renderPosition,
+                Color = GameLibConfig.Textures.Color_WallHitbox
+            };
+
+            return array;
         }
 
     }
