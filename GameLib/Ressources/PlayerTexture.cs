@@ -16,6 +16,11 @@ namespace GameLib.Ressources
         private PlayerTextureLine[] _textureLines;
         private Vector2i _tileSize;
 
+        /// <summary>
+        /// GET : [line index][texture index] => local points for the border of the texture tile
+        /// </summary>
+        private List<List<Vector2f[]>> _pixelPerfectBorder;
+
         #region GET_SET
 
         public Entities.Action Action { get { return _action; } }
@@ -43,6 +48,8 @@ namespace GameLib.Ressources
                 X = (int)this.Image.Size.X / nbCol,
                 Y = (int)this.Image.Size.Y / nbLines
             };
+
+            _pixelPerfectBorder = CreatePixelPerfectBorders();
         }
 
         public PlayerTexture(PlayerTextureSave save) : base(save.File)
@@ -56,7 +63,53 @@ namespace GameLib.Ressources
             {
                 _textureLines[i] = new PlayerTextureLine(save.Lines[i]);
             }
+
+            _pixelPerfectBorder = CreatePixelPerfectBorders();
         }
+
+        private List<List<Vector2f[]>> CreatePixelPerfectBorders()
+        {
+            List<List<Vector2f[]>> outArray = [];
+
+            for (int y = 0; y < _textureLines.Length; ++y)
+            {
+                List<Vector2f[]> linePoints = [];
+
+                for (int x = 0; x < _textureLines[y].TexturesCount; ++x)
+                {
+                    IntRect bounds = new()
+                    {
+                        Position = new Vector2i(x * _tileSize.X, y * _tileSize.Y),
+                        Size = _tileSize
+                    };
+
+                    Vector2f[] points = RessourcesHelper.GeneratePixelPerfectBorderPoints(this.Image, bounds);
+
+                    linePoints.Add(points);
+                }
+
+                outArray.Add(linePoints);
+            }
+
+            return outArray;
+        }
+
+        public Vector2f[] GetPixelPerfectBorderPoints(Direction direction, int texIndex)
+        {
+            int lineIndex = 0;
+
+            for (int i = 0; i < _textureLines.Length; ++i)
+            {
+                if (_textureLines[i].Direction == direction)
+                {
+                    lineIndex = i;
+                    break;
+                }
+            }
+
+            return _pixelPerfectBorder[lineIndex][texIndex];
+        }
+
     }
 
     /// <summary>

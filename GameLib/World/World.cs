@@ -9,6 +9,7 @@ using GameLib.Logging;
 using GameLib.Ressources;
 using GameLib.World.Props;
 using GameLib.World.Tiles;
+using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
@@ -318,7 +319,6 @@ namespace GameLib.World
             else
                 _player.SetAction(Entities.Action.Walk);
         }
-
 
         /// <summary>
         /// Get the global direction depending on the movement

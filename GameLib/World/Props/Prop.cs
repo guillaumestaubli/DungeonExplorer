@@ -54,7 +54,8 @@ namespace GameLib.World.Props
             _texture = texture;
 
             Vector2f scale = new(_renderSize.X / _texture.Image.Size.X, _renderSize.Y / _texture.Image.Size.Y);
-            _globalPointsPixelPerfectBorder = _texture.GetGlobalPointsPixelPerfectBorder(_renderPosition, scale);
+            //_globalPointsPixelPerfectBorder = _texture.GetGlobalPointsPixelPerfectBorder(_renderPosition, scale);
+            _globalPointsPixelPerfectBorder = RessourcesHelper.GetGlobalPointsPixelPerfectBorder(_texture.PointsPixelPerfectBorder, _renderPosition, scale);
 
             _vaProp = CreateVertexArrayProp();
             _renderStates = CreatePropRenderStates();
@@ -71,7 +72,8 @@ namespace GameLib.World.Props
             _texture = RessourcesManager.GetPropTexture(save.TextureName);
 
             Vector2f scale = new(_renderSize.X / _texture.Image.Size.X, _renderSize.Y / _texture.Image.Size.Y);
-            _globalPointsPixelPerfectBorder = _texture.GetGlobalPointsPixelPerfectBorder(_renderPosition, scale);
+            //_globalPointsPixelPerfectBorder = _texture.GetGlobalPointsPixelPerfectBorder(_renderPosition, scale);
+            _globalPointsPixelPerfectBorder = RessourcesHelper.GetGlobalPointsPixelPerfectBorder(_texture.PointsPixelPerfectBorder, _renderPosition, scale);
 
             _vaProp = CreateVertexArrayProp();
             _renderStates = CreatePropRenderStates();

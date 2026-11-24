@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Timers;
-using System.Text;
-
+﻿using GameLib.Ressources;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
-
-using GameLib.Ressources;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Timers;
+using static GameLib.GameLibConfig;
 
 namespace GameLib.Entities
 {
@@ -22,6 +22,7 @@ namespace GameLib.Entities
         private Vector2f _renderSize;
 
         private Dictionary<Action, PlayerTexture> _textures;
+        private Vector2f[] _pixelPerfectBorderPoints = [];
 
         private Timer _texTimer;
         private double _texTimerInterval = 200; // [ms]
@@ -111,15 +112,19 @@ namespace GameLib.Entities
             ++_texCurrentIndex;
 
             PlayerTexture texture = _textures[_action];
-
             PlayerTextureLine line = texture.Lines.First(x => x.Direction == _direction);
 
             if (_texCurrentIndex >= line.TexturesCount)
                 _texCurrentIndex = 0;
 
-            _vaPlayer.Dispose();
+            Vector2f[] localPoints = texture.GetPixelPerfectBorderPoints(_direction, _texCurrentIndex);
+            _pixelPerfectBorderPoints = RessourcesHelper.GetGlobalPointsPixelPerfectBorder(localPoints, _renderPosition);
+
             _vaPlayer = GenerateVertexArrayPlayer();
             _vaPlayerRenderStates = new(texture.Texture);
+
+            _vaPixelPerfectBounds = GenerateVertexArrayPixelPerfectBounds();
+
         }
 
         /// <summary>
@@ -222,10 +227,32 @@ namespace GameLib.Entities
         /// <returns></returns>
         private VertexArray GenerateVertexArrayPixelPerfectBounds()
         {
-            if (!_initialized)
+            if (!_initialized || _pixelPerfectBorderPoints.Length == 0)
                 return new(PrimitiveType.LineStrip, 0);
 
-            return new VertexArray(PrimitiveType.LineStrip, 0);
+            // add 1 more vertex to close the linestrip and form a loop
+            VertexArray array = new VertexArray(PrimitiveType.LineStrip, (uint)_pixelPerfectBorderPoints.Length + 1);
+
+            // draw each point of the line
+            for (uint i = 0; i < _pixelPerfectBorderPoints.Length; ++i)
+            {
+                Vertex vertex = new()
+                {
+                    Position = _pixelPerfectBorderPoints[i],
+                    Color = GameLibConfig.Textures.Color_PixelPerfectBounds
+                };
+
+                array[i] = vertex;
+            }
+
+            // draw the first point again to close the linestrip loop
+            array[(uint)_pixelPerfectBorderPoints.Length] = new Vertex()
+            {
+                Position = _pixelPerfectBorderPoints[0],
+                Color = GameLibConfig.Textures.Color_PixelPerfectBounds
+            };
+
+            return array;
         }
 
         /// <summary>
