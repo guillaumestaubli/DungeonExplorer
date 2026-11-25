@@ -302,7 +302,9 @@ namespace GameLib.World
 
             if (!northPressed && !southPressed && !westPressed && !eastPressed)
             {
-                _player.SetAction(Entities.Action.Idle);
+                if (_player.Action != Entities.Action.Idle)
+                    _player.SetAction(Entities.Action.Idle);
+
                 return;
             }
 

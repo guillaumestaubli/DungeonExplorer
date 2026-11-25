@@ -290,12 +290,45 @@ namespace GameLib.Entities
                 int texCount = _textures[_action].Lines.First(x => x.Direction == _direction).TexturesCount;
                 if (_texCurrentIndex >= texCount)
                     _texCurrentIndex = 0;
+
+                InitializeTexTimer();
             }
         }
 
         public void SetAction(Action action = Action.Idle)
         {
-            this._action = action;
+            if (action == _action)
+                return;
+
+            _action = action;
+
+            InitializeTexTimer();
+        }
+
+        private void InitializeTexTimer()
+        {
+            if (!_textures.ContainsKey(_action))
+            {
+                _texTimer = new(100);
+                _texTimer.Elapsed += OnTexTimerElapsed;
+                _texTimer.AutoReset = true;
+                _texTimer.Enabled = true;
+
+                return;
+            }
+
+            PlayerTexture texture = _textures[_action];
+
+            PlayerTextureLine line = texture.Lines.First(x => x.Direction == _direction);
+
+            _texTimer.Stop();
+            _texTimer.Dispose();
+
+            _texTimer = new(GameLibConfig.Textures.PlayerAnimationBaseDuration / line.TexturesCount);
+            _texTimer.Elapsed += OnTexTimerElapsed;
+            _texTimer.AutoReset = true;
+            _texTimer.Enabled = true;
+
         }
     }
 }

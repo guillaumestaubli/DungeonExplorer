@@ -21,6 +21,7 @@ namespace GameLib
         public static class Textures
         {
             public const string Path_Img_TextureNotFound = @"DefaultRessources\texture_not_found.png";
+            public const int PlayerAnimationBaseDuration = 1750; // 1000 ms => 1 sec
 
             public static Color Color_RectBounds { get; set; } = Color.Green;
             public static Color Color_PixelPerfectBounds { get; set; } = Color.Magenta;
