@@ -8,7 +8,8 @@
         Title="DungeonExplorer - GameEditor - Launcher" 
         Height="400" 
         Width="800"
-        ThemeMode="Dark">
+        ThemeMode="Dark"
+        AllowsTransparency="False">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -49,7 +50,8 @@
                              Margin="10,0,0,0"/>
 
                     <Button Name="Btn_Browse"
-                            Content="Browse" 
+                            Content="Browse"
+                            VerticalAlignment="Stretch"
                             Click="Btn_Browse_Click"/>
 
                 </StackPanel>

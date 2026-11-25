@@ -9,7 +9,8 @@
         Height="450" 
         Width="800"
         Background="#202020"
-        ThemeMode="Dark">
+        ThemeMode="Dark"
+        AllowsTransparency="False">
 
     <Grid Name="Grid_Main">
         <Grid.RowDefinitions>

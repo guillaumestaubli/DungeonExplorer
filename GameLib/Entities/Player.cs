@@ -5,6 +5,7 @@ using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Timers;
 using static GameLib.GameLibConfig;
@@ -96,7 +97,16 @@ namespace GameLib.Entities
 
             _vaPlayer = GenerateVertexArrayPlayer();
 
-            PlayerTexture texture = _textures[_action];
+            PlayerTexture texture;
+
+            if (_textures.ContainsKey(_action))
+                texture = _textures[_action];
+            else
+            {
+                PlayerTextureLine line = new(0, Direction.None, 1);
+                texture = new(GameLibConfig.Textures.Path_Img_TextureNotFound, Action.None, [line]);
+            }
+
             _vaPlayerRenderStates = new(texture.Texture);
 
             _vaRectBounds = GenerateVertexArrayRectBounds();
@@ -112,6 +122,9 @@ namespace GameLib.Entities
         {
             ++_texCurrentIndex;
 
+            if (!_textures.ContainsKey(_action))
+                return;
+
             int texCount = _textures[_action].Lines.First(x => x.Direction == _direction).TexturesCount;
 
             if (_texCurrentIndex >= texCount)
@@ -120,11 +133,14 @@ namespace GameLib.Entities
 
         public void UpdateDrawables(long elapsedMs)
         {
+            if (!_textures.ContainsKey(_action))
+                return;
+
             Vector2f[] localPoints = _textures[_action].GetPixelPerfectBorderPoints(_direction, _texCurrentIndex);
             _pixelPerfectBorderPoints = RessourcesHelper.GetGlobalPointsPixelPerfectBorder(localPoints, _renderPosition);
 
-            _vaPlayer = GenerateVertexArrayPlayer();
             _vaPlayerRenderStates = new(_textures[_action].Texture);
+            _vaPlayer = GenerateVertexArrayPlayer();
             _vaRectBounds = GenerateVertexArrayRectBounds();
             _vaPixelPerfectBounds = GenerateVertexArrayPixelPerfectBounds();
         }
@@ -135,7 +151,7 @@ namespace GameLib.Entities
         /// <returns></returns>
         private VertexArray GenerateVertexArrayPlayer()
         {
-            if (!_initialized)
+            if (!_initialized || _textures.Count == 0 || !_textures.ContainsKey(_action))
                 return new(PrimitiveType.TriangleStrip, 0);
 
             VertexArray array = new(PrimitiveType.TriangleStrip, 4);

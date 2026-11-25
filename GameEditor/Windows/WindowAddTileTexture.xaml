@@ -8,7 +8,8 @@
         Title="DungeonExplorer - GameEditor - Add Tile Texture" 
         Height="450" 
         Width="800"
-        ThemeMode="Dark">
+        ThemeMode="Dark"
+        AllowsTransparency="False">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>

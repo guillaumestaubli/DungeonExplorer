@@ -8,7 +8,8 @@
         Title="DungeonExplorer - GameEditor - WorldMap" 
         Height="450" 
         Width="800"
-        ThemeMode="Dark">
+        ThemeMode="Dark"
+        AllowsTransparency="False">
     <Grid>
         
     </Grid>

@@ -8,7 +8,8 @@
         Title="DungeonExplorer - GameEditor - CreateWorld"
         Height="400"
         Width="800"
-        ThemeMode="Dark">
+        ThemeMode="Dark"
+        AllowsTransparency="False">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -63,17 +64,17 @@
 
             <StackPanel Orientation="Horizontal"
                         Grid.Row="1"
-                        Grid.Column="1">
+                        Grid.Column="1"
+                        Margin="10,5,10,5">
 
                 <TextBox Name="TxtBox_Dir"
-                         Margin="10,5,0,5"
                          VerticalAlignment="Center"
                          Width="350"
                          IsEnabled="False"/>
 
                 <Button Name="Btn_Browse"
                         Content="Browse"
-                        VerticalAlignment="Center" 
+                        VerticalAlignment="Stretch" 
                         Click="Btn_Browse_Click"/>
 
             </StackPanel>
