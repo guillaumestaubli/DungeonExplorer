@@ -16,12 +16,13 @@ using SFML.Graphics;
 using GameLib.World;
 using GameLib.World.Tiles;
 using GameLib.World.Props;
+using GameLib.Entities;
 
 using GameEditor.Windows.Controls.TileToolbar;
 using GameEditor.Windows.Controls.PropToolbar;
 using GameEditor.Windows.Controls.EntityToolbar;
 using GameEditor.Windows.Controls.LevelToolbar;
-using GameLib.Entities;
+using GameEditor.Windows.Controls.PlayerToolbar;
 
 namespace GameEditor.Windows
 {

@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GameEditor.Windows.Controls.EntityToolbar
+namespace GameEditor.Windows.Controls.PlayerToolbar
 {
     /// <summary>
     /// Logique d'interaction pour ControlControlPlayerToolbar.xaml
