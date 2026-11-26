@@ -24,6 +24,7 @@ using GameEditor.Windows.WorldEditor.Toolbar.Level;
 using GameEditor.Windows.WorldEditor.Toolbar.Player;
 using GameEditor.Windows.WorldEditor.Toolbar.Prop;
 using GameEditor.Windows.WorldEditor.Toolbar.Tile;
+using GameEditor.Windows.Texture.ViewTexture;
 
 namespace GameEditor.Windows.WorldEditor
 {
@@ -415,11 +416,6 @@ namespace GameEditor.Windows.WorldEditor
 
         #region NAV_TAB_PROJECT
 
-        /// <summary>
-        /// Handle the Click event on Btn_Save
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Btn_Save_Click(object sender, RoutedEventArgs e)
         {
             GameLib.Files.FilesManager.SaveProject();
@@ -475,13 +471,13 @@ namespace GameEditor.Windows.WorldEditor
             switch (item.Tag.ToString())
             {
                 case "TILE":
-                    window = null;
+                    window = new WindowViewTileTextures();
                     break;
                 case "PROP":
-                    window = null;
+                    window = new WindowViewPropTextures();
                     break;
                 case "PLAYER":
-                    window = null;
+                    window = new WindowViewPlayerTextures();
                     break;
                 default:
                     window = null;

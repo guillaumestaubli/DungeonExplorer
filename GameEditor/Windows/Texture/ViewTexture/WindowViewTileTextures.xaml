@@ -10,6 +10,99 @@
         Width="800"
         ThemeMode="Dark">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="Tile Textures"
+               Grid.Row="0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               FontSize="28"
+               FontWeight="Bold"
+               Margin="10"/>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Row="0"
+                  Grid.Column="0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Type : "
+                       Grid.Column="0"
+                       Margin="10,5,5,5"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"/>
+
+                <ComboBox Name="ComboBox_Type"
+                          Grid.Column="1"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center"
+                          Margin="0,0,5,0"
+                          SelectionChanged="ComboBox_Type_SelectionChanged">
+
+                    <ComboBoxItem Content="Ground"
+                                  Tag="GROUND"/>
+
+                    <ComboBoxItem Content="Wall"
+                                  Tag="WALL"/>
+
+                    <ComboBoxItem Content="Door"
+                                  Tag="DOOR"/>
+
+                </ComboBox>
+
+            </Grid>
+
+            <ScrollViewer Name="ScrollViewer_List"
+                          Grid.Row="1"
+                          Grid.Column="0"
+                          Margin="10"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch">
+
+                <StackPanel Orientation="Vertical"
+                            Name="StackPanel_List">
+                    
+                    
+                    
+                </StackPanel>
+                
+            </ScrollViewer>
+
+            <Grid Grid.Column="1"
+                  Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Label Content="Texture preview : "
+                       Grid.Row="0"
+                       Margin="5,5,5,5"/>
+
+                <Image Name="Img_Texture"
+                       Grid.Row="1"
+                       Margin="10"
+                       VerticalAlignment="Stretch"
+                       HorizontalAlignment="Stretch"/>
+            </Grid>
+        </Grid>
+
     </Grid>
 </Window>

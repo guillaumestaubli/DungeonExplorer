@@ -17,4 +17,8 @@
     <ProjectReference Include="..\GameLib\GameLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Windows\Texture\EditTexture\" />
+  </ItemGroup>
+
 </Project>
