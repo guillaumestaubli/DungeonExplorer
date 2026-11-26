@@ -112,6 +112,9 @@ namespace GameEditor.Windows
 
             _renderArea.Display();
 
+            if (_playerControl && _currentToolbar is ControlControlPlayerToolbar)
+                ((ControlControlPlayerToolbar)_currentToolbar).LoadPlayer(World.Player);
+
             return;
         }
 
@@ -701,8 +704,14 @@ namespace GameEditor.Windows
         {
             _playerControl = !_playerControl;
 
-            if (_playerControl)
-                CenterViewOnPlayer();
+            if (!_playerControl)
+                return;
+
+            _currentToolbar = new ControlControlPlayerToolbar();
+            this.ToolbarContainer.Child = _currentToolbar;
+            ((ControlControlPlayerToolbar)_currentToolbar).LoadPlayer(World.Player);
+
+            CenterViewOnPlayer();
         }
 
         #endregion
