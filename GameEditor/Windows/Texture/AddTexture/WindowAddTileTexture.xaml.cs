@@ -17,7 +17,7 @@ using GameLib.Files;
 using GameLib.World;
 using GameLib.World.Tiles;
 
-namespace GameEditor.Windows.AddTexture
+namespace GameEditor.Windows.Texture.AddTexture
 {
     /// <summary>
     /// Logique d'interaction pour WindowAddTileTexture.xaml

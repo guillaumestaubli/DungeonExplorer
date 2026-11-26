@@ -18,7 +18,7 @@ using GameLib.World.Tiles;
 using GameLib.World.Props;
 using GameLib.Entities;
 
-using GameEditor.Windows.AddTexture;
+using GameEditor.Windows.Texture.AddTexture;
 using GameEditor.Windows.WorldEditor.Toolbar.Entity;
 using GameEditor.Windows.WorldEditor.Toolbar.Level;
 using GameEditor.Windows.WorldEditor.Toolbar.Player;
