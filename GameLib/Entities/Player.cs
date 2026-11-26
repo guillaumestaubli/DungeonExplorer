@@ -63,7 +63,7 @@ namespace GameLib.Entities
 
             PlayerTextureLine line = new(0, Direction.None, 1);
 
-            PlayerTexture texture = new(GameLibConfig.Textures.Path_Img_TextureNotFound, Action.None, [line]);
+            PlayerTexture texture = new(GameLibConfig.Textures.Path_Img_TextureNotFound, Action.None, [line], 1000);
 
             _textures = new()
             {
@@ -104,7 +104,7 @@ namespace GameLib.Entities
             else
             {
                 PlayerTextureLine line = new(0, Direction.None, 1);
-                texture = new(GameLibConfig.Textures.Path_Img_TextureNotFound, Action.None, [line]);
+                texture = new(GameLibConfig.Textures.Path_Img_TextureNotFound, Action.None, [line], 1000);
             }
 
             _vaPlayerRenderStates = new(texture.Texture);
@@ -324,7 +324,7 @@ namespace GameLib.Entities
             _texTimer.Stop();
             _texTimer.Dispose();
 
-            _texTimer = new(GameLibConfig.Textures.PlayerAnimationBaseDuration / line.TexturesCount);
+            _texTimer = new(texture.AnimationDurationMs / line.TexturesCount);
             _texTimer.Elapsed += OnTexTimerElapsed;
             _texTimer.AutoReset = true;
             _texTimer.Enabled = true;

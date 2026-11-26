@@ -122,6 +122,7 @@ namespace GameEditor.Windows
         {
             string? file = null;
             GameLib.Entities.Action? action = null;
+            int duration = -1;
             PlayerTextureLine[] lines = Array.Empty<PlayerTextureLine>();
 
             if (!GetTextureFile(out file))
@@ -130,13 +131,16 @@ namespace GameEditor.Windows
             if (!GetAction(out action))
                 return;
 
+            if (!GetDuration(out duration))
+                return;
+
             if (!GetTextureLines(out lines))
                 return;
 
             if (file == null || action == null || lines.Length == 0)
                 return;
 
-            IOResult ior = FilesManager.CopyPlayerTextureInProject(file, (GameLib.Entities.Action)action, lines);
+            IOResult ior = FilesManager.CopyPlayerTextureInProject(file, (GameLib.Entities.Action)action, lines, duration);
 
             if (ior != IOResult.OK)
             {
@@ -341,6 +345,28 @@ namespace GameEditor.Windows
                 return false;
 
             dir = (Direction)tag;
+            return true;
+        }
+
+        private bool GetDuration(out int duration)
+        {
+            duration = -1;
+
+            string input = this.TxtBox_AnimationDuration.Text;
+
+            if (input.Length == 0)
+                input = "xxx";
+
+            if (!int.TryParse(input, out duration))
+            {
+                string text = "Failed to parse duration";
+                string caption = "DungeonExplorer - GameEditor - AddPlayerTexture";
+
+                _ = MessageBox.Show(text, caption, MessageBoxButton.OK);
+
+                return false;
+            }
+
             return true;
         }
     }

@@ -285,7 +285,7 @@ namespace GameLib.Files
         }
 
 
-        public static IOResult CopyPlayerTextureInProject(string sourceFileName, Entities.Action action, PlayerTextureLine[] lines)
+        public static IOResult CopyPlayerTextureInProject(string sourceFileName, Entities.Action action, PlayerTextureLine[] lines, int duration)
         {
             string destImgPath = "";
 
@@ -296,7 +296,7 @@ namespace GameLib.Files
 
             string destJsonPath = destImgPath.Split('.').First() + ".json";
 
-            PlayerTexture texture = new(destImgPath, action, lines);
+            PlayerTexture texture = new(destImgPath, action, lines, duration);
 
             PlayerTextureSave save = new(texture);
 
@@ -331,9 +331,6 @@ namespace GameLib.Files
             destFilename += sourceFileName.Split('\\').Last();
 
             IOResult ior = IOHelper.CopyFile(sourceFileName, destFilename);
-
-            if (ior == IOResult.OK)
-                World.World.AddPropTextureFile(destFilename);
 
             return ior;
         }

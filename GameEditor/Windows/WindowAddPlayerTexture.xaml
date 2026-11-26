@@ -68,6 +68,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
                 <Label Content="Texture Preview : "
@@ -249,6 +250,8 @@
 
                 </Grid>
 
+                
+
             </Grid>
 
         </Grid>
@@ -261,12 +264,35 @@
 
             <Button Name="Btn_Validate"
                     Content="Add to project"
-                    Grid.Row="2"
                     Grid.Column="1"
                     Margin="5,10,10,10"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch" 
                     Click="Btn_Validate_Click"/>
+
+            <!-- ANIMATION DURATION -->
+            <Grid Grid.Row="0"
+                  Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Duration [ms] : "
+                       Grid.Column="0"
+                       Margin="10,5,5,5"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"/>
+
+                <TextBox Name="TxtBox_AnimationDuration"
+                         Grid.Column="1"
+                         Text="1000"
+                         Margin="5,5,5,5"
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Stretch"
+                         PreviewTextInput="TxtBox_Validation_Number_Integer"/>
+
+            </Grid>
 
         </Grid>
 

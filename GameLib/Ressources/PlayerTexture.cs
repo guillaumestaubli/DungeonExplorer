@@ -15,6 +15,7 @@ namespace GameLib.Ressources
         private Entities.Action _action;
         private PlayerTextureLine[] _textureLines;
         private Vector2i _tileSize;
+        private int _animationDurationMs = 1000;
 
         /// <summary>
         /// GET : [line index][texture index] => local points for the border of the texture tile
@@ -26,6 +27,7 @@ namespace GameLib.Ressources
         public Entities.Action Action { get { return _action; } }
         public PlayerTextureLine[] Lines { get { return _textureLines; } }
         public Vector2i TileSize { get { return _tileSize; } }
+        public int AnimationDurationMs { get { return _animationDurationMs; } }
 
         #endregion
 
@@ -35,9 +37,10 @@ namespace GameLib.Ressources
         /// <param name="path">source file of the texture (.png)</param>
         /// <param name="action">action represented by the texture</param>
         /// <param name="lines">description of the lines of the texture</param>
-        public PlayerTexture(string path, Entities.Action action, PlayerTextureLine[] lines) : base(path)
+        public PlayerTexture(string path, Entities.Action action, PlayerTextureLine[] lines, int duration) : base(path)
         {
             _action = action;
+            _animationDurationMs = duration;
             _textureLines = lines;
 
             int nbCol = _textureLines.OrderBy(x => x.TexturesCount).Last().TexturesCount;
@@ -55,6 +58,7 @@ namespace GameLib.Ressources
         public PlayerTexture(PlayerTextureSave save) : base(save.File)
         {
             _action = save.Action;
+            _animationDurationMs = save.Duration;
             _tileSize = new(save.TileSize_X, save.TileSize_Y);
 
             _textureLines = new PlayerTextureLine[save.Lines.Length];
