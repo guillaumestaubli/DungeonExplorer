@@ -15,6 +15,7 @@ namespace GameLib.Ressources
         private static TextureBase _textureNotFound = new(GameLibConfig.Textures.Path_Img_TextureNotFound);
         private static TileTexture _tileTextureNotFound = new(GameLibConfig.Textures.Path_Img_TextureNotFound);
         private static PropTexture _propTextureNotFound = new(GameLibConfig.Textures.Path_Img_TextureNotFound);
+        private static PlayerTexture _playerTextureNotFound;
 
         private static List<TileTexture> _groundTextures = [];
         private static List<TileTexture> _wallTextures = [];
@@ -28,6 +29,8 @@ namespace GameLib.Ressources
 
         public static TextureBase TextureNotFound { get { return _textureNotFound; } }
         public static TileTexture TileTextureNotFound { get { return _tileTextureNotFound; } }
+        public static PropTexture PropTextureNotFound { get { return _propTextureNotFound; } }
+        public static PlayerTexture PlayerTextureNotFound { get { return _playerTextureNotFound; } }
 
         public static List<TileTexture> GroundTextures { get { return _groundTextures; } }
         public static List<TileTexture> WallTextures { get { return _wallTextures; } }
@@ -38,6 +41,29 @@ namespace GameLib.Ressources
         public static List<PlayerTexture> PlayerTextures { get { return _playerTextures; } }
 
         #endregion
+
+        static RessourcesManager()
+        {
+            _playerTextureNotFound = CreatePlayerTextureNotFound();
+        }
+
+        private static PlayerTexture CreatePlayerTextureNotFound()
+        {
+            string path = GameLibConfig.Textures.Path_Img_TextureNotFound;
+
+            Entities.Action action = Entities.Action.None;
+
+            PlayerTextureLine[] lines = [
+                new(0, Entities.Direction.North, 1),
+                new(0, Entities.Direction.South, 1),
+                new(0, Entities.Direction.West, 1),
+                new(0, Entities.Direction.East, 1)
+                ];
+
+            int duration = 1000;
+
+            return new(path, action, lines, duration);
+        }
 
         public static void Init()
         {
@@ -163,6 +189,18 @@ namespace GameLib.Ressources
                 return _propTextureNotFound;
 
             return texture;
+        }
+
+        public static PlayerTexture GetPlayerTexture(string name)
+        {
+            PlayerTexture? texture = _playerTextures.Where(x => x.Name == name).FirstOrDefault();
+
+            if (texture == null)
+                return _playerTextureNotFound;
+
+            return texture;
+
+
         }
     }
 }

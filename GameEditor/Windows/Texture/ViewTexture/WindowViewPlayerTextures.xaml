@@ -10,6 +10,58 @@
         Width="800"
         ThemeMode="Dark">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Content="Player Textures"
+               Grid.Row="0"
+               Grid.Column="0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Center"
+               FontSize="28"
+               FontWeight="Bold"
+               Margin="10"/>
+
+        <ScrollViewer Grid.Row="1"
+                      Grid.Column="0"
+                      Margin="10"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
+
+            <StackPanel Name="StackPanel_List"
+                        Orientation="Vertical">
+                
+                
+            </StackPanel>
+            
+        </ScrollViewer>
+
+        <Grid Grid.Row="1"
+              Grid.Column="1">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Texture preview : "
+                   Grid.Row="0"
+                   Margin="10"/>
+
+            <Image Name="Img_Texture"
+                   Grid.Row="1"
+                   Margin="10"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch"/>
+
+        </Grid>
     </Grid>
 </Window>

@@ -157,7 +157,7 @@ namespace GameEditor.Windows.Texture.ViewTexture
 
             PropTexture texture = RessourcesManager.GetPropTexture(btn.Tag.ToString() ?? "");
 
-            if (texture.Name == RessourcesManager.TileTextureNotFound.Name)
+            if (texture.Name == RessourcesManager.PropTextureNotFound.Name)
                 return;
 
             string caption = "DungeonExplorer - WorldEditor - View Prop Textures";
