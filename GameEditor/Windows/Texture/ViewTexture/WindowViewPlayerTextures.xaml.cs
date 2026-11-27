@@ -1,5 +1,4 @@
 ﻿using GameLib.Ressources;
-using SFML.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -42,13 +41,6 @@ namespace GameEditor.Windows.Texture.ViewTexture
             AddRows(ref grid, 1);
             AddColumns(ref grid, 8);
 
-            Label titleName = CreateLabel("Name", 0, 0);
-            Label titleTexSize = CreateLabel("Size", 0, 1);
-            Label titleAction = CreateLabel("Action", 0, 2);
-            Label titleTileSize = CreateLabel("Tile", 0, 3);
-            Label titleAnim = CreateLabel("Duration", 0, 4);
-            Label titleLines = CreateLabel("Lines", 0, 5);
-
             grid.Children.Add(CreateLabel("Name", 0, 0));
             grid.Children.Add(CreateLabel("Size", 0, 1));
             grid.Children.Add(CreateLabel("Action", 0, 2));
@@ -73,17 +65,15 @@ namespace GameEditor.Windows.Texture.ViewTexture
                 Label lblAnim = CreateLabel($"{texture.AnimationDurationMs} ms", row, 4);
                 Label lblLinesCount = CreateLabel($"{texture.Lines.Length} lines", row, 5);
 
-                Button btnView = CreateViewButton(texture, row, 6);
-                Button btnDelete = CreateDeleteButton(texture, row, 7);
-
                 grid.Children.Add(lblName);
                 grid.Children.Add(lblTexSize);
                 grid.Children.Add(lblAction);
                 grid.Children.Add(lblTileSize);
                 grid.Children.Add(lblAnim);
                 grid.Children.Add(lblLinesCount);
-                grid.Children.Add(btnView);
-                grid.Children.Add(btnDelete);
+
+                grid.Children.Add(CreateViewButton(texture, row, 6));
+                grid.Children.Add(CreateDeleteButton(texture, row, 7));
 
                 AddRows(ref grid, 1);
 
@@ -101,13 +91,9 @@ namespace GameEditor.Windows.Texture.ViewTexture
 
                     ++row;
 
-                    Label lblIndex = CreateLabel(line.LineIndex.ToString(), row, 1);
-                    Label lblDir = CreateLabel(line.Direction.ToString(), row, 2);
-                    Label lblCount = CreateLabel(line.TexturesCount.ToString(), row, 3);
-
-                    grid.Children.Add(lblIndex);
-                    grid.Children.Add(lblDir);
-                    grid.Children.Add(lblCount);
+                    grid.Children.Add(CreateLabel(line.LineIndex.ToString(), row, 1));
+                    grid.Children.Add(CreateLabel(line.Direction.ToString(), row, 2));
+                    grid.Children.Add(CreateLabel(line.TexturesCount.ToString(), row, 3));
                 }
 
             }
@@ -119,8 +105,10 @@ namespace GameEditor.Windows.Texture.ViewTexture
         {
             for (int i = 0; i < rows; ++i)
             {
-                RowDefinition rowDef = new();
-                rowDef.Height = new(1, GridUnitType.Auto);
+                RowDefinition rowDef = new()
+                {
+                    Height = new(1, GridUnitType.Auto)
+                };
 
                 grid.RowDefinitions.Add(rowDef);
             }
@@ -130,8 +118,10 @@ namespace GameEditor.Windows.Texture.ViewTexture
         {
             for (int i = 0; i < columns; ++i)
             {
-                ColumnDefinition colDef = new();
-                colDef.Width = new(1, GridUnitType.Auto);
+                ColumnDefinition colDef = new()
+                {
+                    Width = new(1, GridUnitType.Auto)
+                };
 
                 grid.ColumnDefinitions.Add(colDef);
             }
@@ -146,6 +136,7 @@ namespace GameEditor.Windows.Texture.ViewTexture
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left
             };
+
             Grid.SetColumn(lbl, col);
             Grid.SetRow(lbl, row);
 
@@ -162,7 +153,9 @@ namespace GameEditor.Windows.Texture.ViewTexture
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
+
             btn.Click += BtnView_Clicked;
+
             Grid.SetColumn(btn, col);
             Grid.SetRow(btn, row);
 
@@ -179,7 +172,9 @@ namespace GameEditor.Windows.Texture.ViewTexture
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
+
             btn.Click += BtnDelete_Clicked;
+
             Grid.SetColumn(btn, col);
             Grid.SetRow(btn, row);
 
