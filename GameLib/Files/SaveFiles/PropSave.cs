@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GameLib.Files.SaveFiles
 {
-    public class PropSave
+    internal class PropSave
     {
         public string ID { get; set; } = "";
         public int GridIndex_X { get; set; } = 0;

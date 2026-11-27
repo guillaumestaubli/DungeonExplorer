@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GameLib.Ressources
+namespace GameLib.Ressources.Textures
 {
     public class PropTexture : TextureBase
     {
@@ -15,7 +15,7 @@ namespace GameLib.Ressources
 
         public PropTexture(string path) : base(path)
         {
-            _pointsPixelPerfectBorder = RessourcesHelper.GeneratePixelPerfectBorderPoints(this.Image).ToArray();
+            _pointsPixelPerfectBorder = PixelPerfectBorderHelper.GeneratePixelPerfectBorderPoints(this.Image).ToArray();
         }
     }
 }

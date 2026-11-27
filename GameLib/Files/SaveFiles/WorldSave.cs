@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GameLib.Files.SaveFiles
 {
-    public class WorldSave
+    internal class WorldSave
     {
         public string PathLevels { get; set; } = "Levels";
         public string PathFirstLevel { get; set; } = "Levels\\level_0.json";

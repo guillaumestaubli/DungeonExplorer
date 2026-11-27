@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace GameLib.Files
 {
-    public static class IOHelper
+    internal static class IOHelper
     {
         /// <summary>
         /// Create the specified file

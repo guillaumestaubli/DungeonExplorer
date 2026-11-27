@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GameLib.Ressources
+namespace GameLib.Ressources.Textures
 {
-    public static class RessourcesHelper
+    internal static class PixelPerfectBorderHelper
     {
         /// <summary>
         /// Generate a list of points representing the border of the prop

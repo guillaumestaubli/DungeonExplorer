@@ -3,6 +3,7 @@ using GameLib;
 using GameLib.Entities;
 using GameLib.Files;
 using GameLib.Ressources;
+using GameLib.Ressources.Textures;
 using GameLib.World;
 using System;
 using System.Collections.Generic;

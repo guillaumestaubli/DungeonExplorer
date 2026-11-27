@@ -13,9 +13,9 @@ using System.Text;
 
 namespace GameLib.Files
 {
-    public static class FilesManager
+    internal static class FilesManager
     {
-        public static class Config
+        public static class FilesManagerConfig
         {
             private const string DIR_LEVELS_NAME = "Levels";
             private const string DIR_RESSOURCES_NAME = "Ressources";
@@ -99,56 +99,9 @@ namespace GameLib.Files
 
         }
 
-        public static string CreateNewProject(string worldName, string dirMain, Vector2i gridSize, Vector2f tileRenderSize)
-        {
-            Config.Init(dirMain, worldName);
-
-            _ = IOHelper.CreateDirectory(Config.PathDirMain);
-            _ = IOHelper.CreateDirectory(Config.PathDirLevels);
-            _ = IOHelper.CreateDirectory(Config.PathDirRessources);
-            _ = IOHelper.CreateDirectory(Config.PathDirResDoors);
-            _ = IOHelper.CreateDirectory(Config.PathDirResEntities);
-            _ = IOHelper.CreateDirectory(Config.PathDirResGrounds);
-            _ = IOHelper.CreateDirectory(Config.PathDirResPlayer);
-            _ = IOHelper.CreateDirectory(Config.PathDirResProps);
-            _ = IOHelper.CreateDirectory(Config.PathDirResWalls);
-
-            _ = IOHelper.CreateFile(Config.PathFileWorld);
-
-            World.World.CreateNewWorld(gridSize, tileRenderSize);
-
-            WorldSave worldSave = new()
-            {
-                PathLevels = Config.PathDirLevels,
-                PathFirstLevel = Config.PathDirLevels + "\\" + "level_0.json",
-                LevelCount = 1,
-                Levels = [Config.PathDirLevels + "\\" + "level_0.json"],
-                PathRessources = Config.PathDirRessources,
-                RessourcesDoors = [],
-                RessourcesEntities = [],
-                RessourcesGrounds = [],
-                RessourcesPlayer = [],
-                RessourcesProps = [],
-                RessourcesWalls = []
-            };
-
-            string worldSaveJson = Newtonsoft.Json.JsonConvert.SerializeObject(worldSave, Newtonsoft.Json.Formatting.Indented);
-
-            IOHelper.WriteToFile(Config.PathFileWorld, worldSaveJson, false, Encoding.UTF8);
-
-            LevelSave levelSave = new(World.World.CurrentLevel);
-
-            string levelSaveJson = Newtonsoft.Json.JsonConvert.SerializeObject(levelSave, Newtonsoft.Json.Formatting.Indented);
-
-            IOHelper.CreateFile(worldSave.PathFirstLevel);
-            IOHelper.WriteToFile(worldSave.PathFirstLevel, levelSaveJson, false, Encoding.UTF8);
-
-            return Config.PathFileWorld;
-        }
-
         public static WorldSave LoadWorldSave(string path)
         {
-            Config.Init(path);
+            FilesManagerConfig.Init(path);
 
             string content = String.Empty;
 
@@ -182,33 +135,6 @@ namespace GameLib.Files
             return levelSave;
         }
 
-        public static void SaveProject()
-        {
-            WorldSave worldSave = LoadWorldSave(Config.PathFileWorld);
-
-            worldSave.LevelCount = World.World.Levels.Count;
-
-            worldSave.RessourcesDoors = World.World.TexturesDoorsFiles.ToArray();
-            worldSave.RessourcesEntities = World.World.TexturesEntitiesFiles.ToArray();
-            worldSave.RessourcesGrounds = World.World.TexturesGroundFiles.ToArray();
-            worldSave.RessourcesPlayer = World.World.TexturesPlayerFiles.ToArray();
-            worldSave.RessourcesProps = World.World.TexturesPropsFiles.ToArray();
-            worldSave.RessourcesWalls = World.World.TexturesWallsFiles.ToArray();
-
-            string worldSaveJson = Newtonsoft.Json.JsonConvert.SerializeObject(worldSave, Newtonsoft.Json.Formatting.Indented);
-
-            _ = IOHelper.WriteToFile(Config.PathFileWorld, worldSaveJson, false, Encoding.UTF8);
-
-            foreach (Level level in World.World.Levels)
-            {
-                LevelSave levelSave = new LevelSave(level);
-
-                string levelSaveJson = Newtonsoft.Json.JsonConvert.SerializeObject(levelSave, Newtonsoft.Json.Formatting.Indented);
-
-                _ = IOHelper.WriteToFile(worldSave.PathFirstLevel, levelSaveJson, false, Encoding.UTF8);
-            }
-        }
-
         public static IOResult CopyTileTextureInProject(string sourceFileName, TileType type, out string destFileName)
         {
             destFileName = string.Empty;
@@ -224,17 +150,17 @@ namespace GameLib.Files
             {
                 case TileType.Door:
                     {
-                        destFileName = Config.PathDirResDoors;
+                        destFileName = FilesManagerConfig.PathDirResDoors;
                         break;
                     }
                 case TileType.Ground:
                     {
-                        destFileName = Config.PathDirResGrounds;
+                        destFileName = FilesManagerConfig.PathDirResGrounds;
                         break;
                     }
                 case TileType.Wall:
                     {
-                        destFileName = Config.PathDirResWalls;
+                        destFileName = FilesManagerConfig.PathDirResWalls;
                         break;
                     }
 
@@ -264,7 +190,7 @@ namespace GameLib.Files
             if (!origin.Exists)
                 return IOResult.DONT_EXISTS;
 
-            destFileName = Config.PathDirResProps;
+            destFileName = FilesManagerConfig.PathDirResProps;
 
             DirectoryInfo destDir = new DirectoryInfo(destFileName);
 
@@ -284,7 +210,7 @@ namespace GameLib.Files
         public static IOResult CopyPlayerTextureImageInProject(string sourceFileName, out string destFilename)
         {
             FileInfo origin = new FileInfo(sourceFileName);
-            destFilename = Config.PathDirResPlayer;
+            destFilename = FilesManagerConfig.PathDirResPlayer;
 
             if (!origin.Exists)
                 return IOResult.DONT_EXISTS;

@@ -13,7 +13,7 @@ using GameLib.Entities;
 
 namespace GameLib.Core
 {
-    public static class CollisionHelper
+    internal static class CollisionHelper
     {
         public static Vector2f DetectAndCorrectPlayerCollisionsWhenMoving(Vector2f offset)
         {

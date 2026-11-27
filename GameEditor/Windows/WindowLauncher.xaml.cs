@@ -1,4 +1,5 @@
 ﻿using GameEditor.Windows.WorldEditor;
+using GameLib;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -109,7 +110,7 @@ namespace GameEditor.Windows
                 return;
             }
 
-            string path = GameLib.Files.FilesManager.CreateNewProject(
+            string path = ProjectManager.CreateNewProject(
                 worldName: GameEditorConfig.WorldCreation.ProjectName,
                 dirMain: GameEditorConfig.WorldCreation.ProjectDir,
                 gridSize: new(GameEditorConfig.WorldCreation.Level_X, GameEditorConfig.WorldCreation.Level_Y),

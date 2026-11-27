@@ -8,6 +8,7 @@ using GameLib.Files;
 using GameLib.Files.SaveFiles;
 using GameLib.Logging;
 using GameLib.Ressources;
+using GameLib.Ressources.Textures;
 using GameLib.World.Props;
 using GameLib.World.Tiles;
 using SFML.Graphics;

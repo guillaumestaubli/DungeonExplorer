@@ -1,4 +1,5 @@
 ﻿using GameLib.Ressources;
+using GameLib.Ressources.Textures;
 using System;
 using System.Collections.Generic;
 using System.Text;

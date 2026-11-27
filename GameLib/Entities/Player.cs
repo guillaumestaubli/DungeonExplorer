@@ -1,4 +1,4 @@
-﻿using GameLib.Ressources;
+﻿using GameLib.Ressources.Textures;
 using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
@@ -137,7 +137,7 @@ namespace GameLib.Entities
                 return;
 
             Vector2f[] localPoints = _textures[_action].GetPixelPerfectBorderPoints(_direction, _texCurrentIndex);
-            _pixelPerfectBorderPoints = RessourcesHelper.GetGlobalPointsPixelPerfectBorder(localPoints, _renderPosition);
+            _pixelPerfectBorderPoints = PixelPerfectBorderHelper.GetGlobalPointsPixelPerfectBorder(localPoints, _renderPosition);
 
             _vaPlayerRenderStates = new(_textures[_action].Texture);
             _vaPlayer = GenerateVertexArrayPlayer();

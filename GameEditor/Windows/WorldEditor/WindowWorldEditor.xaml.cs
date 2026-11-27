@@ -25,6 +25,7 @@ using GameEditor.Windows.WorldEditor.Toolbar.Player;
 using GameEditor.Windows.WorldEditor.Toolbar.Prop;
 using GameEditor.Windows.WorldEditor.Toolbar.Tile;
 using GameEditor.Windows.Texture.ViewTexture;
+using GameLib;
 
 namespace GameEditor.Windows.WorldEditor
 {
@@ -406,7 +407,7 @@ namespace GameEditor.Windows.WorldEditor
             // LCtrl + S => Save
             if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.S))
             {
-                GameLib.Files.FilesManager.SaveProject();
+                ProjectManager.SaveProject();
             }
         }
 
@@ -418,7 +419,7 @@ namespace GameEditor.Windows.WorldEditor
 
         private void Btn_Save_Click(object sender, RoutedEventArgs e)
         {
-            GameLib.Files.FilesManager.SaveProject();
+            ProjectManager.SaveProject();
         }
 
         private void Btn_WorldMap_Click(object sender, RoutedEventArgs e)

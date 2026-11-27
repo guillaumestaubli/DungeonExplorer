@@ -1,5 +1,6 @@
 ﻿using GameEditor.Helper;
 using GameLib.Ressources;
+using GameLib.Ressources.Textures;
 using GameLib.World.Tiles;
 using System;
 using System.Collections.Generic;

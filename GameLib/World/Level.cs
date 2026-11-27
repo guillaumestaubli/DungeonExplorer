@@ -66,7 +66,7 @@ namespace GameLib.World
 
         }
 
-        public Level(LevelSave save)
+        internal Level(LevelSave save)
         {
             _id = new Guid(save.ID);
             _index = save.Index;

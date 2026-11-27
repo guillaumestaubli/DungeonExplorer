@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GameLib.Files.SaveFiles
 {
-    public class TileSave
+    internal class TileSave
     {
         public string ID { get; set; } = "#";
         public int Type { get; set; } = -1;

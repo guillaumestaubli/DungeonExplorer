@@ -7,7 +7,7 @@ using System.Text;
 
 namespace GameLib.Files.SaveFiles
 {
-    public class LevelSave
+    internal class LevelSave
     {
         public string ID { get; set; } = "#";
         public int Index { get; set; } = -1;

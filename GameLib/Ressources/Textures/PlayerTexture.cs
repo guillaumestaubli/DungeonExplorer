@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace GameLib.Ressources
+namespace GameLib.Ressources.Textures
 {
     public class PlayerTexture : TextureBase
     {
@@ -55,7 +55,7 @@ namespace GameLib.Ressources
             _pixelPerfectBorder = CreatePixelPerfectBorders();
         }
 
-        public PlayerTexture(PlayerTextureSave save) : base(save.File)
+        internal PlayerTexture(PlayerTextureSave save) : base(save.File)
         {
             _action = save.Action;
             _animationDurationMs = save.Duration;
@@ -87,7 +87,7 @@ namespace GameLib.Ressources
                         Size = _tileSize
                     };
 
-                    Vector2f[] points = RessourcesHelper.GeneratePixelPerfectBorderPoints(this.Image, bounds);
+                    Vector2f[] points = PixelPerfectBorderHelper.GeneratePixelPerfectBorderPoints(this.Image, bounds);
 
                     linePoints.Add(points);
                 }

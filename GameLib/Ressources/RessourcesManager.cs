@@ -11,6 +11,7 @@ using GameLib.Files.SaveFiles;
 using GameLib.Logging;
 using GameLib.World;
 using GameLib.World.Tiles;
+using GameLib.Ressources.Textures;
 
 namespace GameLib.Ressources
 {
@@ -129,7 +130,7 @@ namespace GameLib.Ressources
 
             World.World.AddTileTextureFile(destFileName, tileType);
 
-            FilesManager.SaveProject();
+            ProjectManager.SaveProject();
             Init();
 
             return true;
@@ -141,12 +142,12 @@ namespace GameLib.Ressources
 
             IOResult ior = FilesManager.CopyPropTextureInProject(sourceFileName, out destFileName);
 
-            if (ior == IOResult.OK)
+            if (ior != IOResult.OK)
                 return false;
 
             World.World.AddPropTextureFile(destFileName);
 
-            FilesManager.SaveProject();
+            ProjectManager.SaveProject();
             Init();
 
             return true;
@@ -176,7 +177,7 @@ namespace GameLib.Ressources
 
             World.World.AddPlayerTextureFile(destImgPath, destJsonPath);
 
-            FilesManager.SaveProject();
+            ProjectManager.SaveProject();
             Init();
 
             return true;
@@ -192,7 +193,7 @@ namespace GameLib.Ressources
             if (ior != IOResult.OK)
                 return false;
 
-            FilesManager.SaveProject();
+            ProjectManager.SaveProject();
             Init();
 
             return true;
@@ -207,7 +208,7 @@ namespace GameLib.Ressources
             if (ior != IOResult.OK)
                 return false;
 
-            FilesManager.SaveProject();
+            ProjectManager.SaveProject();
             Init();
 
             return true;
@@ -226,7 +227,7 @@ namespace GameLib.Ressources
             if (iorImg != IOResult.OK || iorJson != IOResult.OK)
                 return false;
 
-            FilesManager.SaveProject();
+            ProjectManager.SaveProject();
             Init();
 
             return true;

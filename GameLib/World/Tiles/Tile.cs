@@ -1,5 +1,6 @@
 ﻿using GameLib.Files.SaveFiles;
 using GameLib.Ressources;
+using GameLib.Ressources.Textures;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -77,7 +78,7 @@ namespace GameLib.World.Tiles
             _txtType = GenerateTxtTileType();
         }
 
-        public Tile(TileSave save, Vector2f renderSize)
+        internal Tile(TileSave save, Vector2f renderSize)
         {
             _id = new Guid(save.ID);
             _type = (TileType)save.Type;

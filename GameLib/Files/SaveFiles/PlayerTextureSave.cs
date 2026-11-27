@@ -1,5 +1,5 @@
 ﻿using GameLib.Entities;
-using GameLib.Ressources;
+using GameLib.Ressources.Textures;
 using SFML.Graphics;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Text;
 
 namespace GameLib.Files.SaveFiles
 {
-    public class PlayerTextureSave
+    internal class PlayerTextureSave
     {
         public string File { get; set; } = "";
         public Entities.Action Action { get; set; } = Entities.Action.None;

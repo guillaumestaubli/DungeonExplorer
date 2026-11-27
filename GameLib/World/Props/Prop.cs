@@ -1,5 +1,6 @@
 ﻿using GameLib.Files.SaveFiles;
 using GameLib.Ressources;
+using GameLib.Ressources.Textures;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -55,7 +56,7 @@ namespace GameLib.World.Props
 
             Vector2f scale = new(_renderSize.X / _texture.Image.Size.X, _renderSize.Y / _texture.Image.Size.Y);
             //_globalPointsPixelPerfectBorder = _texture.GetGlobalPointsPixelPerfectBorder(_renderPosition, scale);
-            _globalPointsPixelPerfectBorder = RessourcesHelper.GetGlobalPointsPixelPerfectBorder(_texture.PointsPixelPerfectBorder, _renderPosition, scale);
+            _globalPointsPixelPerfectBorder = PixelPerfectBorderHelper.GetGlobalPointsPixelPerfectBorder(_texture.PointsPixelPerfectBorder, _renderPosition, scale);
 
             _vaProp = CreateVertexArrayProp();
             _renderStates = CreatePropRenderStates();
@@ -63,7 +64,7 @@ namespace GameLib.World.Props
             _vaPixelPerfectBorders = CreateVertexArrayPixelPerfectBorders();
         }
 
-        public Prop(PropSave save)
+        internal Prop(PropSave save)
         {
             _id = new Guid(save.ID);
             _gridIndex = new(save.GridIndex_X, save.GridIndex_Y);
@@ -73,7 +74,7 @@ namespace GameLib.World.Props
 
             Vector2f scale = new(_renderSize.X / _texture.Image.Size.X, _renderSize.Y / _texture.Image.Size.Y);
             //_globalPointsPixelPerfectBorder = _texture.GetGlobalPointsPixelPerfectBorder(_renderPosition, scale);
-            _globalPointsPixelPerfectBorder = RessourcesHelper.GetGlobalPointsPixelPerfectBorder(_texture.PointsPixelPerfectBorder, _renderPosition, scale);
+            _globalPointsPixelPerfectBorder = PixelPerfectBorderHelper.GetGlobalPointsPixelPerfectBorder(_texture.PointsPixelPerfectBorder, _renderPosition, scale);
 
             _vaProp = CreateVertexArrayProp();
             _renderStates = CreatePropRenderStates();
