@@ -461,7 +461,7 @@ namespace GameEditor.Windows.WorldEditor
 
         private void ComboBox_ViewTextures_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.ComboBox_AddTexture.SelectedItem == null)
+            if (this.ComboBox_ViewTextures.SelectedItem == null)
                 return;
 
             ComboBoxItem item = (ComboBoxItem)this.ComboBox_ViewTextures.SelectedItem;
@@ -487,7 +487,7 @@ namespace GameEditor.Windows.WorldEditor
             if (window != null)
                 _ = window.ShowDialog();
 
-            this.ComboBox_AddTexture.SelectedIndex = 0;
+            this.ComboBox_ViewTextures.SelectedIndex = 0;
         }
 
         #endregion

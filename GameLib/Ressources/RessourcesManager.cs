@@ -1,12 +1,16 @@
-﻿using GameLib.Files;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using Newtonsoft.Json;
+
+using GameLib.Entities;
+using GameLib.Files;
 using GameLib.Files.SaveFiles;
 using GameLib.Logging;
 using GameLib.World;
 using GameLib.World.Tiles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GameLib.Ressources
 {
@@ -113,6 +117,122 @@ namespace GameLib.Ressources
 
         }
 
+
+        public static bool AddTileTextureInProject(string sourceFileName, TileType tileType)
+        {
+            string destFileName = string.Empty;
+
+            IOResult ior = FilesManager.CopyTileTextureInProject(sourceFileName, tileType, out destFileName);
+
+            if (ior != IOResult.OK)
+                return false;
+
+            World.World.AddTileTextureFile(destFileName, tileType);
+
+            FilesManager.SaveProject();
+            Init();
+
+            return true;
+        }
+
+        public static bool AddPropTextureInProject(string sourceFileName)
+        {
+            string destFileName = string.Empty;
+
+            IOResult ior = FilesManager.CopyPropTextureInProject(sourceFileName, out destFileName);
+
+            if (ior == IOResult.OK)
+                return false;
+
+            World.World.AddPropTextureFile(destFileName);
+
+            FilesManager.SaveProject();
+            Init();
+
+            return true;
+        }
+
+        public static bool AddPlayerTextureInProject(string sourceFileName, Entities.Action action, PlayerTextureLine[] lines, int duration)
+        {
+            string destImgPath = string.Empty;
+
+            IOResult ior = FilesManager.CopyPlayerTextureImageInProject(sourceFileName, out destImgPath);
+
+            if (ior != IOResult.OK)
+                return false;
+
+            string destJsonPath = destImgPath.Split('.').First() + ".json";
+
+            PlayerTexture texture = new(destImgPath, action, lines, duration);
+
+            PlayerTextureSave save = new(texture);
+
+            string json = JsonConvert.SerializeObject(save, Formatting.Indented);
+
+            ior = FilesManager.CreatePlayerTextureJsonFileInProject(destJsonPath, json);
+
+            if (ior != IOResult.OK)
+                return false;
+
+            World.World.AddPlayerTextureFile(destImgPath, destJsonPath);
+
+            FilesManager.SaveProject();
+            Init();
+
+            return true;
+        }
+
+
+        public static bool DeleteTileTextureFromProject(TileTexture texture, TileType tileType)
+        {
+            World.World.RemoveTileTextureFile(texture, tileType);
+
+            IOResult ior = IOHelper.DeleteFile(texture.Path);
+
+            if (ior != IOResult.OK)
+                return false;
+
+            FilesManager.SaveProject();
+            Init();
+
+            return true;
+        }
+
+        public static bool DeletePropTextureFromProject(PropTexture texture)
+        {
+            World.World.RemovePropTextureFile(texture);
+
+            IOResult ior = IOHelper.DeleteFile(texture.Path);
+
+            if (ior != IOResult.OK)
+                return false;
+
+            FilesManager.SaveProject();
+            Init();
+
+            return true;
+        }
+
+        public static bool DeletePlayerTextureFromProject(PlayerTexture texture)
+        {
+            World.World.RemovePlayerTextureFile(texture);
+
+            string imgPath = texture.Path;
+            string jsonPath = imgPath.Split('.').First() + ".json";
+
+            IOResult iorImg = IOHelper.DeleteFile(imgPath);
+            IOResult iorJson = IOHelper.DeleteFile(jsonPath);
+
+            if (iorImg != IOResult.OK || iorJson != IOResult.OK)
+                return false;
+
+            FilesManager.SaveProject();
+            Init();
+
+            return true;
+        }
+
+
         public static TileTexture GetTileTexture(string name, TileType type)
         {
             TileTexture? texture = null;
@@ -202,5 +322,6 @@ namespace GameLib.Ressources
 
 
         }
+
     }
 }

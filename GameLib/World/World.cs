@@ -144,11 +144,6 @@ namespace GameLib.World
 
         #region GAME_EDITOR
 
-        /// <summary>
-        /// Add a texture file in the tiles textures files list
-        /// </summary>
-        /// <param name="file"></param>
-        /// <param name="type"></param>
         public static void AddTileTextureFile(string file, TileType type)
         {
             switch (type)
@@ -171,10 +166,6 @@ namespace GameLib.World
             }
         }
 
-        /// <summary>
-        /// Add a texture file in the props textures files list
-        /// </summary>
-        /// <param name="file"></param>
         public static void AddPropTextureFile(string file)
         {
             _texturesPropsFiles.Add(file);
@@ -185,6 +176,44 @@ namespace GameLib.World
             _texturesPlayerFiles.Add(imgFile);
             _texturesPlayerFiles.Add(jsonFile);
         }
+
+
+        public static void RemoveTileTextureFile(TileTexture texture, TileType tileType)
+        {
+            switch (tileType)
+            {
+                case TileType.Ground:
+                    {
+                        _texturesGroundFiles = _texturesGroundFiles.Where(x => x != texture.Path).ToList();
+                        break;
+                    }
+                case TileType.Wall:
+                    {
+                        _texturesWallsFiles = _texturesWallsFiles.Where(x => x != texture.Path).ToList();
+                        break;
+                    }
+                case TileType.Door:
+                    {
+                        _texturesDoorsFiles = _texturesDoorsFiles.Where(x => x != texture.Path).ToList();
+                        break;
+                    }
+            }
+        }
+
+        public static void RemovePropTextureFile(PropTexture texture)
+        {
+            _texturesPropsFiles = _texturesPropsFiles.Where(x => x != texture.Path).ToList();
+        }
+
+        public static void RemovePlayerTextureFile(PlayerTexture texture)
+        {
+            string imgFile = texture.Path;
+            string jsonFile = texture.Path.Split('.').First() + ".json";
+
+            _texturesPlayerFiles = _texturesPlayerFiles.Where(x => x != imgFile).ToList();
+            _texturesPlayerFiles = _texturesPlayerFiles.Where(x => x != jsonFile).ToList();
+        }
+
 
         /// <summary>
         /// Convert screen/world coordinates to grid index for the current level

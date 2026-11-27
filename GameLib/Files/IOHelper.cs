@@ -148,6 +148,25 @@ namespace GameLib.Files
                 return IOResult.ERROR;
             }
         }
+
+        public static IOResult DeleteFile(string sourceFileName)
+        {
+            try
+            {
+                if (!File.Exists(sourceFileName))
+                    return IOResult.DONT_EXISTS;
+
+                File.Delete(sourceFileName);
+
+                return IOResult.OK;
+            }
+            catch(Exception e)
+            {
+                Logger.Error($"IOHelper.DeleteFile", $"An error occured when deleting the file {sourceFileName}", e);
+
+                return IOResult.ERROR;
+            }
+        }
     }
 
     public enum IOResult

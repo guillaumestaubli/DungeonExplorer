@@ -133,6 +133,7 @@ namespace GameEditor.Windows.Texture.ViewTexture
             BitmapImage bitmapImage = new();
 
             bitmapImage.BeginInit();
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
             bitmapImage.UriSource = new Uri(texture.Path);
 
             if (this.Img_Texture.RenderSize.Width < this.Img_Texture.RenderSize.Height)
@@ -167,9 +168,22 @@ namespace GameEditor.Windows.Texture.ViewTexture
 
             if (result == MessageBoxResult.Yes)
             {
-                // TODO : delete texture from project
+                this.Img_Texture.Source = null;
 
-                System.Diagnostics.Debug.WriteLine($"> delete texture {texture.Name}. Coming soon ...");
+                bool success = RessourcesManager.DeletePropTextureFromProject(texture);
+
+                if (success)
+                {
+                    message = $"The texture {texture.Name} has been successfully deleted from project";
+
+                    _ = MessageBox.Show(message, caption, MessageBoxButton.OK);
+                }
+                else
+                {
+                    message = $"An error occured when trying to delete {texture.Name} from project";
+
+                    _ = MessageBox.Show(message, caption, MessageBoxButton.OK);
+                }
 
                 DisplayTexturesList();
             }

@@ -209,110 +209,79 @@ namespace GameLib.Files
             }
         }
 
-
-        public static IOResult CopyTileTextureInProject(string sourceFileName, TileType type)
+        public static IOResult CopyTileTextureInProject(string sourceFileName, TileType type, out string destFileName)
         {
-            FileInfo origin = new FileInfo(sourceFileName);
+            destFileName = string.Empty;
 
+            FileInfo origin = new FileInfo(sourceFileName);
+            
             if (!origin.Exists)
                 return IOResult.DONT_EXISTS;
 
-            string destFilename = string.Empty;
+            destFileName = string.Empty;
 
             switch (type)
             {
                 case TileType.Door:
                     {
-                        destFilename = Config.PathDirResDoors;
+                        destFileName = Config.PathDirResDoors;
                         break;
                     }
                 case TileType.Ground:
                     {
-                        destFilename = Config.PathDirResGrounds;
+                        destFileName = Config.PathDirResGrounds;
                         break;
                     }
                 case TileType.Wall:
                     {
-                        destFilename = Config.PathDirResWalls;
+                        destFileName = Config.PathDirResWalls;
                         break;
                     }
 
             }
 
-            DirectoryInfo destDir = new DirectoryInfo(destFilename);
+            DirectoryInfo destDir = new DirectoryInfo(destFileName);
 
             bool exists = destDir.EnumerateFiles().Where(x => x.Name == origin.Name).Count() > 0;
 
             if (exists)
                 return IOResult.ALREADY_EXISTS;
 
-            destFilename += "\\";
-            destFilename += sourceFileName.Split('\\').Last();
+            destFileName += "\\";
+            destFileName += sourceFileName.Split('\\').Last();
 
-            IOResult ior = IOHelper.CopyFile(sourceFileName, destFilename);
-
-            if (ior == IOResult.OK)
-                World.World.AddTileTextureFile(destFilename, type);
+            IOResult ior = IOHelper.CopyFile(sourceFileName, destFileName);
 
             return ior;
         }
 
-        public static IOResult CopyPropTextureInProject(string sourceFileName)
+        public static IOResult CopyPropTextureInProject(string sourceFileName, out string destFileName)
         {
+            destFileName = string.Empty;
+
             FileInfo origin = new FileInfo(sourceFileName);
 
             if (!origin.Exists)
                 return IOResult.DONT_EXISTS;
 
-            string destFilename = Config.PathDirResProps;
+            destFileName = Config.PathDirResProps;
 
-            DirectoryInfo destDir = new DirectoryInfo(destFilename);
+            DirectoryInfo destDir = new DirectoryInfo(destFileName);
 
             bool exists = destDir.EnumerateFiles().Where(x => x.Name == origin.Name).Count() > 0;
 
             if (exists)
                 return IOResult.ALREADY_EXISTS;
 
-            destFilename += "\\";
-            destFilename += sourceFileName.Split('\\').Last();
+            destFileName += "\\";
+            destFileName += sourceFileName.Split('\\').Last();
 
-            IOResult ior = IOHelper.CopyFile(sourceFileName, destFilename);
-
-            if (ior == IOResult.OK)
-                World.World.AddPropTextureFile(destFilename);
+            IOResult ior = IOHelper.CopyFile(sourceFileName, destFileName);
 
             return ior;
         }
 
-
-        public static IOResult CopyPlayerTextureInProject(string sourceFileName, Entities.Action action, PlayerTextureLine[] lines, int duration)
-        {
-            string destImgPath = "";
-
-            IOResult ior = CopyPlayerTextureImage(sourceFileName, out destImgPath);
-
-            if (ior != IOResult.OK)
-                return ior;
-
-            string destJsonPath = destImgPath.Split('.').First() + ".json";
-
-            PlayerTexture texture = new(destImgPath, action, lines, duration);
-
-            PlayerTextureSave save = new(texture);
-
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(save, Newtonsoft.Json.Formatting.Indented);
-
-            ior = CreatePlayerTextureJsonFile(destJsonPath, json);
-
-            if (ior != IOResult.OK)
-                return ior;
-
-            World.World.AddPlayerTextureFile(destImgPath, destJsonPath);
-
-            return IOResult.OK;
-        }
-
-        private static IOResult CopyPlayerTextureImage(string sourceFileName, out string destFilename)
+        public static IOResult CopyPlayerTextureImageInProject(string sourceFileName, out string destFilename)
         {
             FileInfo origin = new FileInfo(sourceFileName);
             destFilename = Config.PathDirResPlayer;
@@ -335,7 +304,7 @@ namespace GameLib.Files
             return ior;
         }
 
-        private static IOResult CreatePlayerTextureJsonFile(string destFileName, string json)
+        public static IOResult CreatePlayerTextureJsonFileInProject(string destFileName, string json)
         {
             FileInfo file = new(destFileName);
 
@@ -351,8 +320,6 @@ namespace GameLib.Files
 
             return ior;
         }
-
-
 
         public static IOResult LoadPlayerTexture(string jsonPath, out PlayerTextureSave? save)
         {

@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using GameEditor.Helper;
 using GameEditor.Logging;
 using GameLib.Files;
+using GameLib.Ressources;
 using GameLib.World;
 using GameLib.World.Tiles;
 
@@ -175,14 +176,10 @@ namespace GameEditor.Windows.Texture.AddTexture
 
             foreach (string file in _textureFiles)
             {
-                IOResult ior = FilesManager.CopyTileTextureInProject(file, (TileType)_tileType);
+                bool success = RessourcesManager.AddTileTextureInProject(file, (TileType)_tileType);
 
-                if(ior != IOResult.OK)
-                {
+                if(!success)
                     errorFiles.Add(file);
-
-                    Logger.Error($"{nameof(WindowAddTileTexture)}.{nameof(Btn_Validate_Click)}", $"An error occured during the copy of the file : {file}", null);
-                }
             }
 
             if(errorFiles.Count > 0)
@@ -198,9 +195,6 @@ namespace GameEditor.Windows.Texture.AddTexture
 
                 _ = System.Windows.MessageBox.Show(text, caption, MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            GameLib.Files.FilesManager.SaveProject();
-            GameLib.Ressources.RessourcesManager.Init();
 
             this.Close();
         }

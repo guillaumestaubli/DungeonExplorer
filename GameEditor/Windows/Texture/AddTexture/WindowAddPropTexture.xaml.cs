@@ -1,5 +1,6 @@
 ﻿using GameEditor.Logging;
 using GameLib.Files;
+using GameLib.Ressources;
 using GameLib.World.Tiles;
 using System;
 using System.Collections.Generic;
@@ -81,14 +82,10 @@ namespace GameEditor.Windows.Texture.AddTexture
 
             foreach (string file in _files)
             {
-                IOResult ior = FilesManager.CopyPropTextureInProject(file);
+                bool success = RessourcesManager.AddPropTextureInProject(file);
 
-                if (ior != IOResult.OK)
-                {
+                if (!success)
                     errorFiles.Add(file);
-
-                    Logger.Error($"{nameof(WindowAddPropTexture)}.{nameof(Btn_Validate_Click)}", $"An error occured during the copy of the file : {file}", null);
-                }
             }
 
             if (errorFiles.Count > 0)
@@ -104,9 +101,6 @@ namespace GameEditor.Windows.Texture.AddTexture
 
                 _ = System.Windows.MessageBox.Show(text, caption, MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            GameLib.Files.FilesManager.SaveProject();
-            GameLib.Ressources.RessourcesManager.Init();
 
             this.Close();
         }

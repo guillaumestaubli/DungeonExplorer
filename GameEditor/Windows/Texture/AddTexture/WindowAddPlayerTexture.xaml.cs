@@ -140,12 +140,10 @@ namespace GameEditor.Windows.Texture.AddTexture
             if (file == null || action == null || lines.Length == 0)
                 return;
 
-            IOResult ior = FilesManager.CopyPlayerTextureInProject(file, (GameLib.Entities.Action)action, lines, duration);
+            bool success = RessourcesManager.AddPlayerTextureInProject(file, (GameLib.Entities.Action)action, lines, duration);
 
-            if (ior != IOResult.OK)
+            if (!success)
             {
-                Logger.Error($"{nameof(WindowAddPlayerTexture)}.{nameof(Btn_Validate_Click)}", $"Failed to copy and create texture in project IOResult = {ior}", null);
-
                 string message = "An error happened when copying and creating texture in project";
                 string caption = "DungeonExplorer - GameEditor - AddPlayerTexture";
 
@@ -153,9 +151,6 @@ namespace GameEditor.Windows.Texture.AddTexture
 
                 return;
             }
-
-            FilesManager.SaveProject();
-            RessourcesManager.Init();
 
             this.Close();
         }
